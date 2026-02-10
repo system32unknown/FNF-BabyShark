@@ -379,7 +379,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		charDropDown = new PsychUIDropDownMenu(10, 30, [''], function(index:Int, intended:String) {
 			if (intended == null || intended.length < 1) return;
 
-			if (Paths.exists(Paths.getPath('characters/$intended.json'))) {
+			if (backend.NativeFileSystem.exists(Paths.getPath('characters/$intended.json'))) {
 				_char = intended;
 				check_player.checked = character.isPlayer;
 				addCharacter();

@@ -26,7 +26,7 @@ class LanguageSubState extends FlxSubState {
 
 					if (!displayLanguages.exists(langFile)) {
 						var path:String = '$directory/$file';
-						var txt:String = #if MODS_ALLOWED File.getContent #else openfl.utils.Assets.getText #end(path);
+						var txt:String = backend.NativeFileSystem.getContent(path);
 
 						var id:Int = txt.indexOf('\n');
 						if (id > 0) { //language display name shouldnt be an empty string or null

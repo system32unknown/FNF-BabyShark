@@ -2,6 +2,7 @@ package;
 
 import flixel.addons.transition.FlxTransitionableState;
 import states.FlashingState;
+import backend.NativeFileSystem;
 
 #if DEBUG_TRACY
 import cpp.vm.tracy.TracyProfiler;
@@ -29,9 +30,13 @@ class Init extends flixel.FlxState {
 		Language.reloadPhrases();
 		#if DISCORD_ALLOWED DiscordClient.prepare(); #end
 
+		NativeFileSystem.openFlAssets = openfl.Assets.list();
+		#if linux
+		FlxG.signals.preStateCreate.add(state -> NativeFileSystem.excludePaths.resize(0));
+		#end
+
 		// Flixel Plugins.
 		utils.plugins.EvacuateDebugPlugin.init();
-		utils.plugins.ForceCrashPlugin.init();
 
 		FlxG.fixedTimestep = false;
 		FlxG.game.focusLostFramerate = 60;

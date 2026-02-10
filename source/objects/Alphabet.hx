@@ -1,7 +1,7 @@
 package objects;
 
 import haxe.Json;
-#if !MODS_ALLOWED import openfl.utils.Assets; #end
+import backend.NativeFileSystem;
 
 // swordcube's alphabet but heavily modified to work with psych
 // since i had alignment issues getting it to work the other way around (psych alphabet working with swordcube's code)
@@ -34,12 +34,11 @@ class Alphabet extends FlxTypedSpriteGroup<AlphabetLine> {
 
 	public static function loadData(?request:String = 'alphabet') {
 		var path:String = Paths.getPath('images/$request.json');
-		if (!#if MODS_ALLOWED FileSystem.exists(path) #else Assets.exists(path, TEXT) #end)
-			path = Paths.getPath('images/alphabet.json');
+		if (!NativeFileSystem.exists(path)) path = Paths.getPath('images/alphabet.json');
 
 		AlphabetGlyph.allGlyphs = new Map<String, Glyph>();
 		try {
-			var data:Dynamic = Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path));
+			var data:Dynamic = Json.parse(NativeFileSystem.getContent(path));
 			if (data.allowed != null && data.allowed.length > 0) {
 				for (i in 0...data.allowed.length) {
 					var glyph:String = data.allowed.charAt(i);

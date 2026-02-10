@@ -82,13 +82,17 @@
 	<haxedef name="NO_PRECOMPILED_HEADERS" if="linux"/>
 
 	<section if="HSCRIPT_ALLOWED">
-		<haxeflag name="--macro" value="macros.AdditionalClasses.add()"/>
+		<haxeflag name="--macro" value="macros.KeepMacro.add()"/>
 		<haxedef name="hscriptPos"/>
 	</section>
+
+	<define name="CUSTOM_CLASSES"/>
+	<define name="HSCRIPT_ABSTRACT_SUPPORT"/>
 
 	<section unless="debug">
 		<haxedef name="no-deprecation-warnings"/> <!-- No deprecation warnings. -->
 		<haxedef name="FLX_NO_DEBUG"/> <!-- Disable the Flixel core debugger. Automatically gets set whenever you compile in release mode!-->
+		<haxedef name="analyzer-optimize"/>
 	</section>
 
 	<!-- Used for Izzy Engine's crash handler-->
@@ -121,6 +125,19 @@
 		<haxedef name="HXCPP_TRACY"/>
 		<haxedef name="HXCPP_TRACY_MEMORY"/>
 		<haxedef name="HXCPP_TRACY_ON_DEMAND"/>
+	</section>
+
+	<!-- _______________________________Display Server______________________________ -->
+	<haxedef name="LIME_CMD" value="${project.command}"/>
+	<define name="LIME_DISPLAY" if="${project.command == update} || ${project.command == display} || display || display_details" />
+	<haxedef name="LIME_DISPLAY" if="LIME_DISPLAY" />
+
+	<section if="LIME_DISPLAY">
+		<undefine name="HSCRIPT_ABSTRACT_SUPPORT" />
+		<unset name="HSCRIPT_ABSTRACT_SUPPORT" />
+
+		<undefine name="CUSTOM_CLASSES" />
+		<unset name="CUSTOM_CLASSES" />
 	</section>
 
 	<!-- _________________________________Custom_______________________________ -->

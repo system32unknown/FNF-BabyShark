@@ -33,7 +33,7 @@ class FlxMacro {
 			fields.push({
 				name: "zIndex", // Field name.
 				access: [Access.APublic], // Access level
-				kind: FieldType.FVar(macro :Int, macro $v{0}), // Variable type and default value
+				kind: FieldType.FVar(macro:Int, macro $v{0}), // Variable type and default value
 				pos: pos, // The field's position in code.
 			});
 		}

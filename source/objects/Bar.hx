@@ -61,7 +61,6 @@ class Bar extends FlxSpriteGroup {
 		add(bg);
 
 		setBounds(boundX, boundY);
-
 		regenerateClips();
 	}
 

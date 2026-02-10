@@ -1,7 +1,7 @@
 package backend;
 
 import objects.Note;
-import haxe.ds.Vector;
+import backend.NativeFileSystem;
 
 typedef SwagSong = {
 	var song:String;
@@ -130,11 +130,8 @@ class Song {
 		var formattedSong:String = Paths.formatToSongPath(jsonInput);
 		_lastPath = Paths.json('${Paths.CHART_PATH}/$formattedFolder/$formattedSong');
 
-		#if MODS_ALLOWED
-		if (FileSystem.exists(_lastPath)) rawData = File.getContent(_lastPath);
-		else
-		#end
-			rawData = lime.utils.Assets.getText(_lastPath);
+		if (NativeFileSystem.exists(_lastPath))
+			rawData = NativeFileSystem.getContent(_lastPath);
 
 		return rawData != null ? parseJSON(rawData, jsonInput) : null;
 	}

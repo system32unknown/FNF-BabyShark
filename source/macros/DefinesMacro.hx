@@ -13,6 +13,6 @@ class DefinesMacro {
 
 	static inline function get_defines():Map<String, String> return __get();
 	static macro function __get():haxe.macro.Expr {
-		return macro $v{#if display [] #else haxe.macro.Context.getDefines() #end};
+		return macro $v{#if display []:Map<String, Dynamic> #else haxe.macro.Context.getDefines() #end};
 	}
 }

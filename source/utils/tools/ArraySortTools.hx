@@ -52,7 +52,7 @@ class ArraySortTools {
 			// Elements less than the pivot will be to the left, and elements greater than the pivot will be to the right.
 			// Return the index of the pivot.
 			var pivot:Int = quickSortPartition(input, low, high, compare);
-			if ((pivot) - low <= high - (pivot + 1)) {
+			if (pivot - low <= high - (pivot + 1)) {
 				quickSortInner(input, low, pivot, compare);
 				low = pivot + 1;
 			} else {
@@ -114,11 +114,9 @@ class ArraySortTools {
 		var iMin:Int = 0;
 		var iMax:Int = array.length - 1;
 
-		var i:Int = 0;
-		var mid:Float;
 		while (iMin <= iMax) {
-			i = Math.floor((iMin + iMax) / 2);
-			mid = getVal(array[i]);
+			var i:Int = Math.floor((iMin + iMax) / 2);
+			var mid:Float = getVal(array[i]);
 			if (mid < val) iMin = i + 1
 			else if (mid > val) iMax = i - 1;
 			else {

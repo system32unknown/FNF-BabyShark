@@ -46,7 +46,7 @@ class DialogueCharacter extends FlxSprite {
 
 	public function reloadCharacterJson(character:String) {
 		var characterPath:String = 'images/dialogue/$character.json';
-		var rawJson = null;
+		var rawJson:String = null;
 
 		#if MODS_ALLOWED
 		var path:String = Paths.modFolders(characterPath);

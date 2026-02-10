@@ -164,8 +164,7 @@ class Awards {
 		if (FileSystem.exists(path)) {
 			try {
 				var rawJson:String = File.getContent(path).trim();
-				if (rawJson != null && rawJson.length > 0)
-					retVal = tjson.TJSON.parse(rawJson);
+				if (rawJson != null && rawJson.length > 0) retVal = tjson.TJSON.parse(rawJson);
 
 				if (addMods && retVal != null) {
 					for (i in 0...retVal.length) {

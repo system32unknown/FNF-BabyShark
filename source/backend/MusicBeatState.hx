@@ -115,9 +115,10 @@ class MusicBeatState extends flixel.FlxState {
 		curStep = lastChange.stepTime + Math.floor(delayToFix);
 	}
 
+	public static var transDirection:flixel.util.FlxAxes = X;
 	override function startOutro(onOutroComplete:()->Void):Void {
 		if (!skipNextTransIn) {
-			FlxG.state.openSubState(new Transition(.5, false));
+			FlxG.state.openSubState(new Transition(.5, false, transDirection));
 			Transition.finishCallback = onOutroComplete;
 			return;
 		}

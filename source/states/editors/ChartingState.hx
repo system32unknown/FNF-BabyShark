@@ -3804,7 +3804,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 			note.rgbShader.enabled = !noRGBCheckBox.checked;
 			if (note.rgbShader.enabled) {
-				var data:Array<backend.NoteTypesConfig.NoteTypeProperty> = NoteTypesConfig.loadNoteTypeData(note.noteType);
+				var data:Array<NoteTypeProperty> = NoteTypesConfig.loadNoteTypeData(note.noteType);
 				if (data == null || data.length < 1) continue;
 
 				for (line in data) {
@@ -4181,7 +4181,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	function loadCharacterFile(char:String):CharacterFile {
 		if (char != null) {
 			try {
-				return cast Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(Paths.getPath('characters/$char.json')));
+				return cast Json.parse(backend.NativeFileSystem.getContent(Paths.getPath('characters/$char.json')));
 			} catch (e:Dynamic) {}
 		}
 		return null;

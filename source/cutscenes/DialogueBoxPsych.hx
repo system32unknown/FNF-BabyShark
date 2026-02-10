@@ -1,9 +1,9 @@
 package cutscenes;
 
 import haxe.Json;
-import openfl.utils.Assets;
 import objects.TypedAlphabet;
 import cutscenes.DialogueCharacter;
+import backend.NativeFileSystem;
 import scripting.ScriptUtils;
 
 typedef DialogueFile = {
@@ -252,7 +252,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 	}
 
 	inline public static function parseDialogue(path:String):DialogueFile {
-		return cast #if MODS_ALLOWED (FileSystem.exists(path)) ? Json.parse(File.getContent(path)) #else (Assets.exists(path, TEXT)) ? Json.parse(Assets.getText(path)) #end : dummy();
+		return cast NativeFileSystem.exists(path) ? Json.parse(NativeFileSystem.getContent(path)) : dummy();
 	}
 
 	inline public static function dummy():DialogueFile {

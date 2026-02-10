@@ -1,38 +1,56 @@
 package backend.subtitles;
 
+import data.SubtitleData;
+
+/**
+ * A UI element used to display text in-case a player is speaking.
+ */
 class Subtitle extends flixel.addons.text.FlxTypeText {
+	/**
+	 * The data used to initalize this subtitle.
+	 */
+	var data:SubtitleData;
+
+	/**
+	 * The manager this Subtitle belongs to.
+	 */
 	public var manager:SubtitleManager;
-	public var onSubComplete:Void->Void;
 
-	public function new(text:String, ?typeSpeed:Float, showTime:Float, properties:SubtitleProperties, onComplete:Void->Void) {
-		properties = init(properties);
+	/**
+	 * Initalize a new Subtitle.
+	 * 
+	 * @param text
+	 * @param data The data this subtitle belongs to.
+	 * @param manager The manager this subtitle is contained to.
+	 */
+	public function new(text:String, data:SubtitleData, manager:SubtitleManager) {
+		this.data = data;
+		this.manager = manager;
 
-		super(properties.x, properties.y, FlxG.width, text, 36);
-		onSubComplete = onComplete;
+		super(data.x, data.y, FlxG.width, text, data.subtitleSize);		
+		setup();
+	}
 
-		setFormat(Paths.font(properties.fonts), properties.subtitleSize, FlxColor.WHITE, CENTER);
+	/**
+	 * Constructs this subtitle based on the given data.
+	 */
+	public function setup():Void {
+		setFormat(data.font, data.subtitleSize, FlxColor.WHITE, CENTER);
 		setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		antialiasing = Settings.data.antialiasing;
-
-		if (properties.centerScreen) gameCenter(properties.screenCenter);
-		start(properties.typeSpeed, false, false, [], () -> FlxTimer.wait(showTime, () -> FlxTween.tween(this, {alpha: 0}, .5, {onComplete: (tween:FlxTween) -> finish()})));
+		if (data.centerScreen) gameCenter(data.centerAxis);
 	}
 
-	public function finish() {
-		if (onSubComplete != null) onSubComplete();
-		manager.onSubtitleComplete(this);
+	/**
+	 * Start the subtitle typing process of this subtitle.
+	 */
+	public function startSubtitle():Void {
+		start(data.typeSpeed, false, false, [], () -> beginSubtitleEnd());
 	}
 
-	function init(properties:SubtitleProperties):SubtitleProperties {
-		if (properties == null) properties = {};
-
-		if (properties.x == null) properties.x = FlxG.width / 2;
-		if (properties.y == null) properties.y = (FlxG.height / 2) - 200;
-		if (properties.subtitleSize == null) properties.subtitleSize = 36;
-		if (properties.typeSpeed == null) properties.typeSpeed = .02;
-		if (properties.centerScreen == null) properties.centerScreen = true;
-		if (properties.screenCenter == null) properties.screenCenter = flixel.util.FlxAxes.XY;
-		if (properties.fonts == null) properties.fonts = Paths.font("comic.ttf");
-		return properties;
+	public function beginSubtitleEnd():Void {
+		FlxTimer.wait(data.duration, () -> {
+			FlxTween.tween(this, {alpha: 0}, .5, {onComplete: (tween:FlxTween) -> manager.onSubtitleComplete(this)});
+		});
 	}
 }

@@ -1,5 +1,7 @@
 package objects;
 
+import backend.NativeFileSystem;
+
 typedef MenuCharacterFile = {
 	var image:String;
 	var scale:Float;
@@ -39,14 +41,14 @@ class MenuCharacter extends FlxSprite {
 
 		hasConfirmAnimation = false;
 		var path:String = Paths.getPath('images/menucharacters/$value.json');
-		if (!Paths.exists(path)) {
+		if (!NativeFileSystem.exists(path)) {
 			path = Paths.getSharedPath('menucharacters/$DEFAULT_CHARACTER.json'); //If a character couldn't be found, change him to BF just to prevent a crash
 			color = FlxColor.BLACK;
 			alpha = 0.6;
 		}
 
 		try {
-			_file = haxe.Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path));
+			_file = haxe.Json.parse(NativeFileSystem.getContent(path));
 		} catch (e:Dynamic) Logs.error('Error loading menu character file of "$value": $e');
 		frames = Paths.getSparrowAtlas('menucharacters/${_file.image}');
 		animation.addByPrefix('idle', _file.idle, 24);

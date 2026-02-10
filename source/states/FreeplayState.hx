@@ -7,6 +7,7 @@ import haxe.Timer;
 import data.WeekData;
 import utils.FlxInterpolateColor;
 import utils.system.MemoryUtil;
+import utils.MathUtil;
 import backend.Highscore;
 import backend.Song;
 import objects.HealthIcon;
@@ -253,7 +254,7 @@ class FreeplayState extends MusicBeatState {
 			if (delayTime > 1 / Settings.data.framerate || loading >= songs.length) {
 				var curr:String = Std.string(loading);
 				var total:String = Std.string(songs.length);
-				var prog = utils.MathUtil.floorDecimal(loading * 100.0 / songs.length, 1);
+				var prog = MathUtil.floorDecimal(loading * 100.0 / songs.length, 1);
 
 				loadingText.text = 'Loading Song...\n$curr / $total - $prog% Done';
 				loadingText.gameCenter();
@@ -287,7 +288,7 @@ class FreeplayState extends MusicBeatState {
 		if (Math.abs(lerpScore - intendedScore) <= 10) lerpScore = intendedScore;
 		if (Math.abs(lerpRating - intendedRating) <= .01) lerpRating = intendedRating;
 
-		var ratingSplit:Array<String> = Std.string(utils.MathUtil.floorDecimal(lerpRating * 100, 2)).split('.');
+		var ratingSplit:Array<String> = Std.string(MathUtil.floorDecimal(lerpRating * 100, 2)).split('.');
 		if (ratingSplit.length < 2) ratingSplit.push(''); //No decimals, add an empty space
 		while (ratingSplit[1].length < 2) ratingSplit[1] += '0'; //Less than 2 decimals in it, add decimals then
 		
@@ -317,7 +318,7 @@ class FreeplayState extends MusicBeatState {
 					holdTime += elapsed;
 					if (holdTime > 0.5) {
 						spamTime += elapsed;
-						var timeLimit:Float = 1 / utils.MathUtil.interpolate(10, 30, (holdTime - .5) / 5, 2);
+						var timeLimit:Float = 1 / MathUtil.interpolate(10, 30, (holdTime - .5) / 5, 2);
 
 						if (spamTime > timeLimit) {
 							changeSelection(upPressed ? -shiftMult : shiftMult);

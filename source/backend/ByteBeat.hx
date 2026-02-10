@@ -114,7 +114,7 @@ class ByteBeat {
 	 */
 	public function buildSoundFromBytes(input:Null<Bytes>):Null<FlxSound> {
 		if (input == null) return null;
-		return new FlxSound().loadByteArray(openfl.utils.ByteArray.fromBytes(input));
+		return new FlxSound().load(openfl.utils.ByteArray.fromBytes(input));
 	}
 
 	/**

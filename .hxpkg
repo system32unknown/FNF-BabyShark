@@ -23,8 +23,7 @@
 			},
 			{
 				"name": "hscript-improved",
-				"link": "https://github.com/system32unknown/AlterHscript",
-				"branch": "custom-classes"
+				"link": "https://github.com/system32unknown/AlterHscript"
 			},
 			{
 				"name": "hxdiscord_rpc"

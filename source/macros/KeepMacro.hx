@@ -2,11 +2,12 @@ package macros;
 
 #if macro
 import haxe.macro.Compiler;
+import haxe.macro.Context;
 
 /**
  * Macros containing additional help functions to expand HScript capabilities.
  */
-class AdditionalClasses {
+class KeepMacro {
 	public static function add() {
 		var exc:Array<String> = [
 			"flixel.addons.editors.spine",
@@ -30,9 +31,9 @@ class AdditionalClasses {
 			"haxe.remoting.Proxy",
 		];
 
-		if (haxe.macro.Context.defined("sys"))
+		if (Context.defined("sys"))
 			for (inc in ["sys", "openfl.net"])
-				Compiler.include(inc, compathx4);
+				if (!Context.defined("hl")) Compiler.include(inc, compathx4);
 
 		for (inc in [
 			// FLIXEL

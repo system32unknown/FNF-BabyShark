@@ -3,6 +3,7 @@ package data;
 #if !MODS_ALLOWED import openfl.utils.Assets; #end
 import scripting.ModchartSprite;
 import backend.Song;
+import backend.NativeFileSystem;
 import tjson.TJSON;
 
 typedef StageFile = {
@@ -77,11 +78,7 @@ class StageData {
 	public static function getStageFile(stage:String):StageFile {
 		try {
 			var path:String = Paths.getPath('stages/$stage.json');
-			#if MODS_ALLOWED
-			if (FileSystem.exists(path)) return cast TJSON.parse(File.getContent(path));
-			#else
-			if (Assets.exists(path)) return cast TJSON.parse(Assets.getText(path));
-			#end
+			if (NativeFileSystem.exists(path)) return cast tjson.TJSON.parse(NativeFileSystem.getContent(path));
 		}
 		return dummy();
 	}

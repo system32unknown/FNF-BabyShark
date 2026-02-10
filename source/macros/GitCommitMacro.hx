@@ -27,7 +27,7 @@ class GitCommitMacro {
 
 	// INTERNAL MACROS
 	static macro function __getCommitHash() {
-		#if !display
+		#if !LIME_DISPLAY
 		var pos:Position = Context.currentPos();
 		try {
 			var proc:Process = new Process('git', ['rev-parse', '--short', 'HEAD']);
@@ -38,7 +38,7 @@ class GitCommitMacro {
 		return macro $v{"-"};
 	}
 	static macro function __getCommitNumber() {
-		#if !display
+		#if !LIME_DISPLAY
 		var pos:Position = Context.currentPos();
 		try {
 			var proc:Process = new Process('git', ['rev-list', 'HEAD', '--count']);
@@ -49,7 +49,7 @@ class GitCommitMacro {
 		return macro $v{0};
 	}
 	static macro function __getCommitBranch() {
-		#if !display
+		#if !LIME_DISPLAY
 		var pos:Position = Context.currentPos();
 		try {
 			var proc:Process = new Process('git', ['branch', '--show-current'], false);

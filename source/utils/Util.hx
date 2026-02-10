@@ -1,9 +1,9 @@
 package utils;
 
 import haxe.Http;
-import openfl.utils.Assets;
 import flixel.addons.display.FlxBackdrop;
 import flixel.input.keyboard.FlxKey;
+import backend.NativeFileSystem;
 
 class Util {
 	/**
@@ -101,11 +101,7 @@ class Util {
 	*/
 	public static function readTextFiles(path:String):Array<String> {
 		var daList:String = null;
-		#if (sys && MODS_ALLOWED)
-		if (FileSystem.exists(path)) daList = File.getContent(path);
-		#else
-		if (Assets.exists(path)) daList = Assets.getText(path);
-		#end
+		if (NativeFileSystem.exists(path)) daList = NativeFileSystem.getContent(path);
 		return daList == null ? [] : listFromString(daList);
 	}
 

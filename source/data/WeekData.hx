@@ -1,7 +1,6 @@
 package data;
 
-import lime.utils.Assets;
-import openfl.utils.Assets as OpenFlAssets;
+import backend.NativeFileSystem;
 import haxe.extern.EitherType;
 
 typedef WeekFile = {
@@ -142,12 +141,7 @@ class WeekData {
 
 	static function getWeekFile(path:String):WeekFile {
 		var rawJson:String = null;
-		#if sys
-		if (FileSystem.exists(path)) rawJson = File.getContent(path);
-		else
-		#end
-		if (OpenFlAssets.exists(path)) rawJson = Assets.getText(path);
-
+		if (NativeFileSystem.exists(path)) rawJson = NativeFileSystem.getContent(path);
 		if (rawJson != null && rawJson.length > 0) return cast tjson.TJSON.parse(rawJson);
 		return null;
 	}

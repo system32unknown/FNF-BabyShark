@@ -145,7 +145,7 @@ class Mods {
 		var path:String = Paths.mods('$folder/pack.json');
 		if (FileSystem.exists(path)) {
 			try {
-				var rawJson:String = #if sys File.getContent #else openfl.utils.Assets.getText #end(path);
+				var rawJson:String = NativeFileSystem.getContent(path);
 				if (rawJson != null && rawJson.length > 0) return tjson.TJSON.parse(rawJson);
 			} catch (e:Dynamic) Logs.error('ERROR: $e');
 		}

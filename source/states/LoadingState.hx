@@ -482,7 +482,7 @@ class LoadingState extends MusicBeatState {
 
 	inline static function preloadCharacter(char:String) {
 		try {
-			var character:Dynamic = Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(Paths.getPath('characters/$char.json')));
+			var character:Dynamic = Json.parse(backend.NativeFileSystem.getContent(Paths.getPath('characters/$char.json')));
 			var img:String = character.image;
 			img = img.trim();
 

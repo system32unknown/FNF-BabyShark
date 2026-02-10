@@ -1,50 +1,58 @@
 package backend;
 
-import flixel.graphics.frames.FlxFramesCollection;
-import flixel.animation.FlxAnimationController;
-
 class NoteLoader {
-	public static var defaultSkin:String = 'noteSkins/NOTE_assets';
+	static inline var DEFAULT_SKIN:String = 'noteSkins/NOTE_assets';
 
-	public static var noteSkinFramesMap:Map<String, FlxFramesCollection> = new Map<String, FlxFramesCollection>();
-	public static var noteSkinAnimsMap:Map<String, FlxAnimationController> = new Map<String, FlxAnimationController>();
+	public static var noteSkinFramesMap:Map<String, flixel.graphics.frames.FlxFramesCollection> = [];
+	public static var noteSkinAnimsMap:Map<String, flixel.animation.FlxAnimationController> = [];
 
-	public static function initNote(noteSkin:String = "") {
-		var spr:FlxSprite = new FlxSprite();
+	public static function initNote(noteSkin:String = null) {
+		if (noteSkin == null || noteSkin.length == 0) noteSkin = DEFAULT_SKIN;
+		if (noteSkinFramesMap.exists(noteSkin)) return;
 
-		// Do this to be able to just copy over the note animations and not reallocate it
-		if (noteSkin == null || noteSkin.length == 0) noteSkin = defaultSkin;
+		trace('Initializing noteSkin: $noteSkin');
+
+		var spr = new FlxSprite();
 		spr.frames = Paths.getSparrowAtlas(noteSkin);
-		trace('Initalizing noteSkin: $noteSkin');
+		initAnimations(spr);
 
-		// Use a for loop for adding all of the animations in the note spritesheet, otherwise it won't find the animations for the next recycle
-		for (d in 0...EK.keys(PlayState.mania)) {
-			var gfx:Int = EK.gfxIndex[PlayState.mania][d];
-			if (EK.colArray[gfx] == null) continue;
-			var playAnim:String = EK.colArray[gfx];
-			var playAnimAlt:String = EK.colArrayAlt[gfx];
-
-			addByPrefixCheck(spr, 'Aholdend', 'pruple end hold');
-			addByPrefixCheck(spr, playAnim + 'holdend', playAnim + ' tail0');
-			addByPrefixCheck(spr, playAnim + 'hold', playAnim + ' hold0');
-			addByPrefixCheck(spr, playAnim + 'holdend', playAnimAlt + ' hold end');
-			addByPrefixCheck(spr, playAnim + 'hold', playAnimAlt + ' hold piece');
-			spr.animation.addByPrefix(playAnim + 'holdend', playAnim + ' hold end');
-			spr.animation.addByPrefix(playAnim + 'hold', playAnim + ' hold piece');
-			addByPrefixCheck(spr, playAnim + 'Scroll', playAnimAlt + '0');
-			spr.animation.addByPrefix(playAnim + 'Scroll', playAnim + '0');
-		}
 		noteSkinFramesMap.set(noteSkin, spr.frames);
 		noteSkinAnimsMap.set(noteSkin, spr.animation);
 	}
 
-	static function addByPrefixCheck(spr:FlxSprite, name:String, prefix:String, framerate:Float = 24, doLoop:Bool = true) {
-		var animFrames:Array<flixel.graphics.frames.FlxFrame> = [];
-		@:privateAccess
-		spr.animation.findByPrefix(animFrames, prefix); // adds valid frames to animFrames
-		if (animFrames.length < 1) return;
+	static function initAnimations(spr:FlxSprite):Void {
+		for (d in 0...EK.keys(PlayState.mania)) {
+			var gfx:Int = EK.gfxIndex[PlayState.mania][d];
+			var anim:String = EK.colArray[gfx];
+			var animAlt:String = EK.colArrayAlt[gfx];
 
-		spr.animation.addByPrefix(name, prefix, framerate, doLoop);
+			if (anim == null) continue;
+
+			addAnimSafe(spr, 'Aholdend', 'pruple end hold');
+
+			addAnimSafe(spr, anim + 'holdend', anim + ' tail0');
+			addAnimSafe(spr, anim + 'hold', anim + ' hold0');
+
+			addAnimSafe(spr, anim + 'holdend', animAlt + ' hold end');
+			addAnimSafe(spr, anim + 'hold', animAlt + ' hold piece');
+
+			addAnimSafe(spr, anim + 'holdend', anim + ' hold end');
+			addAnimSafe(spr, anim + 'hold', anim + ' hold piece');
+
+			addAnimSafe(spr, anim + 'Scroll', animAlt + '0');
+			addAnimSafe(spr, anim + 'Scroll', anim + '0');
+		}
+	}
+
+	static function addAnimSafe(spr:FlxSprite, name:String, prefix:String, framerate:Float = 24, loop:Bool = true):Void {
+		if (spr.animation.getByName(name) != null) return;
+
+		var frames:Array<flixel.graphics.frames.FlxFrame> = [];
+		@:privateAccess
+		spr.animation.findByPrefix(frames, prefix);
+		if (frames.length == 0) return;
+
+		spr.animation.addByPrefix(name, prefix, framerate, loop);
 	}
 
 	public static function dispose():Void {

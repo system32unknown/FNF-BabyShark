@@ -60,7 +60,7 @@ final class NdllUtil {
 	 */
 	public static function getFunctionFromPath(ndll:String, name:String, args:Int):Dynamic {
 		#if NDLLS_ALLOWED
-		if (!Paths.exists(ndll)) {
+		if (!backend.NativeFileSystem.exists(ndll)) {
 			Logs.warn('Couldn\'t find ndll at $ndll.');
 			return noop;
 		}

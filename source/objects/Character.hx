@@ -1,5 +1,6 @@
 package objects;
 
+import backend.NativeFileSystem;
 import haxe.Json;
 import flixel.graphics.frames.FlxAtlasFrames;
 
@@ -103,7 +104,7 @@ class Character extends FlxAnimate {
 		curCharacter = character;
 
 		var path:String = Paths.getPath('characters/$curCharacter.json');
-		if (!Paths.exists(path)) {
+		if (!NativeFileSystem.exists(path)) {
 			path = Paths.getSharedPath('characters/$DEFAULT_CHARACTER.json'); // If a character couldn't be found, change him to BF just to prevent a crash
 			missingCharacter = true;
 			missingText = new FlxText(0, 0, 300, 'ERROR:\n$character.json', 16);
@@ -111,7 +112,7 @@ class Character extends FlxAnimate {
 		}
 
 		try {
-			loadCharacterFile(Json.parse(#if MODS_ALLOWED File.getContent #else Assets.getText #end(path)));
+			loadCharacterFile(Json.parse(NativeFileSystem.getContent(path)));
 		} catch (e:Dynamic) Logs.error('Error loading character file of "$curCharacter": $e');
 
 		skipDance = false;
