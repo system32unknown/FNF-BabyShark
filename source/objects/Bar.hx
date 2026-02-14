@@ -112,6 +112,7 @@ class Bar extends FlxSpriteGroup {
 
 		leftBar.clipRect.set(barOffset.x, barOffset.y, leftSize, barHeight);
 		rightBar.clipRect.set(barOffset.x + leftSize, barOffset.y, barWidth - leftSize, barHeight);
+
 		barCenter = leftBar.x + leftSize + barOffset.x;
 	}
 
@@ -128,6 +129,7 @@ class Bar extends FlxSpriteGroup {
 			if (leftBar.clipRect == null) leftBar.clipRect = FlxRect.get(0, 0, width, height);
 			else leftBar.clipRect.set(0, 0, width, height);
 		}
+
 		if (rightBar != null) {
 			if (rightBar.frameWidth != Std.int(bg.frameWidth) || rightBar.frameHeight != Std.int(bg.frameHeight))
 				rightBar.makeGraphic(Std.int(width), Std.int(height), FlxColor.WHITE);

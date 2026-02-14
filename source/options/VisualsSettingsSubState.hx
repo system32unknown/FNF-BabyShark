@@ -199,6 +199,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		var rand:Int = 0;
 		if (splashes.members[0] != null && splashes.members[0].maxAnims > 1)
 			rand = FlxG.random.int(0, splashes.members[0].maxAnims - 1); // For playing the same random animation on all 4 splashes
+
 		for (splash in splashes) {
 			splash.revive();
 			splash.spawnSplashNote(0, 0, splash.ID, null, false);

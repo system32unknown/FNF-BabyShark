@@ -10,30 +10,48 @@ class SpriteUtil {
 	 * @return The most present color in the sprite
 	 */
 	public static function getMostPresentColor(sprite:FlxSprite, saturated:Bool):FlxColor {
-		var colorMap:Map<FlxColor, Float> = [];
-		var color:FlxColor = 0;
-		var fixedColor:FlxColor = 0;
+		if (sprite == null || sprite.pixels == null || sprite.frameWidth <= 0 || sprite.frameHeight <= 0) {
+			return FlxColor.TRANSPARENT;
+		}
 
-		for (col in 0...sprite.frameWidth) {
-			for (row in 0...sprite.frameHeight) {
-				color = sprite.pixels.getPixel32(col, row);
-				fixedColor = 0xFF000000 + (color % 0x1000000);
-				if (colorMap[fixedColor] == null) colorMap[fixedColor] = 0;
+		var weights:Map<Int, Float> = new Map<Int, Float>();
 
-				if (saturated)
-					colorMap[fixedColor] += color.alphaFloat * .33 + (.67 * (color.saturation * (2 * (color.lightness > .5 ? .5 - color.lightness : color.lightness))));
-				else colorMap[fixedColor] += color.alphaFloat;
+		var bestKey:Int = 0;
+		var bestWeight:Float = -1;
+
+		for (x in 0...sprite.frameWidth) {
+			for (y in 0... sprite.frameHeight) {
+				var argb:Int = sprite.pixels.getPixel32(x, y);
+
+				var a:Int = (argb >>> 24) & 0xFF;
+				if (a == 0) continue; // skip fully transparent pixels
+
+				// Force alpha to 0xFF, preserve RGB
+				var key:Int = 0xFF000000 | (argb & 0x00FFFFFF);
+
+				var w:Null<Float> = weights.get(key);
+				if (w == null) w = 0;
+
+				var alphaW:Float = a / 255;
+
+				if (saturated) {
+					// Only compute HSL if needed
+					var c:FlxColor = FlxColor.fromInt(key);
+
+					var l:Float = c.lightness;
+					w += alphaW * 0.33 + 0.67 * (c.saturation * (2 * ((l > .5) ? (1 - l) : l)));
+				} else w += alphaW;
+
+				weights.set(key, w);
+
+				if (w > bestWeight) {
+					bestWeight = w;
+					bestKey = key;
+				}
 			}
 		}
-		var mostPresentColor:FlxColor = 0;
-		var mostPresentColorCount:Float = -1;
-		for (c => n in colorMap) {
-			if (n > mostPresentColorCount) {
-				mostPresentColorCount = n;
-				mostPresentColor = c;
-			}
-		}
-		return FlxColor.fromInt(mostPresentColor);
+
+		return FlxColor.fromInt(bestKey);
 	}
 
 	/**
@@ -76,8 +94,7 @@ class SpriteUtil {
 	public static function resetSprite(spr:FlxSprite, x:Float, y:Float):Void {
 		spr.reset(x, y);
 		spr.alpha = 1;
-		spr.visible = true;
-		spr.active = true;
+		spr.visible = spr.active = true;
 		spr.acceleration.set();
 		spr.velocity.set();
 		spr.drag.set();

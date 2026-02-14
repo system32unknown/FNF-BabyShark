@@ -2,190 +2,315 @@ package states;
 
 import flixel.input.keyboard.FlxKey;
 
-// TODO: REWRITE TERMINAL. NOW CHANGE TO UBUNTU TERMINAL.
+/**
+ * Ubuntu-style terminal theme container.
+ * Abstract over Int so it can still be used as a raw color.
+ */
+enum abstract TerminalTheme(Int) from Int to Int {
+	// Background
+	var COL_BG:Int = 0xFF0C0C0C;
+
+	// Default terminal text
+	var COL_TEXT:Int = 0xFFEDEDED;
+
+	// Prompt color (user@host:~$)
+	var COL_PROMPT:Int = 0xFF7CFC00;
+
+	// Errors (command not found, access denied, etc)
+	var COL_ERROR:Int = 0xFFFF5555;
+
+	// Muted / intro / system info
+	var COL_MUTED:Int = 0xFFAAAAAA;
+
+	// Optional helpers if you want later:
+	var COL_SUCCESS:Int = 0xFF55FF55;
+	var COL_WARNING:Int = 0xFFFFC107;
+}
+
 class TerminalState extends MusicBeatState {
-	// dont just yoink this code and use it in your own mod. this includes you, psych engine porters.
-	// if you ingore this message and use it anyway, atleast give credit.
+	static inline var MAX_LINES:Int = 22;
+
 	var curCmd:String = "";
-	var previousText:String = Language.getPhrase('term_introduction', 'Vs Dave Developer Console\nAll Rights Reserved.\nTerminal Being reworked in future.\n> ');
-	var displayText:FlxText;
 	var adminUnlocked:Bool = false;
+	var displayText:FlxText;
 
 	var cmdList:Array<TerminalCommand> = [];
+	var cmdMap:Map<String, TerminalCommand> = [];
+
 	var typeSound:FlxSound;
 
-	// [BAD PERSON] was too lazy to finish this lol.
-	var unformattedSymbols:Array<String> = [
-		"period", "backslash", "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "zero", "shift", "semicolon", "alt", "lbracket",
-		"rbracket", "comma", "plus"
-	];
-	var formattedSymbols:Array<String> = [
-		".", "/", "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "", ";", "", "[", "]", ",", "="
-	];
+	var lines:Array<TermLine> = [];
 
+	// Faster than parallel arrays + loops each keypress
+	static final SYMBOL_MAP:Map<String, String> = (function() {
+		var m:Map<String, String> = new Map<String, String>();
+		m.set("period", ".");
+		m.set("backslash", "/");
+		m.set("one", "1");
+		m.set("two", "2");
+		m.set("three", "3");
+		m.set("four", "4");
+		m.set("five", "5");
+		m.set("six", "6");
+		m.set("seven", "7");
+		m.set("eight", "8");
+		m.set("nine", "9");
+		m.set("zero", "0");
+		m.set("shift", "");
+		m.set("semicolon", ";");
+		m.set("alt", "");
+		m.set("lbracket", "[");
+		m.set("rbracket", "]");
+		m.set("comma", ",");
+		m.set("plus", "=");
+		return m;
+	})();
+
+	var showCursor:Bool = true;
 	override public function create():Void {
 		Main.fpsVar.visible = false;
 		PlayState.isStoryMode = false;
 
-		displayText = new FlxText(0, 0, FlxG.width, previousText, 16);
+		displayText = new FlxText(0, 0, FlxG.width, '', 16);
 		displayText.setFormat(Paths.font("CascadiaCode.ttf"), displayText.size);
 		displayText.antialiasing = false;
-		typeSound = FlxG.sound.load(Paths.sound('terminal_space'), .6);
-		FlxG.sound.playMusic(Paths.music('TheAmbience'), .7);
+		displayText.scrollFactor.set();
 
-		cmdList.push(new TerminalCommand("help", "Displays this menu.", (args:Array<String>) -> {
-			updatePreviousText(false); // resets the text
-			var helpText:String = "";
-			for (v in cmdList) if (v.showInHelp) helpText += '${v.commandName} - ${Language.getPhrase('termcommand_${v.commandName}', v.commandHelp)}\n';
-			updateText('\n$helpText');
+		typeSound = FlxG.sound.load(Paths.sound("terminal_space"), .6);
+		FlxG.sound.playMusic(Paths.music("TheAmbience"), .7);
+		registerCommands();
+
+		pushPrompt();
+		render();
+
+		add(displayText);
+		super.create();
+	}
+
+	inline function promptString():String {
+		return 'dave@console:~$ ';
+	}
+
+	function pushPrompt():Void {
+		pushLine(promptString() + curCmd + (showCursor ? "█" : ""), COL_PROMPT);
+	}
+
+	function pushLine(text:String, color:Dynamic):Void {
+		if (!Std.isOfType(color, Int)) return;
+		// split multi-line input into individual line entries
+		for (part in text.split("\n")) lines.push({text: part, color: color});
+		clampScrollback();
+	}
+
+	function replaceLastLine(text:String, color:Int):Void {
+		if (lines.length == 0) lines.push({text: text, color: color});
+		else lines[lines.length - 1] = {text: text, color: color};
+	}
+
+	function clampScrollback():Void {
+		if (lines.length <= MAX_LINES) return;
+		lines = lines.slice(lines.length - MAX_LINES, lines.length);
+	}
+
+	function render():Void {
+		var buf:StringBuf = new StringBuf();
+		for (i in 0...lines.length) {
+			buf.add(lines[i].text);
+			if (i < lines.length - 1) buf.add("\n");
+		}
+		displayText.text = buf.toString();
+		displayText.clearFormats();
+
+		var pos:Int = 0;
+		for (i in 0...lines.length) {
+			var s:String = lines[i].text;
+			displayText.addFormat(new FlxTextFormat(lines[i].color), pos, pos + s.length);
+			pos += s.length + 1; // + newline
+		}
+	}
+
+	// Updates the prompt line live while typing
+	function refreshPromptLine():Void {
+		replaceLastLine(promptString() + curCmd + (showCursor ? "█" : ""), COL_PROMPT);
+		render();
+	}
+
+	function registerCommands():Void {
+		addCmd(new TerminalCommand("help", "Displays this menu.", (args:Array<String>) -> {
+			lines.pop();
+			var helpText:StringBuf = new StringBuf();
+			for (v in cmdList) {
+				if (!v.showInHelp) continue;
+				helpText.add(v.commandName);
+				helpText.add(" - ");
+				helpText.add(Language.getPhrase('termcommand_${v.commandName}', v.commandHelp));
+				helpText.add("\n");
+			}
+			pushLine(helpText.toString().trim(), COL_TEXT);
+			curCmd = "";
+			pushPrompt();
+			render();
 		}));
 
-		cmdList.push(new TerminalCommand("admin", "Shows the admin list, use grant to grant rights.", (args:Array<String>) -> {
-			if (args.length == 0) {
-				updatePreviousText(false); // resets the text
-				updateText('\n${Language.getPhrase("term_admlist_ins", 'To add extra users, add the grant parameter and the name.\n(Example: admin grant expungo.dat)\nNOTE: ADDING CHARACTERS AS ADMINS CAN CAUSE UNEXPECTED CHANGES.')}');
-				return;
-			} else if (args.length != 2) {
-				updatePreviousText(false); // resets the text
-				updateText('\n${Language.getPhrase("term_admin_error1", 'No version of the "admin" command takes')} ${args.length} ${Language.getPhrase("term_admin_error2", 'parameter(s)')}.');
+		addCmd(new TerminalCommand("clear", "Clears the screen.", _ -> {
+			lines = [];
+			curCmd = "";
+			pushPrompt();
+			render();
+		}));
+
+		addCmd(new TerminalCommand("admin", "Shows the admin list, use grant to grant rights.", (args:Array<String>) -> {
+			lines.pop();
+
+			if (args.length == 2 && args[0] == "unlock" && args[1] == "expunged") {
+				adminUnlocked = true;
+				pushLine("Unlocked.", COL_TEXT);
+			} else if (args.length == 0) {
+				pushLine(Language.getPhrase("term_admlist_ins", "To add extra users, add the grant parameter and the name.\n(Example: admin grant expungo.dat)\nNOTE: ADDING CHARACTERS AS ADMINS CAN CAUSE UNEXPECTED CHANGES."), COL_TEXT);
 			} else {
-				switch (args[0]) {
-					case 'unlock':
-						if (args[1] == "expunged") {
-							adminUnlocked = true;
-							updateText('\nUnlocked.');
-						}
-					case 'login':
-						// TODO
-						updateText('\nNot Implemented.');
+				pushLine("Invalid Parameter", COL_ERROR);
+			}
 
-					default: updateText("\nInvalid Parameter"); // todo: translate.
-				}
-			}
+			curCmd = "";
+			pushPrompt();
+			render();
 		}));
-		cmdList.push(new TerminalCommand("clear", "Clears the screen.", (args:Array<String>) -> {
-			previousText = "> ";
-			displayText.y = 0;
-			updateText("");
-		}));
-		cmdList.push(new TerminalCommand("access", "Accesses the secret song.", (args:Array<String>) -> {
-			if (!adminUnlocked) {
-				updateText('\nAccess Denied.');
-				return;
-			}
-			updateText('\nNot Implemented.');
-		}));
-		cmdList.push(new TerminalCommand("survey", "???", (args:Array<String>) -> {
-			updateText('\nNot Implemented.');
-		}));
-		cmdList.push(new TerminalCommand("open", "Searches for a text file with the specified ID, and if it exists, display it.", (args:Array<String>) -> {
-			updatePreviousText(false); // resets the text
-			updateText('\n' + switch (args[0].toLowerCase()) {
+
+		addCmd(new TerminalCommand("open", "Searches for a text file with the specified ID, and if it exists, display it.", (args:Array<String>) -> {
+			lines.pop();
+
+			pushLine(switch ((args.length > 0 && args[0] != null) ? args[0].toLowerCase() : "") {
 				case "dave": "Forever lost and adrift.\nTrying to change his destiny.\nDespite this, it pulls him by a lead.\nIt doesn't matter to him though.\nHe has a child to feed.";
 				case "bambi": "A forgotten GOD.\nThe truth will never be known.\nThe extent of his POWERs won't ever unfold.";
-				case "god" | "artifact1": "Artifact 1:\nA stone with symbols and writing carved into it.\nDescription:Its a figure that has hundreds of EYEs all across its body.\nNotes: Why does it look so much like Bambi?";
 				case "tristan": "The key to defeating the one whose name shall not be stated.\nA heart of gold that will never become faded.";
 				case "expunged": "[FILE DELETED]\n[FUCK YOU!]";
 				case "deleted": "The unnamable never was a god and never will be. Just an accident.";
 				case "exbungo": "[EXBUNGOS FILE ARE THE ONLY ONES I HAVE ACCESS TO UNFORTUNATELY.]\n[I HATE HIM. HE'S UGLY AND FAT.]";
 				case "ollie" | "babyshark": "[I HATE HIM. BECAUSE HE KEEPS FOLLOWING ME, AND WANTS FRIENDS. BUT I LIKE HIM.]";
 				case "t5" | "t5mpler": "What the fuck are you doing in here?";
-				case "redacted": "[THE OTHER ME. BUT HE'S POWERFUL. CAN DESTROY BOYFRIEND.]";
+				case "": "Missing file id.";
 				default: "File not found.";
-			});
+			}, COL_TEXT);
+			curCmd = "";
+			pushPrompt();
+			render();
 		}));
 
-		add(displayText);
-		super.create();
+		addCmd(new TerminalCommand("access", "Accesses the secret song.", _ -> {
+			lines.pop();
+			pushLine(adminUnlocked ? "Not Implemented." : "Access Denied.", adminUnlocked ? COL_TEXT : COL_ERROR);
+			curCmd = "";
+			pushPrompt();
+			render();
+		}));
+
+		addCmd(new TerminalCommand("echo", '', (args:Array<String>) -> {
+			lines.pop();
+			pushLine(args.join(' '), COL_TEXT);
+			curCmd = "";
+			pushPrompt();
+			render();
+		}));
 	}
 
-	public function updateText(val:String) {
-		displayText.text = previousText + val;
+	inline function addCmd(cmd:TerminalCommand):Void {
+		cmdList.push(cmd);
+		cmdMap.set(cmd.commandName, cmd);
 	}
 
-	public function updatePreviousText(reset:Bool) {
-		previousText = displayText.text + (reset ? "\n> " : "");
-		displayText.text = previousText;
-		curCmd = "";
+	function runCommand(raw:String):Void {
+		var trimmed:String = raw.trim();
+		var parts:Array<String> = (trimmed.length == 0) ? [] : trimmed.split(" ");
+		var cmdName:String = (parts.length > 0) ? parts[0] : "";
 
-		var finalthing:String = "";
-		var splits:Array<String> = displayText.text.split("\n");
-		if (splits.length <= 22) return;
-		var split_end:Int = Math.round(Math.max(splits.length - 22, 0));
-		for (i in split_end...splits.length) {
-			var split:String = splits[i];
-			if (split == "") finalthing += "\n";
-			else finalthing += split + (i < (splits.length - 1) ? "\n" : "");
+		if (cmdName.length == 0) {
+			lines.pop();
+			pushPrompt();
+			render();
+			return;
 		}
 
-		previousText = finalthing;
-		displayText.text = finalthing;
-		if (displayText.height > 720) displayText.y = 720 - displayText.height;
+		var cmd:Null<TerminalCommand> = cmdMap.get(cmdName);
+		if (cmd != null) {
+			parts.shift();
+			cmd.funcToCall(parts);
+			return;
+		}
+
+		// unknown
+		lines.pop();
+		pushLine('bash: command "$cmdName" not found', COL_ERROR);
+		curCmd = "";
+		pushPrompt();
+		render();
 	}
 
 	override function update(elapsed:Float):Void {
 		super.update(elapsed);
 
-		var keyJustPressed:FlxKey = cast(FlxG.keys.firstJustPressed(), FlxKey);
-		if (keyJustPressed == FlxKey.ENTER) {
-			var calledFunc:Bool = false;
-			var args:Array<String> = curCmd.split(" ");
-			for (v in cmdList) {
-				if (v.commandName == args[0] || (v.commandName == curCmd && v.oneCommand)) { // argument 0 should be the actual command at the moment
-					args.shift();
-					calledFunc = true;
-					v.funcToCall(args);
-					break;
-				}
-			}
-			if (!calledFunc) {
-				updatePreviousText(false); // resets the text
-				updateText('\nUnknown command "${args[0]}"');
-			}
-			updatePreviousText(true);
-			return;
-		}
-
-		if (keyJustPressed != FlxKey.NONE) {
-			if (keyJustPressed == FlxKey.BACKSPACE) {
-				curCmd = curCmd.substr(0, curCmd.length - 1);
-				typeSound.play();
-			} else if (keyJustPressed == FlxKey.SPACE) {
-				curCmd += " ";
-				typeSound.play();
-			} else {
-				var toShow:String = keyJustPressed.toString().toLowerCase();
-				for (i in 0...unformattedSymbols.length) {
-					if (toShow == unformattedSymbols[i]) {
-						toShow = formattedSymbols[i];
-						break;
-					}
-				}
-
-				if (FlxG.keys.pressed.SHIFT) toShow = toShow.toUpperCase();
-				curCmd += toShow;
-				typeSound.play();
-			}
-			updateText(curCmd);
-		}
-		if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.BACKSPACE) curCmd = "";
-
 		if (FlxG.keys.justPressed.ESCAPE) {
 			Main.fpsVar.visible = true;
 			FlxG.switchState(() -> new FreeplayState());
-			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+			FlxG.sound.playMusic(Paths.music("freakyMenu"));
+			return;
 		}
+
+		if (FlxG.keys.pressed.CONTROL && FlxG.keys.justPressed.BACKSPACE) {
+			curCmd = "";
+			typeSound.play();
+			refreshPromptLine();
+			return;
+		}
+
+		var key:FlxKey = cast FlxG.keys.firstJustPressed();
+		if (key == FlxKey.NONE) return;
+
+		switch (key) {
+			case FlxKey.ENTER:
+				runCommand(curCmd);
+				return;
+
+			case FlxKey.BACKSPACE:
+				if (curCmd.length > 0) curCmd = curCmd.substr(0, curCmd.length - 1);
+				typeSound.play();
+
+			case FlxKey.SPACE:
+				curCmd += " ";
+				typeSound.play();
+
+			default:
+				var s:String = keyToChar(key);
+				if (s.length > 0) {
+					curCmd += (FlxG.keys.pressed.SHIFT ? s.toUpperCase() : s);
+					typeSound.play();
+				}
+		}
+
+		refreshPromptLine();
+	}
+
+	inline function keyToChar(key:FlxKey):String {
+		var raw:String = key.toString().toLowerCase();
+		var mapped:String = SYMBOL_MAP.get(raw);
+		return mapped != null ? mapped : raw;
 	}
 }
 
+// Small struct for colored lines
+typedef TermLine = {
+	var text:String;
+	var color:Int;
+};
+
 class TerminalCommand {
-	public var commandName:String = "undefined";
-	public var commandHelp:String = "sample text";
-	public var funcToCall:Dynamic;
+	public var commandName:String;
+	public var commandHelp:String;
+	public var funcToCall:Array<String>->Void;
+
 	public var showInHelp:Bool;
 	public var oneCommand:Bool;
 
-	public function new(name:String, help:String, func:Dynamic, showInHelp = true, oneCommand:Bool = false) {
+	public function new(name:String, help:String, func:Array<String>->Void, showInHelp:Bool = true, oneCommand:Bool = false) {
 		commandName = name;
 		commandHelp = help;
 		funcToCall = func;

@@ -8,63 +8,74 @@ enum PopupType {
 }
 
 class Popup extends FlxSprite {
-	public var type:PopupType;
+	public var type:PopupType = NONE;
 	public var popUpTime:Float = 0;
 	public static var noVelocity:Bool = false;
 
 	final placement:Float = FlxG.width * .35;
+
 	var i:PlayState;
-	var baseRate:Float = 0.0;
+	var baseRate:Float = 1.;
 	var comboOffset:Array<Array<Int>> = [];
 
 	public function new():Void {
 		super();
-		type = NONE;
+
 		i = PlayState.instance;
 		baseRate = i.playbackRate * i.playbackRate;
 		comboOffset = Settings.data.comboOffset;
 	}
 
+	/**
+	 * Loads/assigns a popup texture and caches its frames by `target`.
+	 * Always returns `this` for chaining.
+	 */
 	public function reloadTexture(target:String):Popup {
 		popUpTime = Conductor.songPosition;
-		if (Paths.popUpFramesMap.exists(target)) {
-			this.frames = Paths.popUpFramesMap.get(target);
+
+		var cached:flixel.graphics.frames.FlxFramesCollection = Paths.popUpFramesMap.get(target);
+		if (cached != null) {
+			frames = cached;
 			return this;
-		} else {
-			var texture:Popup = cast loadGraphic(Paths.image(target));
-			Paths.popUpFramesMap.set(target, this.frames);
-			return texture;
 		}
+
+		loadGraphic(Paths.image(target));
+		Paths.popUpFramesMap.set(target, frames);
+		return this;
 	}
 
-	public function setupPopupData(popUptype:PopupType = NONE, img:String, ?index:Int, ?comboDigit:Int):Void {
+	public function setupPopupData(popUptype:PopupType = NONE, img:String, ?index:Int = 0, ?comboDigit:Int = 0):Void {
 		type = popUptype;
 		reloadTexture(img);
+
+		var isPixel:Bool = PlayState.isPixelStage;
+		var zoom:Float = PlayState.daPixelZoom;
 
 		switch (popUptype) {
 			case NUMBER:
 				x = placement + (43 * index) - 50 + comboOffset[1][0] + (0 - (comboDigit + Std.int((comboDigit - 1) / 3) / 2 - 3)) * 22;
 				gameCenter(Y).y += 20 - comboOffset[1][1];
-				setGraphicSize(Std.int(width * (PlayState.isPixelStage ? PlayState.daPixelZoom : .5)));
+				setGraphicSize(Std.int(width * (isPixel ? zoom : .5)));
 			case RATING:
 				x = placement - 40 + comboOffset[0][0];
 				gameCenter(Y).y -= 60 + comboOffset[0][1];
-				setGraphicSize(Std.int(width * (PlayState.isPixelStage ? .85 * PlayState.daPixelZoom : .7)));
+				setGraphicSize(Std.int(width * (isPixel ? (.85 * zoom) : .7)));
 			case CUSTOM(popX, popY, size):
 				x = popX;
 				y = popY;
 				setGraphicSize(Std.int(width * size));
-			case _:
+			case NONE:
 		}
 
 		updateHitbox();
 
 		if (!noVelocity) {
+			var rate:Float = i.playbackRate;
 			if (popUptype == RATING) {
-				velocity.set(-FlxG.random.int(0, 10) * i.playbackRate + i.popupVel.x, -FlxG.random.int(140, 175) * i.playbackRate + i.popupVel.y);
+				velocity.set(-FlxG.random.int(0, 10) * rate + i.popupVel.x, -FlxG.random.int(140, 175) * rate + i.popupVel.y);
 				acceleration.set(i.popupAcc.x * baseRate, 550 * baseRate + i.popupAcc.y);
 			} else {
-				velocity.set(FlxG.random.float(-5, 5) * i.playbackRate + i.popupVel.x, -FlxG.random.int(130, 150) * i.playbackRate + i.popupVel.y);
+				velocity.set(FlxG.random.float(-5, 5) * rate + i.popupVel.x, -FlxG.random.int(130, 150) * rate + i.popupVel.y);
 				acceleration.set(i.popupAcc.x * baseRate, FlxG.random.int(250, 300) * baseRate + i.popupAcc.y);
 			}
 		}

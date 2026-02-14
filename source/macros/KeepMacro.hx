@@ -5,10 +5,13 @@ import haxe.macro.Compiler;
 import haxe.macro.Context;
 
 /**
- * Macros containing additional help functions to expand HScript capabilities.
+ * Macro utilities for HScript-heavy projects.
+ *
+ * Ensures commonly-used packages are included for DCE/reflection, while explicitly excluding
+ * platforms/tools/editor-only packages that cause issues or bloat.
  */
 class KeepMacro {
-	public static function add() {
+	public static function keep():Void {
 		var exc:Array<String> = [
 			"flixel.addons.editors.spine",
 			"flixel.addons.nape",
@@ -31,9 +34,9 @@ class KeepMacro {
 			"haxe.remoting.Proxy",
 		];
 
-		if (Context.defined("sys"))
-			for (inc in ["sys", "openfl.net"])
-				if (!Context.defined("hl")) Compiler.include(inc, compathx4);
+		if (Context.defined("sys") && !Context.defined("hl")) {
+			for (inc in ["sys", "openfl.net"]) Compiler.include(inc, compathx4);
+		}
 
 		for (inc in [
 			// FLIXEL

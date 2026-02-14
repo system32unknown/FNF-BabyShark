@@ -31,8 +31,7 @@ class AwardPopup extends openfl.display.Sprite {
 
 		#if MODS_ALLOWED
 		var lastMod:String = Mods.currentModDirectory;
-		if (award != null)
-			Mods.currentModDirectory = award.mod ?? '';
+		if (award != null) Mods.currentModDirectory = award.mod ?? '';
 		#end
 
 		if (Paths.fileExists('images/$path-pixel.png', IMAGE)) {
@@ -96,9 +95,7 @@ class AwardPopup extends openfl.display.Sprite {
 	public function destroy():Void {
 		Awards._popups.remove(this);
 
-		if (FlxG.game.contains(this)) {
-			FlxG.game.removeChild(this);
-		}
+		if (FlxG.game.contains(this)) FlxG.game.removeChild(this);
 		FlxG.stage.removeEventListener(Event.RESIZE, onResize);
 		removeEventListener(Event.ENTER_FRAME, update);
 	}

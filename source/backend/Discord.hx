@@ -103,7 +103,7 @@ class DiscordClient {
 	public static function updatePresence():Void
 		Discord.UpdatePresence(RawConstPointer.addressOf(presence.__presence));
 
-	public static function resetClientID()
+	public static function resetClientID():Void
 		clientID = _defaultID;
 
 	static function set_clientID(newID:String):String {
@@ -119,7 +119,7 @@ class DiscordClient {
 	}
 
 	#if MODS_ALLOWED
-	public static function loadModRPC() {
+	public static function loadModRPC():Void {
 		var pack:Dynamic = Mods.getPack();
 		if (pack != null && pack.discordRPC != null && pack.discordRPC != clientID)
 			clientID = pack.discordRPC;

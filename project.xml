@@ -82,7 +82,7 @@
 	<haxedef name="NO_PRECOMPILED_HEADERS" if="linux"/>
 
 	<section if="HSCRIPT_ALLOWED">
-		<haxeflag name="--macro" value="macros.KeepMacro.add()"/>
+		<haxeflag name="--macro" value="macros.KeepMacro.keep()"/>
 		<haxedef name="hscriptPos"/>
 	</section>
 

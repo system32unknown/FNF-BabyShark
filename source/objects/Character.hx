@@ -196,8 +196,7 @@ class Character extends FlxAnimate {
 				var animLoop:Bool = !!anim.loop; // Bruh
 				var animIndices:Array<Int> = anim.indices;
 
-				switch (spriteType)
-				{
+				switch (spriteType) {
 					case TEXTURE_ATLAS:
 						if (anim.isFrameLabel) {
 							if (animIndices != null && animIndices.length > 0)
@@ -331,10 +330,8 @@ class Character extends FlxAnimate {
 		}
 
 		if (danceIdle) {
-			if (animName == 'singUP' || animName == 'singDOWN')
-				danced = !danced;
-			else if (animName.startsWith('sing'))
-				danced = animName == 'singLEFT';
+			if (animName == 'singUP' || animName == 'singDOWN') danced = !danced;
+			else if (animName.startsWith('sing')) danced = animName == 'singLEFT';
 		}
 	}
 

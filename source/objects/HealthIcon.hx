@@ -12,30 +12,35 @@ typedef BopInfo = {
 class HealthIcon extends FlxSprite {
 	static final prefix:String = 'icons/';
 	static final defaultIcon:String = 'icon-face';
+	static final ICON_TARGET:Int = 150;
 
 	public var iconZoom:Float = 1;
 	public var sprTracker:FlxSprite;
 	public var isPixelIcon(get, null):Bool;
-	public var animated:Bool;
+	public var animated(default, null):Bool;
+
+	public var iconType:String = "vanilla";
+	public var iSize(default, null):Int = 1;
+	public var autoOffset:Bool = false;
 
 	var isPlayer:Bool = false;
 	var char:String = '';
-	
-	public var iconType:String = 'vanilla';
-	public var iSize:Int = 1;
-
 	var state:Int = 0;
+
 	var _scale:FlxPoint;
-	final animatediconstates:Array<String> = ['normal', 'lose', 'win'];
-	var iconOffsets:Array<Float> = [0.0, 0.0];
+	final animatedIconStates:Array<String> = ['normal', 'lose', 'win'];
+
+	// Keep as 2 floats; avoid recreating arrays in hot paths
+	var iconOffsetX:Float = 0.0;
+	var iconOffsetY:Float = 0.0;
 
 	public static function returnGraphic(char:String, defaultIfMissing:Bool = false, ?allowGPU:Bool = true):FlxGraphic {
 		var path:String = prefix + char;
-		if (!Paths.fileExists('images/$path.png', IMAGE)) path = prefix + 'icon-$char'; //Older versions of psych engine's support
+		if (!Paths.fileExists('images/$path.png', IMAGE)) path = prefix + 'icon-$char'; // Older versions of psych engine's support
 		if (!Paths.fileExists('images/$path.png', IMAGE)) { // Prevents crash from missing icon
 			if (!defaultIfMissing) return null;
 			path = prefix + defaultIcon;
-			if (!Paths.fileExists('images/$path.png', IMAGE)) path = prefix + defaultIcon;
+			if (!Paths.fileExists('images/$path.png', IMAGE)) return null; // still missing
 		}
 		return Paths.image(path, allowGPU);
 	}
@@ -54,10 +59,10 @@ class HealthIcon extends FlxSprite {
 
 	override function destroy():Void {
 		super.destroy();
-		_scale.put();
+		if (_scale != null) _scale.put();
 	}
 
-	override function draw() {
+	override function draw():Void {
 		if (iconZoom == 1) return super.draw();
 		_scale.copyFrom(scale);
 		scale.scale(iconZoom);
@@ -65,85 +70,103 @@ class HealthIcon extends FlxSprite {
 		_scale.copyTo(scale);
 	}
 
+	public function getCharacter():String return char;
+
+	@:noCompletion inline function get_isPixelIcon():Bool
+		return char.endsWith("-pixel");
+
 	public function changeIcon(char:String, defaultIfMissing:Bool = true, ?allowGPU:Bool = true):Bool {
 		if (this.char == char) return false;
-		var graph:FlxGraphic = null;
-		var name:String = 'icons/$char';
 
+		var name:String = 'icons/$char';
 		animated = Paths.fileExists('images/$name.xml');
 
-		if (graph == null) graph = returnGraphic(char, defaultIfMissing, allowGPU);
-		else {
-			iSize = 1;
-			this.char = char;
-			state = 0;
-
-			iconOffsets = [.0, .0];
-			loadGraphic(graph, true, graph.width, graph.height);
-			iconZoom = isPixelIcon ? 150 / graph.height : 1;
-
-			updateHitbox();
-			antialiasing = iconZoom < 2.5 && Settings.data.antialiasing;
-			return true;
-		}
+		var graph:FlxGraphic = returnGraphic(char, defaultIfMissing, allowGPU);
 		if (graph == null) return false;
 
-		iSize = Math.round(graph.width / graph.height);
 		this.char = char;
 		state = 0;
 
+		// Determine size (static icons are usually N frames stacked horizontally)
+		iSize = Math.round(graph.width / graph.height);
+
 		if (!animated) {
 			loadGraphic(graph, true, Math.floor(graph.width / iSize), Math.floor(graph.height));
-			iconZoom = isPixelIcon ? 150 / graph.height : 1;
 
+			// build a 0..N-1 frame list once
 			animation.add(char, [for (i in 0...frames.frames.length) i], 0, false, isPlayer);
-			iconOffsets = [(width - 150) / iSize, (height - 150) / iSize];
+
+			// Keep your old offset math; just store in floats
+			iconOffsetX = (width - ICON_TARGET) / iSize;
+			iconOffsetY = (height - ICON_TARGET) / iSize;
+
 			animation.play(char);
 		} else {
 			frames = Paths.getSparrowAtlas(name);
-			for (animstate in animatediconstates) if (getIconAnims(name).contains(animstate))
-				animation.addByPrefix(animstate, animstate, 24, true, isPlayer, false);
-			animation.play(animatediconstates[0]);
+
+			for (stateName in animatedIconStates) {
+				if (getIconAnims(name).contains(stateName)) {
+					animation.addByPrefix(stateName, stateName, 24, true, isPlayer, false);
+				}
+			}
+
+			// play first valid state (fallback to "normal" if present, else any)
+			if (animation.exists(animatedIconStates[0])) animation.play(animatedIconStates[0], true);
+			else if (animation.getNameList().length > 0) animation.play(animation.getNameList()[0], true);
 		}
 
+		// Zoom depends on pixel suffix (keeps your original intent)
+		iconZoom = isPixelIcon ? (ICON_TARGET / graph.height) : 1;
+
 		updateHitbox();
-		antialiasing = iconZoom < 2.5 && Settings.data.antialiasing;
+		antialiasing = (iconZoom < 2.5) && Settings.data.antialiasing;
 		return true;
 	}
 
-	public var autoOffset:Bool = false;
-	override function updateHitbox() {
-		if (iconType.toLowerCase() == 'center') centerOrigin();
-		else if (iconType.toLowerCase() == 'psych') {
+	override function updateHitbox():Void {
+		var t:String = iconType.toLowerCase();
+
+		if (t == 'center') {
+			centerOrigin();
+		} else if (t == 'psych') {
 			super.updateHitbox();
 			width *= iconZoom;
 			height *= iconZoom;
 			offset.set(-.5 * (frameWidth * iconZoom - frameWidth), -.5 * (frameHeight * iconZoom - frameHeight));
 		} else super.updateHitbox();
-		if (autoOffset) offset.set(iconOffsets[0], iconOffsets[1]);
+
+		if (autoOffset) offset.set(iconOffsetX, iconOffsetY);
 	}
 
-	public function getCharacter():String return char;
+	public function setStateIndex(newState:Int):Void {
+		if (iSize <= 0) iSize = 1;
+		if (newState >= iSize) newState = 0;
 
-	@:noCompletion inline function get_isPixelIcon():Bool
-		return char.endsWith('-pixel');
+		if (state == newState || animation.curAnim == null) return;
 
-	public function setStateIndex(state:Int):Void {
-		if (state >= iSize) state = 0;
-		if (this.state == state || animation.curAnim == null) return;
-		animation.curAnim.curFrame = this.state = state;
+		state = newState;
+		animation.curAnim.curFrame = newState;
 	}
 
-	public function setState(state:Int):Void {
-		if (!animated) setStateIndex(state);
-		else if (animation.exists(animatediconstates[state])) animation.play(animatediconstates[state]);
+	public function setState(newState:Int):Void {
+		if (!animated) {
+			setStateIndex(newState);
+			return;
+		}
+
+		if (newState < 0 || newState >= animatedIconStates.length) return;
+
+		var name:String = animatedIconStates[newState];
+		if (animation.exists(name)) animation.play(name, true);
 	}
 
-	override function update(elapsed:Float) {
+	override function update(elapsed:Float):Void {
 		super.update(elapsed);
 
+		// keep existing behavior
 		if (Std.isOfType(FlxG.state, PlayState) && (Settings.data.iconBopType == 'Dave' || Settings.data.iconBopType == 'GoldenApple'))
-			offset.set(Std.int(FlxMath.bound(width - 150, 0)), Std.int(FlxMath.bound(height - 150, 0)));
+			offset.set(Std.int(FlxMath.bound(width - ICON_TARGET, 0)), Std.int(FlxMath.bound(height - ICON_TARGET, 0)));
+
 		if (sprTracker != null) setPosition(sprTracker.x + sprTracker.width + 12, sprTracker.y - 30);
 	}
 
@@ -152,7 +175,7 @@ class HealthIcon extends FlxSprite {
 
 	public dynamic function bopUpdate(e:Float, rate:Float):Void {
 		switch (curBopType.toLowerCase()) {
-			case "old": setGraphicSize(Std.int(FlxMath.lerp(150, width, .5)));
+			case "old": setGraphicSize(Std.int(FlxMath.lerp(ICON_TARGET, width, 0.5)));
 			case "psych":
 				var mult:Float = FlxMath.lerp(1, scale.x, Math.exp(-e * 9 * rate));
 				scale.set(mult, mult);
@@ -172,31 +195,39 @@ class HealthIcon extends FlxSprite {
 	 * Values are necessary for proper calculations!!
 	 */
 	public dynamic function bop(bopInfo:BopInfo, iconAnim:String = "Settings", type:Int = 0):Void {
-		if (iconAnim.toLowerCase() == "settings" || iconAnim.toLowerCase() == "clientPrefs" || iconAnim.toLowerCase() == "client") iconAnim = Settings.data.iconBopType;
+		var requested:String = iconAnim.toLowerCase();
+		if (requested == "settings" || requested == "clientprefs" || requested == "client") iconAnim = Settings.data.iconBopType;
 		if (iconAnim == "None") return;
+
 		if (curBopType != iconAnim) curBopType = iconAnim;
 
 		final info:BopInfo = checkInfo(bopInfo);
-		if (info.curBeat % info.gfSpeed == 0) {
-			switch (iconAnim.toLowerCase()) { // Messy Math hell jumpscare (it is more customizeable though)
-				case "old": setGraphicSize(Std.int(width + 30));
-				case "psych": scale.set(1.2, 1.2);
-				case "dave":
-					var funny:Float = Math.max(Math.min(info.percent, 1.9), .1);
-					if (type == 0) setGraphicSize(Std.int(width + (50 * (funny + .1))), Std.int(height - (25 * funny)));
-					else if (type == 1) setGraphicSize(Std.int(width + (50 * ((2 - funny) + .1))), Std.int(height - (25 * ((2 - funny) + .1))));
-					iconSizeResetTime = .8;
-				case "goldenapple":
-					var iconAngle:Float = (info.curBeat % (info.gfSpeed * 2) == 0 * info.playbackRate ? -15 : 15);
-					if (type == 0) {
-						scale.set(1.1, (info.curBeat % (info.gfSpeed * 2) == 0 * info.playbackRate ? .8 : 1.3));
-						FlxTween.angle(this, iconAngle, 0, Conductor.crochet / 1300 / info.playbackRate * info.gfSpeed, {ease: FlxEase.quadOut});
-					} else if (type == 1) {
-						scale.set(1.1, (info.curBeat % (info.gfSpeed * 2) == 0 * info.playbackRate ? 1.3 : .8));
-						FlxTween.angle(this, -iconAngle, 0, Conductor.crochet / 1300 / info.playbackRate * info.gfSpeed, {ease: FlxEase.quadOut});
-					}
-					FlxTween.tween(this, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 / info.playbackRate * info.gfSpeed, {ease: FlxEase.quadOut});
-			}
+		if (info.curBeat % info.gfSpeed != 0) return;
+
+		switch (iconAnim.toLowerCase()) {
+			case "old": setGraphicSize(Std.int(width + 30));
+			case "psych": scale.set(1.2, 1.2);
+			case "dave":
+				var funny:Float = FlxMath.bound(info.percent, .1, 1.9);
+				if (type == 0) setGraphicSize(Std.int(width + (50 * (funny + .1))), Std.int(height - (25 * funny)));
+				else {
+					var inv:Float = (2 - funny) + .1;
+					setGraphicSize(Std.int(width + (50 * inv)), Std.int(height - (25 * inv)));
+				}
+				iconSizeResetTime = .8;
+			case "goldenapple":
+				var everyOther:Bool = (info.curBeat % (info.gfSpeed * 2)) == 0;
+				var iconAngle:Float = everyOther ? -15 : 15;
+
+				if (type == 0) {
+					scale.set(1.1, everyOther ? .8 : 1.3);
+					FlxTween.angle(this, iconAngle, 0, Conductor.crochet / 1300 / info.playbackRate * info.gfSpeed, {ease: FlxEase.quadOut});
+				} else {
+					scale.set(1.1, everyOther ? 1.3 : .8);
+					FlxTween.angle(this, -iconAngle, 0, Conductor.crochet / 1300 / info.playbackRate * info.gfSpeed, {ease: FlxEase.quadOut});
+				}
+
+				FlxTween.tween(this, {'scale.x': 1, 'scale.y': 1}, Conductor.crochet / 1250 / info.playbackRate * info.gfSpeed, {ease: FlxEase.quadOut});
 		}
 		updateHitbox();
 	}
@@ -205,7 +236,7 @@ class HealthIcon extends FlxSprite {
 		curBopType = newType;
 		angle = 0;
 		scale.set(1, 1);
-		setGraphicSize(150, 150);
+		setGraphicSize(ICON_TARGET, ICON_TARGET);
 		updateHitbox();
 		return curBopType;
 	}
