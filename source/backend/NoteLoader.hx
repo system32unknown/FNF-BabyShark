@@ -12,7 +12,7 @@ class NoteLoader {
 
 		trace('Initializing noteSkin: $noteSkin');
 
-		var spr = new FlxSprite();
+		var spr:FlxSprite = new FlxSprite();
 		spr.frames = Paths.getSparrowAtlas(noteSkin);
 		initAnimations(spr);
 

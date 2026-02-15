@@ -681,7 +681,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 	function getSelected(blockReserved:Bool = true):StageEditorMetaSprite {
 		var selected:Int = spriteListRadioGroup.checked;
 		if (selected >= 0) {
-			var spr = stageSprites[spriteListRadioGroup.labels.length - selected - 1];
+			var spr:StageEditorMetaSprite = stageSprites[spriteListRadioGroup.labels.length - selected - 1];
 			if (spr != null && (!blockReserved || !StageData.reservedNames.contains(spr.type))) return spr;
 		}
 		return null;
@@ -1261,7 +1261,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 			var selected:Int = spriteListRadioGroup.checked;
 			if (selected < 0) return;
 
-			var spr = stageSprites[spriteListRadioGroup.labels.length - selected - 1];
+			var spr:StageEditorMetaSprite = stageSprites[spriteListRadioGroup.labels.length - selected - 1];
 			if (spr != null) {
 				var displayX:Float, displayY:Float;
 				spr.x = displayX = Math.round(spr.x + moveX);

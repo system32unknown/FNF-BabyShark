@@ -69,7 +69,9 @@ class CharacterSelectionState extends MusicBeatState {
 
 	override function create() {
 		#if DISCORD_ALLOWED DiscordClient.changePresence('Selecting Character'); #end
+
 		unlockedChrs = Settings.data.unlockedCharacters;
+		if (unlockedChrs == null) unlockedChrs = []; // avoid null crashes
 
 		persistentUpdate = true;
 
@@ -204,12 +206,12 @@ class CharacterSelectionState extends MusicBeatState {
 			if (leftJustPressed || Controls.justPressed('ui_right')) {
 				curForm = 0;
 				current = FlxMath.wrap(current += (leftJustPressed ? -1 : 1), 0, characters.length - 1);
-				UpdateBF();
+				updateBF();
 			}
 
 			if (downJustPressed || Controls.justPressed('ui_up')) {
 				curForm = FlxMath.wrap(curForm += (downJustPressed ? -1 : 1), 0, characters[current].forms.length - 1);
-				UpdateBF();
+				updateBF();
 			}
 
 			if (Controls.justPressed('reset')) {
@@ -240,7 +242,7 @@ class CharacterSelectionState extends MusicBeatState {
 		Settings.save();
 	}
 
-	function UpdateBF() {
+	function updateBF() {
 		FlxG.sound.play(Paths.sound('scrollMenu'), .4);
 
 		currentSelectedCharacter = characters[current];

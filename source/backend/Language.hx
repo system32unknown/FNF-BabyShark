@@ -47,12 +47,7 @@ class Language {
 	}
 
 	inline public static function getPhrase(key:String, ?defaultPhrase:String, values:Array<Dynamic> = null):String {
-		#if TRANSLATIONS_ALLOWED
-		var str:String = phrases.get(formatKey(key)) ?? defaultPhrase;
-		#else
-		var str:String = defaultPhrase;
-		#end
-
+		var str:String = #if TRANSLATIONS_ALLOWED phrases.get(formatKey(key)) ?? #end defaultPhrase;
 		if (str == null) str = key;
 		if (values != null) for (num => value in values) str = str.replace('{${num + 1}}', value);
 		return str;

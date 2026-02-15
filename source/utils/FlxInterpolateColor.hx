@@ -2,7 +2,7 @@ package utils;
 
 /**
  * Additional class for FlxColor lerping.
- * Gets rid of precision issues with `FlxColor.interpolate`
+ * Gets rid of precision issues with `FlxColor.interpolate`.
  */
 class FlxInterpolateColor {
 	public var red:Float = 0;

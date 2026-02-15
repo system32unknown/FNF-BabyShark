@@ -161,7 +161,7 @@ class Settings {
 		#if DISCORD_ALLOWED DiscordClient.check(); #end
 	}
 
-	public static inline function reset() {
+	public static inline function reset():Void {
 		data = default_data;
 	}
 

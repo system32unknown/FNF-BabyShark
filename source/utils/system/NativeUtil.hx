@@ -35,9 +35,16 @@ class NativeUtil {
 		return System.platformLabel.toLowerCase().indexOf(ver.toLowerCase()) != -1;
 
 	/**
-	 * Shows a message box
+	 * Displays a native message box dialog.
+	 *
+	 * On Windows, this uses the system message box implementation via `PlatformUtil`.
+	 * On other platforms, it falls back to the Lime window alert dialog.
+	 *
+	 * @param caption The title of the message box window.
+	 * @param message The body text displayed inside the message box.
+	 * @param icon Optional icon type to display (Windows only).
 	 */
-	public static function showMessageBox(caption:String, message:String, icon:utils.system.PlatformUtil.MessageBoxIcon = MSG_WARNING) {
+	public static function showMessageBox(caption:String, message:String, icon:utils.system.PlatformUtil.MessageBoxIcon = MSG_WARNING):Void {
 		#if windows
 		PlatformUtil.showMessageBox(caption, message, icon);
 		#else
@@ -46,9 +53,20 @@ class NativeUtil {
 	}
 
 	/**
-	 * Sets the console colors
+	 * Sets the console foreground and background colors using ANSI escape codes.
+	 *
+	 * - On Windows (non-hl targets), colors are applied using `PlatformUtil`.
+	 * - On other `sys` targets, ANSI escape sequences are written directly to stdout.
+	 * - If `Main.noTerminalColor` is enabled, no color changes will be applied.
+	 *
+	 * Passing `NONE` will:
+	 * - Reset to default behavior on non-Windows platforms.
+	 * - Use LIGHTGRAY (foreground) and BLACK (background) as defaults on Windows.
+	 *
+	 * @param foregroundColor The desired text (foreground) color.
+	 * @param backgroundColor Optional background color.
 	 */
-	public static function setAnsiColors(foregroundColor:AnsiColor = NONE, ?backgroundColor:AnsiColor = NONE) {
+	public static function setAnsiColors(foregroundColor:AnsiColor = NONE, ?backgroundColor:AnsiColor = NONE):Void {
 		if (Main.noTerminalColor) return;
 
 		#if (windows && !hl)

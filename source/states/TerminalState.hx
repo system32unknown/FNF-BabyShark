@@ -198,7 +198,10 @@ class TerminalState extends MusicBeatState {
 
 		addCmd(new TerminalCommand("access", "Accesses the secret song.", _ -> {
 			lines.pop();
-			pushLine(adminUnlocked ? "Not Implemented." : "Access Denied.", adminUnlocked ? COL_TEXT : COL_ERROR);
+			if (adminUnlocked) {
+				pushLine("Not Implemented.", COL_TEXT);
+			} else pushLine("Access Denied.", COL_ERROR);
+			
 			curCmd = "";
 			pushPrompt();
 			render();
@@ -231,7 +234,7 @@ class TerminalState extends MusicBeatState {
 		}
 
 		var cmd:Null<TerminalCommand> = cmdMap.get(cmdName);
-		if (cmd != null) {
+		if (cmd != null && !cmd.oneCommand) {
 			parts.shift();
 			cmd.funcToCall(parts);
 			return;
@@ -279,7 +282,8 @@ class TerminalState extends MusicBeatState {
 				typeSound.play();
 
 			default:
-				var s:String = keyToChar(key);
+				var raw:String = key.toString().toLowerCase();
+				var s:String = SYMBOL_MAP.get(raw) ?? raw;
 				if (s.length > 0) {
 					curCmd += (FlxG.keys.pressed.SHIFT ? s.toUpperCase() : s);
 					typeSound.play();
@@ -287,12 +291,6 @@ class TerminalState extends MusicBeatState {
 		}
 
 		refreshPromptLine();
-	}
-
-	inline function keyToChar(key:FlxKey):String {
-		var raw:String = key.toString().toLowerCase();
-		var mapped:String = SYMBOL_MAP.get(raw);
-		return mapped != null ? mapped : raw;
 	}
 }
 

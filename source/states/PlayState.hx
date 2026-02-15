@@ -24,8 +24,8 @@ import cutscenes.DialogueBoxPsych;
 #if HSCRIPT_ALLOWED import alterhscript.AlterHscript; #end
 
 class PlayState extends MusicBeatState {
-	public static var STRUM_X = 48.5;
-	public static var STRUM_X_MIDDLESCROLL = -271.5;
+	public static var STRUM_X:Float = 48.5;
+	public static var STRUM_X_MIDDLESCROLL:Float = -271.5;
 
 	public static var ratingStuff:Array<Array<haxe.extern.EitherType<String, Float>>> = [
 		['Skill issue', .2], // From 0% to 19%

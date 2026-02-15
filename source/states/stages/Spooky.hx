@@ -70,21 +70,17 @@ class Spooky extends BaseStage {
 		boyfriend.playAnim('scared', true);
 
 		// white flash
-		var whiteScreen:FlxSprite = new FlxSprite().makeGraphic(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2));
+		var whiteScreen:FlxSprite = new FlxSprite().makeSolid(Std.int(FlxG.width * 2), Std.int(FlxG.height * 2));
 		whiteScreen.scrollFactor.set();
 		whiteScreen.blend = ADD;
 		whiteScreen.zIndex = 1000;
 		add(whiteScreen);
-		FlxTween.tween(whiteScreen, {alpha: 0}, 1, {
-			startDelay: 0.1,
-			ease: FlxEase.linear,
-			onComplete: (twn:FlxTween) -> {
-				remove(whiteScreen);
-				whiteScreen.destroy();
+		FlxTween.tween(whiteScreen, {alpha: 0}, 1, {startDelay: .1, ease: FlxEase.linear, onComplete: (twn:FlxTween) -> {
+			remove(whiteScreen);
+			whiteScreen.destroy();
 
-				camHUD.visible = true;
-				startCountdown();
-			}
-		});
+			camHUD.visible = true;
+			startCountdown();
+		}});
 	}
 }

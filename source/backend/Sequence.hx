@@ -1,4 +1,4 @@
-package utils;
+package backend;
 
 /**
  * A data structure representing a sequence event.

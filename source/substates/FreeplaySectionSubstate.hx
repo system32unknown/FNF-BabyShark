@@ -19,34 +19,26 @@ class FreeplaySectionSubstate extends FlxSubState {
 	var bg:FlxSprite;
 	var transitioning:Bool = false;
 
-	override public function new() {
-		super();
+	// Track last section to avoid doing expensive text/center work every frame
+	var lastShownSection:String = null;
+
+	override public function create() {
+		super.create();
+
 		WeekData.reloadWeekFiles();
+		buildSections();
 
-		for (i in 0...WeekData.weeksList.length) {
-			if (weekIsLocked(WeekData.weeksList[i])) continue;
-
-			var leWeek:WeekData = WeekData.weeksLoaded.get(WeekData.weeksList[i]);
-			if (leWeek.hideFreeplay || leWeek.section == null) continue;
-			WeekData.setDirectoryFromWeek(leWeek);
-			if (leWeek.section != null) {
-				var curSection:String = leWeek.section;
-				if (curSection.toLowerCase() != sectionArray[0].toLowerCase()) {
-					sectionArray.push(curSection);
-					sectionImageMap.set(curSection.toLowerCase(), Paths.image('freeplaysections/${curSection.toLowerCase()}'));
-				}
-			}
-		}
-		sectionArray = Util.removeDupString(sectionArray);
 		Mods.loadTopMod();
 
+		// Pick initial counter based on saved daSection (fallback to 0)
+		counter = 0;
 		for (i in 0...sectionArray.length) {
 			if (sectionArray[i] == daSection) {
 				counter = i;
 				break;
 			}
 		}
-		daSection = sectionArray[counter];
+		daSection = sectionArray.length > 0 ? sectionArray[counter] : daSection;
 
 		bg = new FlxSprite(Paths.image('menuDesat'));
 		bg.scrollFactor.set();
@@ -61,17 +53,18 @@ class FreeplaySectionSubstate extends FlxSubState {
 		grid.alpha = 0;
 		add(grid);
 
-		sectionSpr = new FlxSprite(sectionImageMap.get(daSection.toLowerCase()));
+		sectionSpr = new FlxSprite();
 		sectionSpr.antialiasing = Settings.data.antialiasing;
 		sectionSpr.scrollFactor.set();
-		sectionSpr.gameCenter();
 		sectionSpr.alpha = 0;
 		add(sectionSpr);
 
-		sectionTxt = new Alphabet(0, 0, daSection.toUpperCase());
-		sectionTxt.gameCenter(X).y = sectionSpr.y;
+		sectionTxt = new Alphabet(0, 0, "");
 		sectionTxt.alpha = 0;
 		add(sectionTxt);
+
+		// Apply initial visuals
+		applySectionVisuals();
 
 		transitioning = true;
 		FlxTween.tween(bg, {alpha: 1}, 1, {ease: FlxEase.expoOut});
@@ -80,15 +73,51 @@ class FreeplaySectionSubstate extends FlxSubState {
 		FlxTween.tween(sectionTxt, {alpha: 1}, 1, {ease: FlxEase.expoOut, onComplete: (_:FlxTween) -> transitioning = false});
 	}
 
+	function buildSections() {
+		sectionArray = [];
+		sectionImageMap = new Map();
+
+		// Track seen sections case-insensitively
+		var seen:Map<String, Bool> = new Map();
+
+		for (weekName in WeekData.weeksList) {
+			if (weekIsLocked(weekName)) continue;
+
+			var leWeek:WeekData = WeekData.weeksLoaded.get(weekName);
+			if (leWeek == null || leWeek.hideFreeplay) continue;
+
+			var sec:String = leWeek.section;
+			if (sec == null) continue;
+
+			var key:String = sec.toLowerCase();
+			if (seen.exists(key)) continue;
+
+			seen.set(key, true);
+			sectionArray.push(sec);
+
+			WeekData.setDirectoryFromWeek(leWeek);
+			sectionImageMap.set(key, Paths.image('freeplaysections/$key'));
+		}
+
+		// If nothing found, keep at least the default so UI doesn't explode
+		if (sectionArray.length == 0) {
+			sectionArray.push(daSection);
+			sectionImageMap.set(daSection.toLowerCase(), Paths.image('freeplaysections/${daSection.toLowerCase()}'));
+		}
+	}
+
 	override function update(elapsed:Float) {
 		if (FlxG.sound.music != null) Conductor.songPosition = FlxG.sound.music.time;
 
-		final leftjustPressed:Bool = Controls.justPressed('ui_left');
-		if (leftjustPressed || Controls.justPressed('ui_right')) changeSection(leftjustPressed ? -1 : 1);
+		if (sectionArray.length > 1) {
+			var left:Bool = Controls.justPressed('ui_left');
+			if (left || Controls.justPressed('ui_right')) changeSection(left ? -1 : 1);
+		}
 
 		if (Controls.justPressed('back') && !transitioning) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
 			transitioning = true;
+
 			closeFreeplaysection((_:FlxTween) -> {
 				daSection = states.FreeplayState.section;
 				close();
@@ -98,14 +127,12 @@ class FreeplaySectionSubstate extends FlxSubState {
 		if (Controls.justPressed('accept') && !transitioning) {
 			FlxG.sound.play(Paths.sound('confirmMenu'));
 			transitioning = true;
+
 			closeFreeplaysection((_:FlxTween) -> {
 				close();
 				FlxG.resetState();
 			});
 		}
-
-		sectionTxt.text = daSection.toUpperCase();
-		sectionTxt.gameCenter(X).y = sectionSpr.y;
 
 		super.update(elapsed);
 	}
@@ -116,17 +143,38 @@ class FreeplaySectionSubstate extends FlxSubState {
 	}
 
 	function changeSection(change:Int = 0) {
+		if (sectionArray.length == 0) return;
+
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 		counter = FlxMath.wrap(counter + change, 0, sectionArray.length - 1);
-
 		daSection = sectionArray[counter];
-		sectionSpr.loadGraphic(sectionImageMap.get(daSection.toLowerCase()));
-		sectionSpr.gameCenter();
+
+		applySectionVisuals();
+	}
+
+	function applySectionVisuals() {
+		// Load graphic
+		var g:FlxGraphic = sectionImageMap.get(daSection.toLowerCase());
+		if (g != null) sectionSpr.loadGraphic(g);
+
 		sectionSpr.updateHitbox();
+		sectionSpr.gameCenter();
+
+		// Update text only when changed
+		if (lastShownSection != daSection) {
+			lastShownSection = daSection;
+			sectionTxt.text = daSection.toUpperCase();
+			sectionTxt.gameCenter(X).y = sectionSpr.y;
+		} else sectionTxt.y = sectionSpr.y;
 	}
 
 	function weekIsLocked(name:String):Bool {
 		var leWeek:WeekData = WeekData.weeksLoaded.get(name);
-		return (!leWeek.startUnlocked && leWeek.weekBefore.length > 0 && (!StoryMenuState.weekCompleted.exists(leWeek.weekBefore) || !StoryMenuState.weekCompleted.get(leWeek.weekBefore)));
+		if (leWeek == null) return true;
+
+		var prereq:String = leWeek.weekBefore;
+		if (leWeek.startUnlocked || prereq == null || prereq.length == 0) return false;
+
+		return !StoryMenuState.weekCompleted.exists(prereq) || !StoryMenuState.weekCompleted.get(prereq);
 	}
 }

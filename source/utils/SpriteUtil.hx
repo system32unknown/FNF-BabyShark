@@ -87,9 +87,9 @@ class SpriteUtil {
 	/**
 	 * Resets an FlxSprite.
 	 * 
-	 * @param  spr  Sprite to reset
-	 * @param  x	New X position
-	 * @param  y	New Y position
+	 * @param spr Sprite to reset
+	 * @param x	New X position
+	 * @param y	New Y position
 	 */
 	public static function resetSprite(spr:FlxSprite, x:Float, y:Float):Void {
 		spr.reset(x, y);

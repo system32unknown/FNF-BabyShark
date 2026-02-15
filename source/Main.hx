@@ -116,6 +116,10 @@ class Main extends Sprite {
 		FlxG.signals.gameResized.add((w:Int, _:Int) -> {
 			@:privateAccess FlxG.game.soundTray._defaultScale = (w / FlxG.width) * 2;
 		});
-		#if VIDEOS_ALLOWED hxvlc.util.Handle.init(#if (hxvlc >= "1.8.0") ['--no-lua'] #end); #end
+		#if VIDEOS_ALLOWED
+		hxvlc.util.Handle.initAsync(['--no-lua'], (success:Bool) -> {
+			if (!success) Logs.error('LibVLC instance failed to init!');
+		});
+		#end
 	}
 }

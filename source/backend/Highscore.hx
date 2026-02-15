@@ -2,12 +2,12 @@ package backend;
 
 import flixel.util.FlxSave;
 
-enum abstract SaveMode(Int) from Int to Int {
-	var WEEKSCORE:SaveMode = 0;
-	var SCORE:SaveMode = 1;
-	var RATING:SaveMode = 2;
-	var COMBO:SaveMode = 3;
-	var ALL:SaveMode = 4;
+enum SaveMode {
+	WEEKSCORE;
+	SCORE;
+	RATING;
+	COMBO;
+	ALL;
 }
 
 class Highscore {

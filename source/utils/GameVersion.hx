@@ -2,10 +2,43 @@ package utils;
 
 import macros.GitCommitMacro;
 
+/**
+ * Represents a semantic-style game version string.
+ *
+ * Format:
+ * `MAJOR.MINOR.PATCH[-PRERELEASE]`
+ *
+ * Examples:
+ * - `1.0.0`
+ * - `1.2.3-beta`
+ * - `2.0.0-rc1`
+ *
+ * This abstract allows accessing and modifying version components
+ * (major, minor, patch, prerelease_id) while internally storing a String.
+ *
+ * Supports comparison operators (==, >, >=).
+ */
 abstract GameVersion(String) from String to String {
+	/**
+	 * Major version number.
+	 */
 	public var major(get, set):Int;
+
+	/**
+	 * Minor version number.
+	 */
 	public var minor(get, set):Int;
+
+	/**
+	 * Patch version number.
+	 */
 	public var patch(get, set):Int;
+
+	/**
+	 * Optional prerelease identifier.
+	 *
+	 * Example: `beta`, `rc1`, `alpha-2`
+	 */
 	public var prerelease_id(get, set):String;
 
 	inline function get_prerelease_id():String {
@@ -52,8 +85,19 @@ abstract GameVersion(String) from String to String {
 		return i;
 	}
 
+	/**
+	 * Git commit hash of the current build.
+	 *
+	 * Generated at compile time via macro.
+	 */
 	public var COMMIT_HASH(get, never):String;
 	function get_COMMIT_HASH():String return GitCommitMacro.commitHash;
+
+	/**
+	 * Git commit number of the current build.
+	 *
+	 * Generated at compile time via macro.
+	 */
 	public var COMMIT_NUM(get, never):Int;
 	function get_COMMIT_NUM():Int return GitCommitMacro.commitNumber;
 
