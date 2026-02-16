@@ -128,9 +128,19 @@ class PlatformUtil {
 		SetWindowPos(window, NULL, 0, 0, 0, 0, SWP_FRAMECHANGED | SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOOWNERZORDER); // Force the window to redraw
 	')
 	#end
-	public static function removeWindowIcon() {}
+	public static function removeWindowIcon():Void {}
 
-	// Thanks leer lol
+	/**
+	 * Retrieves the current global mouse cursor position.
+	 *
+	 * On Windows (C++ target only), this calls the Win32 `GetCursorPos`
+	 * function and returns the screen-space cursor coordinates.
+	 *
+	 * On unsupported platforms or non-C++ targets, this function
+	 * returns `[0, 0]`.
+	 *
+	 * @return An array containing the mouse X and Y position in screen coordinates: `[x, y]`.
+	 */
 	#if (cpp && windows)
 	@:functionCode('
 		POINT mousePos;
@@ -270,11 +280,32 @@ class PlatformUtil {
 		return windowBorderColor = value;
 	}
 
+	/**
+	* Checks whether a window matching the given class name and/or window title exists.
+	*
+	* @param className  The window class name to search for. Pass `null` to ignore the class name.
+	* @param windowName The window title (caption) to search for. Pass an empty string to ignore the title.
+	*
+	* @return `true` if a matching window is found, `false` otherwise.
+	*/
 	#if (cpp && windows)
 	@:functionCode('return FindWindowA(className.c_str(), windowName.c_str()) != NULL;')
 	#end
 	public static function findWindow(className:String = null, windowName:String = ''):Bool return false;
 
+	/**
+	 * Plays a simple system beep sound.
+	 *
+	 * On Windows (C++ target only), this calls the native Win32 `Beep`
+	 * function with the specified frequency and duration.
+	 *
+	 * On unsupported platforms or non-C++ targets, this function does nothing and returns `false`.
+	 *
+	 * @param freq The frequency of the sound in hertz (Hz). Typical audible range is between 37 and 32767.
+	 * @param duration The duration of the beep in milliseconds.
+	 *
+	 * @return `true` if the beep was successfully triggered (Windows C++ only), otherwise `false`.
+	 */
 	#if (cpp && windows)
 	@:functionCode('return Beep(freq, duration);')
 	#end
@@ -398,6 +429,15 @@ class PlatformUtil {
 		return false;
 	}
 
+	/**
+	* Flashes the application window in the taskbar and/or title bar.
+	*
+	* @param count   The number of times the window should flash. Use `0` to flash continuously until the window comes to the foreground.
+	* @param timeout The rate of flashing, in milliseconds. Use `0` to use the default cursor blink rate.
+	* @param flag    A combination of `FlashWFlags` values that determine how the window flashes (taskbar, caption, continuously, etc.).
+	*
+	* @return `true` if the flashing operation was successfully started, `false` otherwise.
+	*/
 	#if (cpp && windows)
 	@:functionCode('
 		getHandle();

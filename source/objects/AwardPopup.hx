@@ -4,10 +4,11 @@ import openfl.events.Event;
 import openfl.geom.Matrix;
 import openfl.text.TextField;
 import openfl.text.TextFormat;
+import openfl.display.Sprite;
 import openfl.Lib;
 
 #if AWARDS_ALLOWED
-class AwardPopup extends openfl.display.Sprite {
+class AwardPopup extends Sprite {
 	public var intendedY:Float = 0;
 
 	var lastScale:Float = 1;
@@ -137,7 +138,7 @@ class AwardPopup extends openfl.display.Sprite {
 	}
 }
 #else
-class AwardPopup extends openfl.display.Sprite {
+class AwardPopup extends Sprite {
 	public var intendedY:Float = 0;
 
 	public function new(_):Void {

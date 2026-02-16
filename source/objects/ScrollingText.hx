@@ -34,12 +34,12 @@ class BGScrollingText extends FlxText {
 			if (speed > 0) { // Going left
 				if (txtPosition.x < -frameWidth) {
 					txtPosition.x = _textPositions[_textPositions.length - 1].x + frameWidth + placementOffset;
-					sortTextShit();
+					sortText();
 				}
 			} else { // Going right
 				if (txtPosition.x > frameWidth * 2) {
 					txtPosition.x = _textPositions[0].x - frameWidth - placementOffset;
-					sortTextShit();
+					sortText();
 				}
 			}
 		}
@@ -54,7 +54,7 @@ class BGScrollingText extends FlxText {
 		setPosition(_positionCache.x, _positionCache.y);
 	}
 
-	function sortTextShit():Void {
+	function sortText():Void {
 		_textPositions.sort((Obj1:FlxPoint, Obj2:FlxPoint) -> return FlxSort.byValues(FlxSort.ASCENDING, Obj1.x, Obj2.x));
 	}
 }

@@ -18,6 +18,7 @@ typedef WeekFile = {
 	var storyName:String;
 	// -- FREEPLAY MENU SPECIFIC -- //
 	var hideFreeplay:Bool;
+	@:default('mods')
 	var section:String;
 }
 

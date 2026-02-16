@@ -57,8 +57,7 @@ class FPSCounter extends openfl.text.TextField {
 
 	public dynamic function preUpdateText():Void {
 		if (!checkLag) return;
-		if (fpsManager.lagged()) textColor = FlxColor.RED;
-		else textColor = FlxColor.WHITE;
+		textColor = fpsManager.lagged() ? FlxColor.RED : FlxColor.WHITE;
 	}
 
 	var deltaTimeout:Float = .0;
