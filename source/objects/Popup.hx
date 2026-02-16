@@ -15,7 +15,7 @@ class Popup extends FlxSprite {
 	final placement:Float = FlxG.width * .35;
 
 	var i:PlayState;
-	var baseRate:Float = 1.;
+	var baseRate:Float = 0.0;
 	var comboOffset:Array<Array<Int>> = [];
 
 	public function new():Void {
@@ -44,7 +44,7 @@ class Popup extends FlxSprite {
 		return this;
 	}
 
-	public function setupPopupData(popUptype:PopupType = NONE, img:String, ?index:Int = 0, ?comboDigit:Int = 0):Void {
+	public function setupPopupData(popUptype:PopupType = NONE, img:String, ?index:Int, ?comboDigit:Int):Void {
 		type = popUptype;
 		reloadTexture(img);
 

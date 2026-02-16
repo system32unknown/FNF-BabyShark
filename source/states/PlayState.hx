@@ -387,7 +387,7 @@ class PlayState extends MusicBeatState {
 
 		add(noteGroup = new FlxTypedGroup<FlxBasic>());
 		showPopups = Settings.data.showComboCounter && (showRating || showComboNum);
-		if (showPopups) add(popUpGroup = new FlxTypedSpriteGroup<Popup>());
+		if (showPopups) {add(popUpGroup = new FlxTypedSpriteGroup<Popup>()); popUpGroup.zIndex = 1000;}
 		add(uiGroup = new FlxSpriteGroup());
 
 		Conductor.songPosition = -Conductor.crochet * 5 + Conductor.offset;
