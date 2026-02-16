@@ -846,7 +846,7 @@ class PlayState extends MusicBeatState {
 
 		i = notes.length - 1;
 		daNote = notes.members[i];
-		while (daNote.strumTime - noteKillOffset < time) {
+		while (daNote != null && daNote.strumTime - noteKillOffset < time) {
 			daNote.ignoreNote = true;
 			invalidateNote(daNote);
 			daNote = notes.members[i--];
