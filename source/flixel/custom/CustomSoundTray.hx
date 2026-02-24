@@ -93,7 +93,7 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 	 * @param label The test label to display
 	 */
 	public override function showAnim(volume:Float, ?sound:FlxSoundAsset, duration = 1.0, ?label:String):Void {
-		if (sound != null) FlxG.sound.play(FlxG.assets.getSoundAddExt(sound));
+		if (sound != null) FlxG.sound.play(sound.resolveSound(true, true));
 
 		_timer = duration;
 		lerpYPos = 0;
