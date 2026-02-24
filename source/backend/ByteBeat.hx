@@ -8,7 +8,7 @@ import haxe.io.BytesOutput;
  * a method of creating sound through simple mathematical expressions.
  * It allows real-time evaluation of formulas to produce dynamic audio output.
  */
-class ByteBeat {
+final class ByteBeat {
 	/**
 	 * Number of audio channels (1 = mono, 2 = stereo).
 	 */
@@ -47,8 +47,7 @@ class ByteBeat {
 	 */
 	public var length(get, never):Float;
 	@:noCompletion function get_length():Float {
-		var numSamples:Float = totalSize / (bitsPerSample / 8 * channels);
-		return numSamples / sampleRate;
+		return (totalSize / (bitsPerSample / 8 * channels)) / sampleRate;
 	}
 
 	public var totalSize:Int;

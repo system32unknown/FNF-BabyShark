@@ -55,6 +55,7 @@ class MusicBeatState extends flixel.FlxState {
 	}
 
 	var countJudge:Bool = false;
+	var isFirstSection:Bool = false;
 	override function update(elapsed:Float) {
 		updateCount = 0;
 
@@ -65,7 +66,12 @@ class MusicBeatState extends flixel.FlxState {
 		updateBeat();
 
 		if (oldStep != curStep) {
-			if (curStep > 0) stepHit();
+			isFirstSection = curStep >= 0 && oldStep < 0;
+
+			if (curStep > 0 || isFirstSection) {
+				stepHit();
+				if (isFirstSection && PlayState.SONG != null) sectionHit();
+			}
 
 			if (PlayState.SONG != null) {
 				if (oldStep < curStep) updateSection();

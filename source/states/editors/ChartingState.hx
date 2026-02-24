@@ -1848,7 +1848,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 	var _lastSec:Int = -1;
 	var _lastGfSection:Null<Bool> = null;
 	function updateHeads(ignoreCheck:Bool = false):Void {
-		var curSecData:SwagSection = PlayState.SONG.notes[curSec];
+		var curSecData:Section = PlayState.SONG.notes[curSec];
 		var isGfSection:Bool = (curSecData != null && curSecData.gfSection == true);
 		if (_lastGfSection == isGfSection && _lastSec == curSec && !ignoreCheck) return; // optimization
 

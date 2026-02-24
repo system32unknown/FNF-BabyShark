@@ -10,6 +10,7 @@ class Language {
 		var loadedText:Array<String> = Mods.mergeAllTextsNamed('data/$langFile.lang');
 
 		phrases.clear();
+
 		var hasPhrases:Bool = false;
 		for (num => phrase in loadedText) {
 			phrase = phrase.trim();

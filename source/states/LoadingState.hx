@@ -122,7 +122,7 @@ class LoadingState extends MusicBeatState {
 		}
 	}
 
-	function addBehindBar(obj:flixel.FlxBasic) {
+	function addBehindBar(obj:flixel.FlxBasic):Void {
 		insert(members.indexOf(barGroup), obj);
 	}
 
@@ -249,7 +249,7 @@ class LoadingState extends MusicBeatState {
 	}
 
 	static var initialThreadCompleted:Bool = true;
-	static function _startPool() {
+	static function _startPool():Void {
 		#if MULTITHREADED_LOADING
 		// Due to the Main thread and Discord thread, we decrease it by 2.
 		var threadCount:Int = Std.int(Math.max(1, utils.system.PlatformUtil.getCPUThreadsCount() - #if DISCORD_ALLOWED 2 #else 1 #end));
@@ -401,10 +401,10 @@ class LoadingState extends MusicBeatState {
 				initialThreadCompleted = true;
 			}
 			return true;
-		}, isIntrusive)).onError((err:Dynamic) -> Logs.error('ERROR! while preparing song: $err'));
+		}, isIntrusive)).onError((err:Dynamic) -> Logs.error('Error while preparing song: $err'));
 	}
 
-	public static function clearInvalids() {
+	public static function clearInvalids():Void {
 		clearInvalidFrom(imagesToPrepare, 'images', '.png', IMAGE);
 		clearInvalidFrom(soundsToPrepare, 'sounds', '.${Paths.SOUND_EXT}', SOUND);
 		clearInvalidFrom(musicToPrepare, 'music', ' .${Paths.SOUND_EXT}', SOUND);

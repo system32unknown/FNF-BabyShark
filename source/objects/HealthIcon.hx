@@ -30,9 +30,7 @@ class HealthIcon extends FlxSprite {
 	var _scale:FlxPoint;
 	final animatedIconStates:Array<String> = ['normal', 'lose', 'win'];
 
-	// Keep as 2 floats; avoid recreating arrays in hot paths
-	var iconOffsetX:Float = 0.0;
-	var iconOffsetY:Float = 0.0;
+	var iconOffsets:Array<Float> = [0, 0];
 
 	public static function returnGraphic(char:String, defaultIfMissing:Bool = false, ?allowGPU:Bool = true):FlxGraphic {
 		var path:String = prefix + char;
@@ -42,6 +40,7 @@ class HealthIcon extends FlxSprite {
 			path = prefix + defaultIcon;
 			if (!Paths.fileExists('images/$path.png', IMAGE)) return null; // still missing
 		}
+
 		return Paths.image(path, allowGPU);
 	}
 
@@ -92,14 +91,8 @@ class HealthIcon extends FlxSprite {
 
 		if (!animated) {
 			loadGraphic(graph, true, Math.floor(graph.width / iSize), Math.floor(graph.height));
-
-			// build a 0..N-1 frame list once
 			animation.add(char, [for (i in 0...frames.frames.length) i], 0, false, isPlayer);
-
-			// Keep your old offset math; just store in floats
-			iconOffsetX = (width - ICON_TARGET) / iSize;
-			iconOffsetY = (height - ICON_TARGET) / iSize;
-
+			iconOffsets = [(width - ICON_TARGET) / iSize, (height - ICON_TARGET) / iSize];
 			animation.play(char);
 		} else {
 			frames = Paths.getSparrowAtlas(name);
@@ -110,7 +103,6 @@ class HealthIcon extends FlxSprite {
 				}
 			}
 
-			// play first valid state (fallback to "normal" if present, else any)
 			if (animation.exists(animatedIconStates[0])) animation.play(animatedIconStates[0], true);
 			else if (animation.getNameList().length > 0) animation.play(animation.getNameList()[0], true);
 		}
@@ -125,7 +117,6 @@ class HealthIcon extends FlxSprite {
 
 	override function updateHitbox():Void {
 		var t:String = iconType.toLowerCase();
-
 		if (t == 'center') {
 			centerOrigin();
 		} else if (t == 'psych') {
@@ -135,7 +126,7 @@ class HealthIcon extends FlxSprite {
 			offset.set(-.5 * (frameWidth * iconZoom - frameWidth), -.5 * (frameHeight * iconZoom - frameHeight));
 		} else super.updateHitbox();
 
-		if (autoOffset) offset.set(iconOffsetX, iconOffsetY);
+		if (autoOffset) offset.set(iconOffsets[0], iconOffsets[1]);
 	}
 
 	public function setStateIndex(newState:Int):Void {
@@ -175,7 +166,7 @@ class HealthIcon extends FlxSprite {
 
 	public dynamic function bopUpdate(e:Float, rate:Float):Void {
 		switch (curBopType.toLowerCase()) {
-			case "old": setGraphicSize(Std.int(FlxMath.lerp(ICON_TARGET, width, 0.5)));
+			case "old": setGraphicSize(Std.int(FlxMath.lerp(ICON_TARGET, width, .5)));
 			case "psych":
 				var mult:Float = FlxMath.lerp(1, scale.x, Math.exp(-e * 9 * rate));
 				scale.set(mult, mult);

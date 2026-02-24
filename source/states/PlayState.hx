@@ -1725,7 +1725,7 @@ class PlayState extends MusicBeatState {
 	}
 
 	public function moveCameraSection():Void {
-		var section:SwagSection = SONG.notes[curSection];
+		var section:Section = SONG.notes[curSection];
 		if (section == null) return;
 
 		if (gf != null && section.gfSection) {

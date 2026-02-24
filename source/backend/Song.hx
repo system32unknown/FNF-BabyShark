@@ -5,7 +5,7 @@ import backend.NativeFileSystem;
 
 typedef SwagSong = {
 	var song:String;
-	var notes:Array<SwagSection>;
+	var notes:Array<Section>;
 	var events:Array<Dynamic>;
 	var bpm:Float;
 	var needsVoices:Bool;
@@ -31,7 +31,7 @@ typedef SwagSong = {
 	@:optional var splashSkin:String;
 }
 
-typedef SwagSection = {
+typedef Section = {
 	var sectionNotes:Array<Dynamic>;
 	var sectionBeats:Int;
 	var mustHitSection:Bool;
@@ -45,7 +45,11 @@ class Song {
 	public static function createDummyFile():SwagSong {
 		return {
 			song: 'Test',
-			notes: [],
+			notes: [{
+				sectionNotes: [],
+				sectionBeats: 4,
+				mustHitSection: false
+			}],
 			events: [],
 			bpm: 150,
 			needsVoices: true,
@@ -69,10 +73,10 @@ class Song {
 
 		if (songJson.events == null) {
 			songJson.events = [];
+
 			for (secNum in 0...songJson.notes.length) {
-				var sec:SwagSection = songJson.notes[secNum];
 				var i:Int = 0;
-				var notes:Array<Dynamic> = sec.sectionNotes;
+				var notes:Array<Dynamic> = songJson.notes[secNum].sectionNotes;
 				var len:Int = notes.length;
 				while (i < len) {
 					var note:Array<Dynamic> = notes[i];
@@ -85,7 +89,7 @@ class Song {
 			}
 		}
 
-		var sectionsData:Array<SwagSection> = songJson.notes;
+		var sectionsData:Array<Section> = songJson.notes;
 		if (sectionsData == null) return;
 
 		var maniaKey:Int = EK.keys(PlayState.mania);
@@ -130,8 +134,11 @@ class Song {
 		var formattedSong:String = Paths.formatToSongPath(jsonInput);
 		_lastPath = Paths.json('${Paths.CHART_PATH}/$formattedFolder/$formattedSong');
 
-		if (NativeFileSystem.exists(_lastPath))
-			rawData = NativeFileSystem.getContent(_lastPath);
+		#if MODS_ALLOWED
+		if (FileSystem.exists(_lastPath)) rawData = File.getContent(_lastPath);
+		else
+		#end
+			rawData = lime.utils.Assets.getText(_lastPath);
 
 		return rawData != null ? parseJSON(rawData, jsonInput) : null;
 	}

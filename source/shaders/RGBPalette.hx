@@ -115,6 +115,7 @@ class RGBShaderReference {
 	function cloneOriginal() {
 		if (!allowNew) return;
 		allowNew = false;
+
 		if (_original != parent) return;
 
 		parent = new RGBPalette();

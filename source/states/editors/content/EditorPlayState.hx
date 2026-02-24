@@ -307,7 +307,7 @@ class EditorPlayState extends MusicBeatSubstate {
 		Note.chartArrowSkin = PlayState.SONG.arrowSkin;
 
 		// Load Notes
-		var section:SwagSection = songData.notes[0];
+		var section:Section = songData.notes[0];
 		for (note in _noteList) {
 			if (note == null || note.strumTime < startPos) continue;
 

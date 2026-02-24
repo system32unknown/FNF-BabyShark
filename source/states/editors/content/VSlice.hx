@@ -150,7 +150,7 @@ class VSlice {
 		}
 		if (sectionMustHits.length < 1) sectionMustHits.push(false);
 
-		var baseSections:Array<SwagSection> = [];
+		var baseSections:Array<Section> = [];
 		var sectionTimes:Array<Float> = [];
 		var bpm:Float = songBpm;
 		var lastBpm:Float = songBpm;
@@ -167,7 +167,7 @@ class VSlice {
 			sectionTimes.push(time);
 			time += sectionTime;
 
-			var sec:SwagSection = emptySection();
+			var sec:Section = emptySection();
 			sec.mustHitSection = sectionMustHits[baseSections.length >= sectionMustHits.length ? sectionMustHits.length - 1 : baseSections.length];
 			if (lastBpm != bpm) {
 				sec.changeBPM = true;
@@ -182,9 +182,9 @@ class VSlice {
 			var scrollSpeed:Float = Reflect.hasField(chart.scrollSpeed, diff) ? Reflect.field(chart.scrollSpeed, diff) : Reflect.field(chart.scrollSpeed, 'default');
 			var notes:Array<VSliceNote> = notesMap.get(diff);
 
-			var sectionData:Array<SwagSection> = [];
+			var sectionData:Array<Section> = [];
 			for (section in baseSections) { // clone sections
-				var sec:SwagSection = emptySection();
+				var sec:Section = emptySection();
 				sec.mustHitSection = section.mustHitSection;
 				if (Reflect.hasField(section, 'changeBPM')) {
 					sec.changeBPM = section.changeBPM;
@@ -383,7 +383,7 @@ class VSlice {
 		return {chart: chart, metadata: metadata};
 	}
 
-	static function emptySection():SwagSection {
+	static function emptySection():Section {
 		return {
 			sectionNotes: [],
 			sectionBeats: 4,

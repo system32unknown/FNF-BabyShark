@@ -112,5 +112,5 @@ class Conductor {
 		return Math.floor(getStepRounded(time) / 4);
 	}
 
-	inline static function getSectionBeats(section:SwagSection):Int return section?.sectionBeats ?? 4;
+	inline static function getSectionBeats(section:Section):Int return section?.sectionBeats ?? 4;
 }

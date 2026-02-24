@@ -50,7 +50,7 @@ class FPSUtil {
 		if (sliceCnt > 0) times.splice(0, sliceCnt);
 
 		var curCount:Int = times.length;
-		totalFPS = Math.round(curFPS + curCount / 8);
+		totalFPS = Std.int(curFPS + curCount / 8);
 		if (curCount != cacheCount) {
 			avgFPS = curCount > 0 ? 1000 / (sum / curCount) : 0.0;
 			var roundAvgFPS = Math.round(avgFPS);
