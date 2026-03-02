@@ -64,6 +64,7 @@ final class NdllUtil {
 			Logs.warn('Couldn\'t find ndll at $ndll.');
 			return noop;
 		}
+
 		var func:Dynamic = lime.system.CFFI.load(Assets.getPath(ndll), name, args);
 		if (func == null) {
 			Logs.error('Method $name in ndll $ndll with $args args was not found.');

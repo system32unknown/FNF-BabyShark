@@ -137,12 +137,12 @@ class FreeplaySectionSubstate extends FlxSubState {
 		super.update(elapsed);
 	}
 
-	function closeFreeplaysection(func:FlxTween->Void, onlyFade:Bool = false) {
+	function closeFreeplaysection(func:FlxTween->Void, onlyFade:Bool = false):Void {
 		for (obj in [bg, grid, sectionTxt]) FlxTween.tween(obj, {alpha: 0}, .5, {ease: FlxEase.expoInOut});
 		FlxTween.tween(sectionSpr, onlyFade ? {alpha: 0} : {alpha: 0, y: sectionSpr.y + 200}, .5, {ease: FlxEase.expoInOut, onComplete: func});
 	}
 
-	function changeSection(change:Int = 0) {
+	function changeSection(change:Int = 0):Void {
 		if (sectionArray.length == 0) return;
 
 		FlxG.sound.play(Paths.sound('scrollMenu'));
@@ -152,15 +152,13 @@ class FreeplaySectionSubstate extends FlxSubState {
 		applySectionVisuals();
 	}
 
-	function applySectionVisuals() {
-		// Load graphic
+	function applySectionVisuals():Void {
 		var g:FlxGraphic = sectionImageMap.get(daSection.toLowerCase());
 		if (g != null) sectionSpr.loadGraphic(g);
 
 		sectionSpr.updateHitbox();
 		sectionSpr.gameCenter();
 
-		// Update text only when changed
 		if (lastShownSection != daSection) {
 			lastShownSection = daSection;
 			sectionTxt.text = daSection.toUpperCase();

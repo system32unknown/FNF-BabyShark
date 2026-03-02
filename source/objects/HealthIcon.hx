@@ -30,7 +30,7 @@ class HealthIcon extends FlxSprite {
 	var _scale:FlxPoint;
 	final animatedIconStates:Array<String> = ['normal', 'lose', 'win'];
 
-	var iconOffsets:Array<Float> = [0, 0];
+	var iconOffset:FlxPoint = FlxPoint.get();
 
 	public static function returnGraphic(char:String, defaultIfMissing:Bool = false, ?allowGPU:Bool = true):FlxGraphic {
 		var path:String = prefix + char;
@@ -92,7 +92,7 @@ class HealthIcon extends FlxSprite {
 		if (!animated) {
 			loadGraphic(graph, true, Math.floor(graph.width / iSize), Math.floor(graph.height));
 			animation.add(char, [for (i in 0...frames.frames.length) i], 0, false, isPlayer);
-			iconOffsets = [(width - ICON_TARGET) / iSize, (height - ICON_TARGET) / iSize];
+			iconOffset.set((width - ICON_TARGET) / iSize, (height - ICON_TARGET) / iSize);
 			animation.play(char);
 		} else {
 			frames = Paths.getSparrowAtlas(name);
@@ -126,7 +126,7 @@ class HealthIcon extends FlxSprite {
 			offset.set(-.5 * (frameWidth * iconZoom - frameWidth), -.5 * (frameHeight * iconZoom - frameHeight));
 		} else super.updateHitbox();
 
-		if (autoOffset) offset.set(iconOffsets[0], iconOffsets[1]);
+		if (autoOffset) offset.copyFrom(iconOffset);
 	}
 
 	public function setStateIndex(newState:Int):Void {

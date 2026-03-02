@@ -384,7 +384,7 @@ class FreeplayState extends MusicBeatState {
 						MemoryUtil.collect(true);
 						MemoryUtil.enable(false);
 					}
-					Song.loadFromJson(poop, songLowercase);
+					Song.loadFromJson(poop, true, songLowercase);
 				} catch (e:Exception) {
 					if (Settings.data.disableGC) {
 						MemoryUtil.enable();
@@ -445,7 +445,7 @@ class FreeplayState extends MusicBeatState {
 					MemoryUtil.collect(true);
 					MemoryUtil.enable(false);
 				}
-				Song.loadFromJson(songLowercase, songFolder);
+				Song.loadFromJson(songLowercase, false, songFolder);
 				PlayState.isStoryMode = false;
 				PlayState.storyDifficulty = curDifficulty;
 			} catch (e:Exception) {

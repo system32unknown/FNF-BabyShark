@@ -23,38 +23,56 @@ class StringUtil {
 	}
 
 	/**
-	 * Formats a given time in seconds into a human-readable string (weeks, days, hours, minutes, seconds).
-	 * @param time Floating-point number representing total seconds.
-	 * @param precision Integer specifying decimal precision.
-	 * @param timePre Integer for additional time formatting.
+	 * Formats a duration (in seconds) into a human-readable string.
+	 *
+	 * Output rules (compatible with the original intent):
+	 * - Default: "m:ss"
+	 * - If hours > 0 and days == 0: "h:mm:ss"
+	 * - If days > 0 and weeks == 0: "{d}d {h}h {m}m {s}s"
+	 * - If weeks > 0: "{w}w {d}d {h}h {m}m {s}s"
+	 *
+	 * Fractional seconds:
+	 * - If `precision > 0`, appends ".<fraction>".
+	 * - `precision` here is the scale factor (kept compatible with your original math).
+	 *   If you want “decimal digits”, see the note below.
+	 *
+	 * @param time Total duration in seconds (can be fractional).
+	 * @param precision Scale factor for fractional part (kept as-is from original code).
+	 * @param timePre Minimum width for the fractional part (left-padded with zeros).
 	 * @return Formatted time string.
 	 */
 	public static function formatTime(time:Float, precision:Int = 0, timePre:Int = 0):String {
-		var secs:String = '' + Math.floor(time) % 60;
-		var mins:String = '' + Math.floor(time / 60) % 60;
-		var hour:String = '' + Math.floor(time / 3600) % 24;
-		var days:String = '' + Math.floor(time / 86400) % 7;
-		var weeks:String = '' + Math.floor(time / (86400 * 7));
+		// Clamp negatives to 0 (prevents weird modulo results)
+		if (time <= 0) return (precision > 0) ? "0:00." + fillNumber(0, timePre, '0'.code) : "0:00";
 
-		if (secs.length < 2) secs = '0$secs';
+		final total:Int = Std.int(Math.floor(time));
 
-		var formattedtime:String = '$mins:$secs';
-		if (hour != '0' && days == '0') {
-			if (mins.length < 2) mins = '0$mins';
-			formattedtime = '$hour:$mins:$secs';
+		var s:Int = total % 60;
+		var m:Int = Std.int(total / 60) % 60;
+		var h:Int = Std.int(total / 3600) % 24;
+		var d:Int = Std.int(total / 86400) % 7;
+		var w:Int = Std.int(total / (86400 * 7));
+
+		inline function pad2(n:Int):String return (n < 10 ? "0" : "") + n;
+
+		var out:String;
+		if (w > 0) {
+			out = '${w}w ${d}d ${h}h ${m}m ${s}s';
+		} else if (d > 0) {
+			out = '${d}d ${h}h ${m}m ${s}s';
+		} else if (h > 0) {
+			out = '${h}:${pad2(m)}:${pad2(s)}';
+		} else {
+			out = '${m}:${pad2(s)}';
 		}
-
-		if (days != '0' && weeks == '0') formattedtime = '${days}d ${hour}h ${mins}m ${secs}s';
-		if (weeks != '0') formattedtime = '${weeks}w ${days}d ${hour}h ${mins}m ${secs}s';
 
 		if (precision > 0) {
-			var secondsForMS:Float = time % 60;
-
-			formattedtime += ".";
-			var seconds:Int = Math.floor((secondsForMS - Std.int(secondsForMS)) * precision);
-			formattedtime += fillNumber(seconds, timePre, '0'.charCodeAt(0));
+			var frac:Float = time - total;
+			var ms:Int = Std.int(Math.floor(frac * precision));
+			out += "." + fillNumber(ms, timePre, '0'.code);
 		}
-		return formattedtime;
+
+		return out;
 	}
 
 	/**

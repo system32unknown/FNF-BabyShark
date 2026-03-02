@@ -35,7 +35,8 @@ class TitleState extends MusicBeatState {
 			skipIntro();
 			return;
 		}
-		FlxG.sound.playMusic(Paths.music('freakyMenu'), 0);
+
+		FlxG.sound.playMusic(Paths.music('freakyMenu'), null, 0);
 		FlxG.sound.music.persist = true;
 		FlxG.sound.music.fadeIn(4, 0, .7);
 	}

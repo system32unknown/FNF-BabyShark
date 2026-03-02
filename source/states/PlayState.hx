@@ -1830,7 +1830,7 @@ class PlayState extends MusicBeatState {
 					MusicBeatState.skipNextTransIn = MusicBeatState.skipNextTransOut = true;
 					prevCamFollow = camFollow;
 
-					Song.loadFromJson(storyPlaylist[0] + difficulty, storyPlaylist[0]);
+					Song.loadFromJson(storyPlaylist[0] + difficulty, false, storyPlaylist[0]);
 					FlxG.sound.music.stop();
 
 					canResync = false;

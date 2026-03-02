@@ -69,11 +69,7 @@ class NativeUtil {
 	public static function setAnsiColors(foregroundColor:AnsiColor = NONE, ?backgroundColor:AnsiColor = NONE):Void {
 		if (Main.noTerminalColor) return;
 
-		#if (windows && !hl)
-		if (foregroundColor == NONE) foregroundColor = LIGHTGRAY;
-		if (backgroundColor == NONE) backgroundColor = BLACK;
-		PlatformUtil.setAnsiColors((cast(backgroundColor, Int) * 16) + cast(foregroundColor, Int));
-		#elseif sys
+		#if sys
 		Sys.print("\x1b[0m");
 		if (foregroundColor != NONE) Sys.print("\x1b[" + Std.int(Ansi.colorToANSI(foregroundColor)) + "m");
 		if (backgroundColor != NONE) Sys.print("\x1b[" + Std.int(Ansi.colorToANSI(backgroundColor) + 10) + "m");

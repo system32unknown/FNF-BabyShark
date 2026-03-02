@@ -70,6 +70,8 @@ class Conductor {
 	public static function setBPMChanges(song:SwagSong) {
 		bpmChanges = [];
 
+		trace(song);
+
 		var curBPM:Float = song.bpm;
 		var curSteps:Int = 0;
 		var curTime:Float = 0.0;

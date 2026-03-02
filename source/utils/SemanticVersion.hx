@@ -18,7 +18,7 @@ import macros.GitCommitMacro;
  *
  * Supports comparison operators (==, >, >=).
  */
-abstract GameVersion(String) from String to String {
+abstract SemanticVersion(String) from String to String {
 	/**
 	 * Major version number.
 	 */
@@ -103,11 +103,11 @@ abstract GameVersion(String) from String to String {
 
 	// operators
 	@:op(A == B)
-	static function eq(A:GameVersion, B:GameVersion):Bool
+	static function eq(A:SemanticVersion, B:SemanticVersion):Bool
 		return A.major == B.major && A.minor == B.minor && A.patch == B.patch && A.prerelease_id == B.prerelease_id;
 
 	@:op(A >= B)
-	static function gte(A:GameVersion, B:GameVersion):Bool {
+	static function gte(A:SemanticVersion, B:SemanticVersion):Bool {
 		if (A.major >= B.major || A.minor >= B.minor || A.patch >= B.patch) {
 			return true;
 		} else {
@@ -122,7 +122,7 @@ abstract GameVersion(String) from String to String {
 	}
 
 	@:op(A > B)
-	static function gt(A:GameVersion, B:GameVersion):Bool {
+	static function gt(A:SemanticVersion, B:SemanticVersion):Bool {
 		if (A.major > B.major || A.minor > B.minor || A.patch > B.patch) {
 			return true;
 		} else {

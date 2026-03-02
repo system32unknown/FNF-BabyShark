@@ -52,6 +52,7 @@ class LoadingState extends MusicBeatState {
 	var intendedPercent:Float = 0;
 	var curPercent:Float = 0;
 	var stateChangeDelay:Float = 0;
+	static var stateText:String = '';
 
 	var timePassed:Float;
 	var loadingText:FlxText;
@@ -109,7 +110,7 @@ class LoadingState extends MusicBeatState {
 		funkay.updateHitbox();
 		addBehindBar(funkay);
 
-		loadingText = new FlxText(520, 600, 450, Language.getPhrase('now_loading', 'Now Loading', ['...']), 32);
+		loadingText = new FlxText(520, 600, 450, Language.getPhrase('stateText', 'Preparing to load assets', ['...']), 32);
 		loadingText.setFormat(Paths.font("vcr.ttf"), loadingText.size, FlxColor.WHITE, CENTER);
 		loadingText.setBorderStyle(OUTLINE_FAST, FlxColor.BLACK, 2);
 		loadingText.gameCenter(X);
@@ -164,7 +165,7 @@ class LoadingState extends MusicBeatState {
 			case 1: dots = '..';
 			case 2: dots = '...';
 		}
-		loadingText.text = Language.getPhrase('now_loading', '({1}%) Now Loading{2}', [utils.MathUtil.floorDecimal(curPercent * 100, 2), dots]);
+		loadingText.text = Language.getPhrase('now_loading', '({1}%) {2}{3}', [utils.MathUtil.floorDecimal(curPercent * 100, 2), stateText, dots]);
 	}
 
 	#if HSCRIPT_ALLOWED
@@ -275,11 +276,12 @@ class LoadingState extends MusicBeatState {
 		soundsToPrepare = [];
 		musicToPrepare = [];
 		songsToPrepare = [];
+		stateText = 'Preparing to load assets';
 
 		initialThreadCompleted = false;
 		var threadsCompleted:Int = 0;
 		var threadsMax:Int = 0;
-		function completedThread() {
+		function completedThread():Void {
 			threadsCompleted++;
 			if (threadsCompleted == threadsMax) {
 				clearInvalids();
@@ -291,6 +293,7 @@ class LoadingState extends MusicBeatState {
 		var song:SwagSong = PlayState.SONG;
 		var folder:String = Paths.formatToSongPath(Song.loadedSongName);
 		new Future<Bool>(() -> {
+			stateText = 'Loading Note Assets';
 			// LOAD NOTE IMAGE
 			var noteSkin:String = Note.defaultNoteSkin;
 			if (song.arrowSkin != null && song.arrowSkin.length > 1) noteSkin = song.arrowSkin;
@@ -334,6 +337,7 @@ class LoadingState extends MusicBeatState {
 			} catch (e:Dynamic) Logs.error("ERROR PREPARING SONG: " + e);
 			return true;
 		}, isIntrusive).then((_) -> new Future<Bool>(() -> {
+			stateText = 'Loading Stage Assets';
 			if (song.stage == null || song.stage.length < 1)
 				song.stage = StageData.vanillaSongStage(folder);
 
@@ -402,6 +406,7 @@ class LoadingState extends MusicBeatState {
 			}
 			return true;
 		}, isIntrusive)).onError((err:Dynamic) -> Logs.error('Error while preparing song: $err'));
+		stateText = 'Finished Loading.';
 	}
 
 	public static function clearInvalids():Void {

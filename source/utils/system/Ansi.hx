@@ -1,5 +1,18 @@
 package utils.system;
 
+enum abstract AnsiStyle(Int) from Int to Int {
+	public var RESET:AnsiStyle = 0; // 0m
+	public var BOLD:AnsiStyle = 1; // 1m
+	public var DIM:AnsiStyle = 2; // 2m
+	public var ITALIC:AnsiStyle = 3; // 3m
+	public var UNDERLINE:AnsiStyle = 4; // 4m
+	public var BLINK:AnsiStyle = 5; // 5m
+	public var BLINK_FAST:AnsiStyle = 6; // 6m
+	public var REVERSE:AnsiStyle  = 7; // 7m
+	public var HIDDEN:AnsiStyle = 8; // 8m
+	public var STRIKETHROUGH:AnsiStyle = 9; // 9m
+}
+
 enum abstract AnsiColor(Int) from Int to Int {
 	public var NONE:AnsiColor = -1;
 
@@ -80,6 +93,11 @@ class Ansi {
 	public static function colorToOpenFL(color:AnsiColor):FlxColor {
 		var i:Int = Std.int(color);
 		return (i >= 0 && i < FLX_COLOR.length) ? FLX_COLOR[i] : 0xFFFFFFFF;
+	}
+
+	public static function style(text:String, s:AnsiStyle, reset:Bool = true):String {
+		var prefix:String = '\x1b[${(s:Int)}m';
+		return reset ? (prefix + text + '\x1b[0m') : (prefix + text);
 	}
 
 	/**

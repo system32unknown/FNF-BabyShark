@@ -2,6 +2,7 @@ package;
 
 import states.FlashingState;
 import backend.NativeFileSystem;
+import utils.FunkinCache;
 #if DEBUG_TRACY
 import cpp.vm.tracy.TracyProfiler;
 import openfl.events.Event;
@@ -43,10 +44,9 @@ class Init extends flixel.FlxState {
 
 			#if DISCORD_ALLOWED DiscordClient.prepare(); #end
 			utils.plugins.EvacuateDebugPlugin.init();
+			FunkinCache.init();
 
 			NativeFileSystem.openFlAssets = openfl.Assets.list();
-			#if linux FlxG.signals.preStateCreate.add(state -> NativeFileSystem.excludePaths.resize(0)); #end
-
 			_coreInitialized = true;
 		}
 
@@ -56,7 +56,7 @@ class Init extends flixel.FlxState {
 		Settings.load();
 
 		Paths.clearStoredMemory();
-		utils.FunkinCache.init();
+		FunkinCache.instance.clearSecondLayer();
 
 		Mods.pushGlobalMods();
 		Mods.loadTopMod();

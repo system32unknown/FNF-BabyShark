@@ -168,11 +168,6 @@ class PlatformUtil {
 	#end
 	public static function allocConsole() {}
 
-	#if (cpp && windows)
-	@:functionCode('return SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);')
-	#end
-	public static function setAnsiColors(color:Int):Bool return false;
-
 	#if windows
 	@:functionCode('
 		system("CLS");

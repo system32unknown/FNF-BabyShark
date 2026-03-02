@@ -67,8 +67,7 @@ class Logs {
 			Sys.print(chunk.text);
 		}
 		NativeUtil.setAnsiColors();
-		Sys.print("\n");
-
+		Sys.println("\r");
 		_showing = false;
 	}
 
