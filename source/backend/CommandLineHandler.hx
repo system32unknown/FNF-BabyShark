@@ -22,9 +22,9 @@ class CommandLineHandler {
 
 	static function printHelp():Void {
 		Sys.println("-- Alter Engine Command Line help --");
-		Sys.println("-help           | Show this help");
-		Sys.println("-nocolor        | Disables colors in the terminal");
-		Sys.println("-v / -verbose   | Enables verbose logging");
+		Sys.println("-help			| Show this help");
+		Sys.println("-nocolor		| Disables colors in the terminal");
+		Sys.println("-v / -verbose	| Enables verbose logging");
 	}
 }
 #end

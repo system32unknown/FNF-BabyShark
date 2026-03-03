@@ -40,9 +40,8 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 
 		_bars = [];
 
-		var tmp:Bitmap;
 		for (i in 0...10) {
-			tmp = new Bitmap(new BitmapData(4, i + 1, false, FlxColor.GREEN));
+			var tmp:Bitmap = new Bitmap(new BitmapData(4, i + 1, false, FlxColor.GREEN));
 			addChild(tmp);
 			_bars.push(tmp);
 		}
@@ -99,7 +98,7 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 		lerpYPos = 0;
 		visible = active = true;
 
-		var globalVolume:Int = FlxG.sound.muted ? 0 : Math.round(FlxG.sound.volume * 10);
+		var globalVolume:Int = FlxG.sound.muted ? 0 : Math.round(volume * 10);
 		for (i in 0..._bars.length) _bars[i].alpha = i < globalVolume ? 1 : .5;
 
 		_label.text = FlxG.sound.muted ? 'Muted' : (label ?? 'Volume: ${globalVolume * 10}%');

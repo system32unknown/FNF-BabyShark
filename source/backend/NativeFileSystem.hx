@@ -158,7 +158,7 @@ class NativeFileSystem {
 
 		// Walk backwards from the end of the path until we reach a directory
 		// that actually exists, then do a case-insensitive scan from there.
-		var parts:String = absPath.replace("\\", "/").split("/");
+		var parts:Array<String> = absPath.replace("\\", "/").split("/");
 		var pending:Array<String> = [];
 
 		while (parts.length > 0 && !FileSystem.exists(parts.join("/")))

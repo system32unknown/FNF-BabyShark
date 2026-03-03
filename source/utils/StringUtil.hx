@@ -34,7 +34,7 @@ class StringUtil {
 	 * Fractional seconds:
 	 * - If `precision > 0`, appends ".<fraction>".
 	 * - `precision` here is the scale factor (kept compatible with your original math).
-	 *   If you want “decimal digits”, see the note below.
+	 * If you want “decimal digits”, see the note below.
 	 *
 	 * @param time Total duration in seconds (can be fractional).
 	 * @param precision Scale factor for fractional part (kept as-is from original code).

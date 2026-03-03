@@ -4,7 +4,6 @@ package data;
 import scripting.ModchartSprite;
 import backend.Song;
 import backend.NativeFileSystem;
-import tjson.TJSON;
 
 typedef StageFile = {
 	var directory:String;

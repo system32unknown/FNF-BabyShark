@@ -427,9 +427,9 @@ class PlatformUtil {
 	/**
 	* Flashes the application window in the taskbar and/or title bar.
 	*
-	* @param count   The number of times the window should flash. Use `0` to flash continuously until the window comes to the foreground.
+	* @param count The number of times the window should flash. Use `0` to flash continuously until the window comes to the foreground.
 	* @param timeout The rate of flashing, in milliseconds. Use `0` to use the default cursor blink rate.
-	* @param flag    A combination of `FlashWFlags` values that determine how the window flashes (taskbar, caption, continuously, etc.).
+	* @param flag  A combination of `FlashWFlags` values that determine how the window flashes (taskbar, caption, continuously, etc.).
 	*
 	* @return `true` if the flashing operation was successfully started, `false` otherwise.
 	*/

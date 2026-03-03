@@ -48,10 +48,10 @@ package backend;
 	/**
 	 * Creates a new judgement definition.
 	 *
-	 * @param name        Judgement name (also used for image and timing window lookup).
-	 * @param ratingMod   Accuracy multiplier.
-	 * @param score       Score awarded.
-	 * @param noteSplash  Whether a splash should appear.
+	 * @param name Judgement name (also used for image and timing window lookup).
+	 * @param ratingMod Accuracy multiplier.
+	 * @param score Score awarded.
+	 * @param noteSplash Whether a splash should appear.
 	 */
 	public function new(name:String = '', ratingMod:Float = 1, score:Int = 500, noteSplash:Bool = true) {
 		this.name = image = name;
