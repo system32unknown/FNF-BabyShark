@@ -366,8 +366,10 @@ class BaseOptionsMenu extends MusicBeatSubstate {
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 
-	function reloadCheckboxes() {
-		for (checkbox in checkboxGroup)
+	function reloadCheckboxes():Void {
+		for (checkbox in checkboxGroup) {
+			if (checkbox == null) continue; 
 			checkbox.daValue = Std.string(optionsArray[checkbox.ID].getValue()) == 'true';
+		}
 	}
 }

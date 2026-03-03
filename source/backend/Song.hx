@@ -1,7 +1,6 @@
 package backend;
 
 import objects.Note;
-import haxe.ds.Vector;
 
 typedef SwagSong = {
 	var song:String;

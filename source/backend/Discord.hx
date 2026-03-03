@@ -28,10 +28,13 @@ class DiscordClient {
 
 	public static function prepare() {
 		if (!isInitialized && Settings.data.discordRPC) initialize();
-		lime.app.Application.current.window.onClose.add(() -> if (isInitialized) shutdown());
+		lime.app.Application.current.window.onClose.add(() -> {
+			if (!isInitialized) return;
+			shutdown();
+		});
 	}
 
-	public dynamic static function shutdown() {
+	public dynamic static function shutdown():Void {
 		isInitialized = false;
 		Discord.Shutdown();
 	}
@@ -85,6 +88,8 @@ class DiscordClient {
 	}
 
 	public static function changePresence(?details:String = 'In the Menus', ?state:Null<String>, ?hasStartTimestamp:Bool, ?endTimestamp:Float, ?largeImageKey:Null<String>) {
+		if (!isInitialized) return;
+
 		if (largeImageKey == null) largeImageKey = icon_img;
 
 		var startTimestamp:Float = hasStartTimestamp ? Date.now().getTime() : 0;
@@ -138,9 +143,8 @@ final class DiscordPresence {
 
 	@:noCompletion var __presence:DiscordRichPresence;
 
-	function new() {
+	function new():Void {
 		__presence = new DiscordRichPresence();
-		__presence.type = DiscordActivityType_Playing;
 	}
 
 	public function toString():String {
