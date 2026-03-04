@@ -220,7 +220,7 @@ class PlayState extends MusicBeatState {
 
 	var downScroll:Bool = Settings.data.downScroll;
 	var middleScroll:Bool = Settings.data.middleScroll;
-	var hideHud:Bool = Settings.data.hideHud;
+	public var hideHud:Bool = Settings.data.hideHud;
 	var timeType:String = Settings.data.timeBarType; 
 
 	// Callbacks for stages
@@ -435,16 +435,6 @@ class PlayState extends MusicBeatState {
 		healthBar.alpha = Settings.data.healthBarAlpha;
 		reloadHealthBarColors();
 		if (!instakillOnMiss) uiGroup.add(healthBar);
-
-		iconP1 = new HealthIcon(boyfriend.healthIcon, true);
-		iconP2 = new HealthIcon(dad.healthIcon);
-		for (icon in [iconP1, iconP2]) {
-			icon.y = healthBar.y - (icon.height / 2);
-			icon.visible = !hideHud;
-			icon.alpha = Settings.data.healthBarAlpha;
-			if (Settings.data.healthTypes == 'Psych') icon.iconType = 'psych';
-			if (!instakillOnMiss) uiGroup.add(icon);
-		}
 
 		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 35), FlxG.width);
 		scoreTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
@@ -1192,8 +1182,8 @@ class PlayState extends MusicBeatState {
 	var skipCnt:Int = 0;
 
 	var nps:IntMap<Float> = new IntMap<Float>();
-	var bfNpsVal:Float = 0;
-	var bfNpsMax:Float = 0;
+	public var bfNpsVal:Float = 0;
+	public var bfNpsMax:Float = 0;
 	var bfSideHit:Float = 0;
 
 	override function update(elapsed:Float):Void {
@@ -1223,7 +1213,7 @@ class PlayState extends MusicBeatState {
 			else if (Controls.justPressed('debug_2')) openCharacterEditor();
 		}
 
-		for (icon in [iconP1, iconP2]) icon.bopUpdate(elapsed, playbackRate);
+		
 
 		if (startedCountdown && !paused) {
 			Conductor.songPosition += elapsed * 1000 * playbackRate;
@@ -1418,11 +1408,7 @@ class PlayState extends MusicBeatState {
 
 		health = value; // update health bar
 		var newPercent:Null<Float> = FlxMath.remapToRange(healthBar.bounded, healthBar.bounds.min, healthBar.bounds.max, 0, 100);
-		healthBar.percent = (newPercent ?? 0);
 
-		if (healthBar.percent < 20) {iconP1.setState(1); iconP2.setState(2);}
-		else if (healthBar.percent > 80) {iconP1.setState(2); iconP2.setState(1);}
-		else {iconP1.setState(0); iconP2.setState(0);}
 		return health;
 	}
 
@@ -2310,14 +2296,6 @@ class PlayState extends MusicBeatState {
 			camHUD.zoom += .03 * camZoomingMult;
 		}
 
-		for (i => icon in [iconP1, iconP2])
-			icon.bop({
-				curBeat: curBeat,
-				playbackRate: playbackRate,
-				gfSpeed: gfSpeed,
-				percent: healthBar.bounded
-			}, "Settings", i);
-
 		if (curBeat > 0) charactersDance(curBeat);
 		super.beatHit();
 		lastBeatHit = curBeat;
@@ -2467,7 +2445,7 @@ class PlayState extends MusicBeatState {
 							break;
 						}
 					}
-				else ratingName = ratingStuff[ratingStuff.length - 1][0]; //Uses last string
+				else ratingName = ratingStuff[ratingStuff.length - 1][0]; // Uses last string
 			}
 			fullComboFunction();
 		}

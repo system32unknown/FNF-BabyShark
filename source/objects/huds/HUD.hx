@@ -19,6 +19,14 @@ class HUD extends FlxSpriteGroup {
 
 	var game:PlayState = PlayState.instance;
 
+	var songName:String;
+	public function new(songName:String) {
+		this.songName = songName;
+
+		super();
+		active = false;
+	}
+
 	public function healthChange(value:Float) {}
 	public function songStarted() {}
 
