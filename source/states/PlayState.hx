@@ -220,7 +220,7 @@ class PlayState extends MusicBeatState {
 
 	var downScroll:Bool = Settings.data.downScroll;
 	var middleScroll:Bool = Settings.data.middleScroll;
-	public var hideHud:Bool = Settings.data.hideHud;
+	var hideHud:Bool = Settings.data.hideHud;
 	var timeType:String = Settings.data.timeBarType; 
 
 	// Callbacks for stages
@@ -435,6 +435,16 @@ class PlayState extends MusicBeatState {
 		healthBar.alpha = Settings.data.healthBarAlpha;
 		reloadHealthBarColors();
 		if (!instakillOnMiss) uiGroup.add(healthBar);
+
+		iconP1 = new HealthIcon(boyfriend.healthIcon, true);
+		iconP2 = new HealthIcon(dad.healthIcon);
+		for (icon in [iconP1, iconP2]) {
+			icon.y = healthBar.y - (icon.height / 2);
+			icon.visible = !hideHud;
+			icon.alpha = Settings.data.healthBarAlpha;
+			if (Settings.data.healthTypes == 'Psych') icon.iconType = 'psych';
+			if (!instakillOnMiss) uiGroup.add(icon);
+		}
 
 		scoreTxt = new FlxText(FlxG.width / 2, Math.floor(healthBar.y + 35), FlxG.width);
 		scoreTxt.setFormat(Paths.font("babyshark.ttf"), 16, FlxColor.WHITE, CENTER, OUTLINE, FlxColor.BLACK);
@@ -1182,8 +1192,8 @@ class PlayState extends MusicBeatState {
 	var skipCnt:Int = 0;
 
 	var nps:IntMap<Float> = new IntMap<Float>();
-	public var bfNpsVal:Float = 0;
-	public var bfNpsMax:Float = 0;
+	var bfNpsVal:Float = 0;
+	var bfNpsMax:Float = 0;
 	var bfSideHit:Float = 0;
 
 	override function update(elapsed:Float):Void {
@@ -1213,7 +1223,7 @@ class PlayState extends MusicBeatState {
 			else if (Controls.justPressed('debug_2')) openCharacterEditor();
 		}
 
-		
+		for (icon in [iconP1, iconP2]) icon.bopUpdate(elapsed, playbackRate);
 
 		if (startedCountdown && !paused) {
 			Conductor.songPosition += elapsed * 1000 * playbackRate;
@@ -1366,39 +1376,39 @@ class PlayState extends MusicBeatState {
 	public function noteUpdate():Void {
 		if (!generatedMusic) return;
 		checkEventNote();
-		if (!inCutscene) {
-			if (!cpuControlled) keysCheck();
-			else playerDance();
+		if (inCutscene) return;
 
-			if (notes.length > 0) {
-				if (startedCountdown) {
-					notes.forEach((daNote:Note) -> {
-						var canBeHit:Bool = Conductor.songPosition - daNote.strumTime > 0;
-						if (Settings.data.updateSpawnNote) daNote.strum = (!daNote.mustPress ? opponentStrums : playerStrums).members[daNote.noteData];
-						if (Conductor.songPosition - daNote.strumTime > noteKillOffset) {
-							if (daNote.mustPress) {
+		if (!cpuControlled) keysCheck();
+		else playerDance();
+
+		if (notes.length > 0) {
+			if (startedCountdown) {
+				notes.forEach((daNote:Note) -> {
+					var canBeHit:Bool = Conductor.songPosition - daNote.strumTime > 0;
+					if (Settings.data.updateSpawnNote) daNote.strum = (!daNote.mustPress ? opponentStrums : playerStrums).members[daNote.noteData];
+					if (Conductor.songPosition - daNote.strumTime > noteKillOffset) {
+						if (daNote.mustPress) {
+							if (cpuControlled) goodNoteHit(daNote);
+							else if (!daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit)) noteMiss(daNote);
+						} else {
+							if (!daNote.hitByOpponent) opponentNoteHit(daNote);
+							if (daNote.ignoreNote && !endingSong) noteMiss(daNote, true);
+						}
+						invalidateNote(daNote);
+						canBeHit = false;
+					}
+					if (canBeHit) {
+						if (daNote.mustPress) {
+							if (!daNote.blockHit || daNote.isSustainNote) {
 								if (cpuControlled) goodNoteHit(daNote);
-								else if (!daNote.ignoreNote && !endingSong && (daNote.tooLate || !daNote.wasGoodHit)) noteMiss(daNote);
-							} else {
-								if (!daNote.hitByOpponent) opponentNoteHit(daNote);
-								if (daNote.ignoreNote && !endingSong) noteMiss(daNote, true);
+								else if (!Util.toBool(pressHit & 1 << daNote.noteData) && daNote.isSustainNote && !daNote.wasGoodHit && Conductor.songPosition - daNote.strumTime > Conductor.stepCrochet) noteMiss(daNote);
 							}
-							invalidateNote(daNote);
-							canBeHit = false;
-						}
-						if (canBeHit) {
-							if (daNote.mustPress) {
-								if (!daNote.blockHit || daNote.isSustainNote) {
-									if (cpuControlled) goodNoteHit(daNote);
-									else if (!Util.toBool(pressHit & 1 << daNote.noteData) && daNote.isSustainNote && !daNote.wasGoodHit && Conductor.songPosition - daNote.strumTime > Conductor.stepCrochet) noteMiss(daNote);
-								}
-							} else if (!daNote.hitByOpponent && !daNote.ignoreNote || daNote.isSustainNote) opponentNoteHit(daNote);
-							if (daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
-						}
-						if (daNote.exists) daNote.followStrumNote(songSpeed);
-					});
-				} else notes.forEachAlive((daNote:Note) -> daNote.canBeHit = daNote.wasGoodHit = false);
-			}
+						} else if (!daNote.hitByOpponent && !daNote.ignoreNote || daNote.isSustainNote) opponentNoteHit(daNote);
+						if (daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
+					}
+					if (daNote.exists) daNote.followStrumNote(songSpeed);
+				});
+			} else notes.forEachAlive((daNote:Note) -> daNote.canBeHit = daNote.wasGoodHit = false);
 		}
 	}
 
@@ -1407,8 +1417,11 @@ class PlayState extends MusicBeatState {
 		if (!iconsAnimations || healthBar == null || !healthBar.enabled || healthBar.valueFunction == null) return health = value;
 
 		health = value; // update health bar
-		var newPercent:Null<Float> = FlxMath.remapToRange(healthBar.bounded, healthBar.bounds.min, healthBar.bounds.max, 0, 100);
+		healthBar.percent = FlxMath.remapToRange(healthBar.bounded, healthBar.bounds.min, healthBar.bounds.max, 0, 100);
 
+		if (healthBar.percent < 20) {iconP1.setState(1); iconP2.setState(2);}
+		else if (healthBar.percent > 80) {iconP1.setState(2); iconP2.setState(1);}
+		else {iconP1.setState(0); iconP2.setState(0);}
 		return health;
 	}
 
@@ -2296,6 +2309,14 @@ class PlayState extends MusicBeatState {
 			camHUD.zoom += .03 * camZoomingMult;
 		}
 
+		for (i => icon in [iconP1, iconP2])
+			icon.bop({
+				curBeat: curBeat,
+				playbackRate: playbackRate,
+				gfSpeed: gfSpeed,
+				percent: healthBar.bounded
+			}, "Settings", i);
+
 		if (curBeat > 0) charactersDance(curBeat);
 		super.beatHit();
 		lastBeatHit = curBeat;
@@ -2445,7 +2466,7 @@ class PlayState extends MusicBeatState {
 							break;
 						}
 					}
-				else ratingName = ratingStuff[ratingStuff.length - 1][0]; // Uses last string
+				else ratingName = ratingStuff[ratingStuff.length - 1][0]; //Uses last string
 			}
 			fullComboFunction();
 		}
