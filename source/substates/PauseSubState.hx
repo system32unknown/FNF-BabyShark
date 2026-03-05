@@ -263,6 +263,7 @@ class PauseSubState extends MusicBeatSubstate {
 					PlayState.changedDifficulty = false;
 					PlayState.chartingMode = false;
 					FlxG.camera.followLerp = 0;
+					PlayState.instance.unloadNotes();
 			}
 		}
 	}
@@ -282,6 +283,7 @@ class PauseSubState extends MusicBeatSubstate {
 		pSte.paused = true; // For Hscript
 		FlxG.sound.music.volume = 0;
 		pSte.vocals.volume = 0;
+		pSte.unloadNotes();
 
 		if (noTrans) MusicBeatState.skipNextTransIn = MusicBeatState.skipNextTransOut = true;
 		FlxG.resetState();

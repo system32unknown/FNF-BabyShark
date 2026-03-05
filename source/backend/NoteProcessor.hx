@@ -8,7 +8,7 @@ import objects.Note;
  * Handles note spawning for note spams in PlayState.
  */
 class NoteProcessor {
-	var game:PlayState;
+	var game:PlayState = PlayState.instance;
 
 	/**
 	 * How far ahead (in ms) notes are spawned before their hit time.
@@ -80,16 +80,20 @@ class NoteProcessor {
 	 */
 	var adjustedPosition:Float = 0;
 
-	var _botPlay:Bool = false;
-	var _songSpeed:Float = 0.0;
+	var botPlay(get, never):Bool;
+	inline function get_botPlay():Bool return game.cpuControlled;
+
+	var songSpeed(get, never):Float;
+	inline function get_songSpeed():Float return game.songSpeed;
 
 	var _skipThisFrame:Int = 0;
 
-	public function new(ps:PlayState):Void {
-		game = ps;
-		_botPlay = game.cpuControlled;
-		_songSpeed = game.songSpeed;
-	}
+	/**
+	 * Bitmask of keys currently held this frame.
+	 */
+	var pressHit:Int = 0;
+
+	public function new():Void {}
 
 	/**
 	 * Called every game frame. Runs note spawning and note-update logic
@@ -139,7 +143,7 @@ class NoteProcessor {
 		isHold = target.isSustainNote;
 		isPlayerNote = target.mustPress;
 
-		spawnWindowMs = isHold ? Math.max(spawnTime / _songSpeed, Conductor.stepCrochet) : spawnTime / _songSpeed;
+		spawnWindowMs = isHold ? Math.max(spawnTime / songSpeed, Conductor.stepCrochet) : spawnTime / songSpeed;
 		spawnWindowSec = spawnWindowMs / 1000;
 		isVisible = target.strumTime - adjustedPosition < spawnWindowMs;
 	}
@@ -149,9 +153,9 @@ class NoteProcessor {
 	 * notes group or handles them as missed/skipped notes.
 	 */
 	function noteSpawn():Void {
+		var frameStart:Float = Timer.stamp();
 		if (game.unspawnNotes.length <= totalCnt) return;
 
-		var frameStart:Float = Timer.stamp();
 		var target:Note = game.unspawnNotes[totalCnt];
 		adjustedPosition = Conductor.songPosition - Settings.data.noteOffset;
 		cacheSpawnInfo(target);
@@ -162,10 +166,15 @@ class NoteProcessor {
 
 			var shouldSkip:Bool = isHold ? tooLate : pastHitTime;
 
-			var withinTimeout:Bool = !Settings.data.skipSpawnNote || Timer.stamp() - frameStart < spawnWindowSec;
+			var isCanPass:Bool = !Settings.data.skipSpawnNote || Timer.stamp() - frameStart < spawnWindowSec;
 
-			if ((!shouldSkip || !Settings.data.optimizeSpawnNote) && withinTimeout) spawnNote(target, pastHitTime);
-			else handleSkippedNote(target);
+			if ((!shouldSkip || !Settings.data.optimizeSpawnNote) && isCanPass) spawnNote(target, pastHitTime);
+			else {
+				game.strumHitId = (target.noteData + (isPlayerNote ? EK.keys(PlayState.mania) : 0)) & 255;
+				if (botPlay) {
+					if (!isHold && isPlayerNote) ++skipBf;
+				} else if (isPlayerNote) @:privateAccess game.noteMissCommon(target.noteData);
+			}
 
 			// Advance to the next unspawned note
 			if (game.unspawnNotes.length > ++totalCnt) target = game.unspawnNotes[totalCnt];
@@ -185,20 +194,9 @@ class NoteProcessor {
 		game.callOnHScript('onSpawnNote', [note]);
 
 		if (Settings.data.processFirst) {
-			note.followStrumNote(_songSpeed);
+			note.followStrumNote(songSpeed);
 			if (pastHitTime && note.isSustainNote && note.strum.sustainReduce) note.clipToStrumNote();
 		}
-	}
-
-	/**
-	 * Handles a note that was skipped (too late or optimised away).
-	 */
-	inline function handleSkippedNote(note:Note):Void {
-		game.strumHitId = (note.noteData + (isPlayerNote ? EK.keys(PlayState.mania) : 0)) & 0xFF;
-
-		if (_botPlay) {
-			if (!isHold && isPlayerNote) ++skipBf;
-		} else if (isPlayerNote) @:privateAccess game.noteMissCommon(note.noteData);
 	}
 
 	/**
@@ -210,7 +208,7 @@ class NoteProcessor {
 		game.checkEventNote();
 		if (game.inCutscene) return;
 
-		if (!_botPlay) game.keysCheck();
+		if (!botPlay) keysCheck();
 		else game.playerDance();
 
 		if (game.notes.length == 0) return;
@@ -230,9 +228,8 @@ class NoteProcessor {
 
 		if (Conductor.songPosition - daNote.strumTime > game.noteKillOffset) {
 			if (daNote.mustPress) {
-				if (_botPlay) game.goodNoteHit(daNote);
+				if (botPlay) game.goodNoteHit(daNote);
 				else if (!daNote.ignoreNote && !game.endingSong && (daNote.tooLate || !daNote.wasGoodHit)) {
-					trace("FUCK");
 					game.noteMiss(daNote);
 				}
 			} else {
@@ -246,16 +243,43 @@ class NoteProcessor {
 		if (canBeHit) {
 			if (daNote.mustPress) {
 				if (!daNote.blockHit || daNote.isSustainNote) {
-					if (_botPlay) game.goodNoteHit(daNote);
-					else {
-						final holdMissed:Bool = !Util.toBool(game.pressHit & (1 << daNote.noteData)) && daNote.isSustainNote && !daNote.wasGoodHit && Conductor.songPosition - daNote.strumTime > Conductor.stepCrochet;
-						if (holdMissed) game.noteMiss(daNote);
-					}
+					if (botPlay) game.goodNoteHit(daNote);
+					else if (!Util.toBool(pressHit & (1 << daNote.noteData)) && daNote.isSustainNote && !daNote.wasGoodHit && Conductor.songPosition - daNote.strumTime > Conductor.stepCrochet) game.noteMiss(daNote);
 				}
 			} else if ((!daNote.hitByOpponent && !daNote.ignoreNote) || daNote.isSustainNote) game.opponentNoteHit(daNote);
 			if (daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
 		}
 
-		if (daNote.exists) daNote.followStrumNote(_songSpeed);
+		if (daNote.exists) daNote.followStrumNote(songSpeed);
+	}
+
+	/**
+	 * Samples held/released key states, updates `pressHit`, drives sustain
+	 * auto-hit during the active gameplay window, triggers idle dance when no
+	 * keys are held, and releases any blocked strum lanes.
+	 */
+	function keysCheck():Void @:privateAccess {
+		var holdArray:Array<Bool> = [];
+		var releaseArray:Array<Bool> = [];
+
+		pressHit = 0;
+		for (index => key in game.keysArray) {
+			holdArray.push(Controls.pressed(key));
+			releaseArray.push(Controls.released(key));
+			pressHit |= holdArray[index] ? 1 << index : 0;
+		}
+
+		if (game.startedCountdown && !game.inCutscene && !game.boyfriend.stunned && game.generatedMusic) {
+			if (game.notes.length == 0) return;
+
+			for (note in game.notes) {
+				if (note == null || game.strumsBlocked[note.noteData] || !note.canBeHit || !note.mustPress || note.tooLate || note.wasGoodHit || note.blockHit || !note.isSustainNote) continue;
+				if (holdArray[note.noteData]) game.goodNoteHit(note);
+			}
+			if (!holdArray.contains(true) || game.endingSong) game.playerDance();
+		}
+
+		if (game.strumsBlocked.contains(true) && releaseArray.contains(true))
+			for (i in 0...releaseArray.length) if (releaseArray[i] || game.strumsBlocked[i]) game.keyReleased(i);
 	}
 }

@@ -207,7 +207,6 @@ class PlayState extends MusicBeatState {
 	public var introSoundNames:Array<String> = [];
 
 	var keysArray:Array<String>;
-	public var pressHit:Int = 0;
 
 	public var popUpGroup:FlxTypedSpriteGroup<Popup>;
 	public var uiGroup:FlxSpriteGroup;
@@ -244,10 +243,10 @@ class PlayState extends MusicBeatState {
 
 		instance = this;
 		PauseSubState.songName = null; //Reset to default
-		processor = new NoteProcessor(this);
-
+		processor = new NoteProcessor();
+		
 		FlxG.sound.music?.stop();
-
+		
 		// Gameplay settings
 		healthGain = Settings.getGameplaySetting('healthgain');
 		healthLoss = Settings.getGameplaySetting('healthloss');
@@ -1731,11 +1730,17 @@ class PlayState extends MusicBeatState {
 				FlxG.switchState(() -> new FreeplayState());
 				FlxG.sound.playMusic(Paths.music('freakyMenu'));
 				changedDifficulty = false;
+				leavePlayState = true;
 			}
 			transitioning = true;
 		}
-		unspawnNotes.resize(0); loaded = false;
+		unloadNotes();
 		return true;
+	}
+
+	public function unloadNotes():Void {
+		unspawnNotes.resize(0);
+		loaded = false;
 	}
 
 	public function KillNotes():Void {
@@ -1897,28 +1902,6 @@ class PlayState extends MusicBeatState {
 		callOnHScript('onKeyRelease', [key]);
 	}
 
-	function keysCheck():Void {
-		var holdArray:Array<Bool> = [];
-		var releaseArray:Array<Bool> = [];
-		pressHit = 0;
-		for (index => key in keysArray) {
-			holdArray.push(Controls.pressed(key));
-			releaseArray.push(Controls.released(key));
-			pressHit |= holdArray[index] ? 1 << index : 0;
-		}
-		if (startedCountdown && !inCutscene && !boyfriend.stunned && generatedMusic) {
-			if (notes.length > 0) for (n in notes) { // I can't do a filter here, that's kinda awesome
-				if ((n != null && !strumsBlocked[n.noteData] && n.canBeHit && n.mustPress && !n.tooLate && !n.wasGoodHit && !n.blockHit) && n.isSustainNote) {
-					if (holdArray[n.noteData]) goodNoteHit(n);
-				}
-			}
-			if (!holdArray.contains(true) || endingSong) playerDance();
-		}
-
-		if (strumsBlocked.contains(true) && releaseArray.contains(true))
-			for (i in 0...releaseArray.length) if (releaseArray[i] || strumsBlocked[i]) keyReleased(i);
-	}
-
 	function noteMiss(daNote:Note, opponent:Bool = false):Void { //You didn't hit the key and let it go offscreen, also used by Hurt Notes
 		if (daNote.missed) return;
 		notes.forEachAlive((note:Note) -> {
@@ -2076,7 +2059,7 @@ class PlayState extends MusicBeatState {
 			vocals.volume = 1;
 
 			if (!isSus) {
-				++combo; ++processor.skipBf;
+				++combo; ++processor.sideHit;
 				if (showPopups) popUpHitNote = note;
 				addScore(note);
 			}
@@ -2161,9 +2144,7 @@ class PlayState extends MusicBeatState {
 		backend.NoteLoader.dispose();
 		Paths.popUpFramesMap.clear();
 		Note.chartArrowSkin = null;
-
 		if (leavePlayState) SONG = null;
-		unspawnNotes = [];
 		notes.clear();
 
 		inPlayState = false;

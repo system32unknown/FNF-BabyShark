@@ -1551,7 +1551,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 	function createNote(note:Dynamic, ?secNum:Null<Int> = null):MetaNote {
 		if (secNum == null) secNum = curSec;
-		var section = PlayState.SONG.notes[secNum];
+		var section:Section = PlayState.SONG.notes[secNum];
 
 		var daStrumTime:Float = note[0];
 		var daNoteData:Int = Std.int(note[1] % GRID_COLUMNS_PER_PLAYER);
@@ -3959,6 +3959,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 		setSongPlaying(false);
 		updateChartData();
 		StageData.loadDirectory(PlayState.SONG);
+		PlayState.instance.unloadNotes();
 		LoadingState.loadAndSwitchState(() -> new PlayState());
 		Controls.toggleVolumeKeys();
 	}
