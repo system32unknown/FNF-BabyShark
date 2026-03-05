@@ -256,7 +256,7 @@ class PlayState extends MusicBeatState {
 		cpuControlled = Settings.getGameplaySetting('botplay');
 		playbackRate = Settings.getGameplaySetting('songspeed');
 
-		FlxG.cameras.reset(camGame = initPsychCamera());
+		camGame = initPsychCamera();
 		camHUD = FlxG.cameras.add(new FlxCamera(), false); camHUD.bgColor.alpha = 0;
 		camOther = FlxG.cameras.add(new FlxCamera(), false); camOther.bgColor.alpha = 0;
 
