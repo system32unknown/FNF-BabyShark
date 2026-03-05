@@ -25,10 +25,14 @@ class NoteProcessor {
 	 */
 	public var totalCnt:Int = 0;
 
+	public var skipNote:Bool = true;
+
 	/**
 	 * Number of botplay notes to skip (passed to combo this frame).
 	 */
-	public var skipBf:Int = 0;
+	public var skipped:Float = 0;
+	public var skipCnt:Float = 0;
+	public var skipMax:Float = 0;
 
 	/**
 	 * Rolling window of note hits keyed by song position (ms).
@@ -86,8 +90,6 @@ class NoteProcessor {
 	var songSpeed(get, never):Float;
 	inline function get_songSpeed():Float return game.songSpeed;
 
-	var _skipThisFrame:Int = 0;
-
 	/**
 	 * Bitmask of keys currently held this frame.
 	 */
@@ -108,8 +110,14 @@ class NoteProcessor {
 			noteSpawn();
 		}
 
-		_skipThisFrame = skipBf;
-		if (_skipThisFrame > 0) game.combo += skipBf;
+		if (skipNote) {
+			skipCnt = skipped;
+			if (skipCnt > 0) {
+				game.combo += skipped;
+				sideHit += skipped;
+			}
+			skipMax = Math.max(skipCnt, skipMax);
+		}
 	}
 
 	/**
@@ -172,7 +180,7 @@ class NoteProcessor {
 			else {
 				game.strumHitId = (target.noteData + (isPlayerNote ? EK.keys(PlayState.mania) : 0)) & 255;
 				if (botPlay) {
-					if (!isHold && isPlayerNote) ++skipBf;
+					if (!isHold && isPlayerNote && skipNote) ++skipped;
 				} else if (isPlayerNote) @:privateAccess game.noteMissCommon(target.noteData);
 			}
 

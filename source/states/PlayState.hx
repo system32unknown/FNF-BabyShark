@@ -1186,7 +1186,7 @@ class PlayState extends MusicBeatState {
 	var popUpHitNote:Note = null;
 	override function update(elapsed:Float):Void {
 		if (popUpHitNote != null) popUpHitNote = null;
-		processor.hit = processor.skipBf = 0;
+		processor.hit = 0; processor.skipped = 0;
 
 		splashMoment.fill(0);
 		if (Settings.data.camMovement && camlock) camFollow.setPosition(camlockpoint.x, camlockpoint.y);

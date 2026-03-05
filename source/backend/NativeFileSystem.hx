@@ -89,9 +89,7 @@ class NativeFileSystem {
 	 * @param directory A path **relative** to the working directory.
 	 */
 	public static function isDirectory(directory:String):Bool {
-		if (!isModded(directory)) {
-			return openFlAssets.filter(p -> p.startsWith(directory) && p != directory).length > 0;
-		}
+		if (!isModded(directory)) return openFlAssets.filter(p -> p.startsWith(directory) && p != directory).length > 0;
 
 		return FileSystem.isDirectory(addCwd(directory));
 	}
@@ -114,12 +112,10 @@ class NativeFileSystem {
 			for (library in Assets.libraries.keys()) {
 				var libKey:String = '$library:$dir';
 				if (library != "default" && Assets.exists(libKey)) {
-					if (!dirs.contains(libKey) && !dirs.contains(dir))
-						dirs.push(libKey);
+					if (!dirs.contains(libKey) && !dirs.contains(dir)) dirs.push(libKey);
 				} else if (Assets.exists(dir) && !dirs.contains(dir)) {
 					// Return only the file name, not the full path
-					var parts:Array<String> = dir.split("/");
-					var name:Null<String> = parts.pop();
+					var name:Null<String> = dir.split("/").pop();
 					if (name != null && name != "") dirs.push(name);
 				}
 			}
