@@ -231,7 +231,10 @@ class NoteProcessor {
 		if (Conductor.songPosition - daNote.strumTime > game.noteKillOffset) {
 			if (daNote.mustPress) {
 				if (_botPlay) game.goodNoteHit(daNote);
-				else if (!daNote.ignoreNote && !game.endingSong && (daNote.tooLate || !daNote.wasGoodHit)) game.noteMiss(daNote);
+				else if (!daNote.ignoreNote && !game.endingSong && (daNote.tooLate || !daNote.wasGoodHit)) {
+					trace("FUCK");
+					game.noteMiss(daNote);
+				}
 			} else {
 				if (!daNote.hitByOpponent) game.opponentNoteHit(daNote);
 				if (daNote.ignoreNote && !game.endingSong) game.noteMiss(daNote, true);
@@ -244,7 +247,10 @@ class NoteProcessor {
 			if (daNote.mustPress) {
 				if (!daNote.blockHit || daNote.isSustainNote) {
 					if (_botPlay) game.goodNoteHit(daNote);
-					else if (!Util.toBool(game.pressHit & (1 << daNote.noteData)) && daNote.isSustainNote && !daNote.wasGoodHit && Conductor.songPosition - daNote.strumTime > Conductor.stepCrochet) game.noteMiss(daNote);
+					else {
+						final holdMissed:Bool = !Util.toBool(game.pressHit & (1 << daNote.noteData)) && daNote.isSustainNote && !daNote.wasGoodHit && Conductor.songPosition - daNote.strumTime > Conductor.stepCrochet;
+						if (holdMissed) game.noteMiss(daNote);
+					}
 				}
 			} else if ((!daNote.hitByOpponent && !daNote.ignoreNote) || daNote.isSustainNote) game.opponentNoteHit(daNote);
 			if (daNote.isSustainNote && daNote.strum.sustainReduce) daNote.clipToStrumNote();
