@@ -3,6 +3,8 @@ package backend;
 import haxe.io.Bytes;
 import haxe.io.BytesOutput;
 
+import flixel.util.FlxStringUtil;
+
 /**
  * The `ByteBeat` class generates audio using bytebeat formulas, 
  * a method of creating sound through simple mathematical expressions.
@@ -125,6 +127,11 @@ final class ByteBeat {
 	}
 
 	public function toString():String {
-		return '(Channels: $channels | SampleRate: $sampleRate | BitsPerSample: $bitsPerSample | Length: $length)';
+		return FlxStringUtil.getDebugString([
+			LabelValuePair.weak("channels", channels),
+			LabelValuePair.weak("sampleRate", sampleRate),
+			LabelValuePair.weak("bitsPerSample", bitsPerSample),
+			LabelValuePair.weak("length", length)
+		]);
 	}
 }
