@@ -107,4 +107,14 @@ class SpriteUtil {
 		rectangle.bitmap.fillRect(new openfl.geom.Rectangle(thickness, thickness, width - thickness * 2, height - thickness * 2), color);
 		return rectangle;
 	}
+
+	public static function addAnimSafe(spr:FlxSprite, name:String, prefix:String, framerate:Float = 24, loop:Bool = true):Void {
+		if (spr.animation.getByName(name) != null) return;
+
+		var frames:Array<flixel.graphics.frames.FlxFrame> = [];
+		@:privateAccess spr.animation.findByPrefix(frames, prefix);
+		if (frames.length == 0) return;
+
+		spr.animation.addByPrefix(name, prefix, framerate, loop);
+	}
 }

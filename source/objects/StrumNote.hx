@@ -1,6 +1,7 @@
 package objects;
 
 import shaders.RGBPalette.RGBShaderReference;
+import utils.SpriteUtil;
 
 class StrumNote extends FlxSprite {
 	public var rgbShader:RGBShaderReference;
@@ -138,8 +139,8 @@ class StrumNote extends FlxSprite {
 		animation.addByPrefix('static', 'arrow' + EK.gfxDir[EK.gfxHud[PlayState.mania][noteData]]);
 
 		// Prefer alt if exists, then fall back to normal (your original did both)
-		addAnimSafe('pressed', pressNameAlt + ' press', 24, false);
-		addAnimSafe('confirm', pressNameAlt + ' confirm', 24, false);
+		SpriteUtil.addAnimSafe(this, 'pressed', pressNameAlt + ' press', 24, false);
+		SpriteUtil.addAnimSafe(this, 'confirm', pressNameAlt + ' confirm', 24, false);
 
 		animation.addByPrefix('pressed', pressName + ' press', 24, false);
 		animation.addByPrefix('confirm', pressName + ' confirm', 24, false);
@@ -170,13 +171,5 @@ class StrumNote extends FlxSprite {
 			centerOrigin();
 		}
 		if (useRGBShader) rgbShader.enabled = (animation.curAnim != null && animation.curAnim.name != 'static');
-	}
-
-	function addAnimSafe(name:String, prefix:String, framerate:Float = 24, doLoop:Bool = true):Void {
-		var animFrames:Array<flixel.graphics.frames.FlxFrame> = [];
-		@:privateAccess animation.findByPrefix(animFrames, prefix); // adds valid frames to animFrames
-		if (animFrames.length < 1) return;
-
-		animation.addByPrefix(name, prefix, framerate, doLoop);
 	}
 }
