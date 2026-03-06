@@ -27,7 +27,7 @@ class FPSUtil {
 	 */
 	var cacheCount:Int;
 
-	public function new() {
+	public function new():Void {
 		curFPS = 0;
 		avgFPS = 0;
 		sum = sliceCnt = 0;

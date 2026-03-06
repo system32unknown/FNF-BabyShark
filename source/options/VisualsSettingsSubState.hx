@@ -120,6 +120,10 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 			else FlxG.sound.playMusic(Paths.music(Paths.formatToSongPath(Settings.data.pauseMusic)));
 			changedMusic = true;
 		};
+
+		addOption(new Option('Show Pop-Up Counter', 'If checked, the popup counter will display every time you hit notes.\nUnchecking reduces RAM usage by a bit.', 'showComboCounter'));
+		addOption(new Option('Pop-Up Stacking', "If checked, score pop-ups won't stack,\nbut the game now uses a recycling system,\nso it doesn't have a huge effect anymore.", 'comboStacking'));
+
 		super();
 		add(notes);
 		add(splashes);
@@ -227,6 +231,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 	override function destroy() {
 		if (changedMusic && !OptionsState.onPlayState) FlxG.sound.playMusic(Paths.music('freakyMenu'));
 		Note.globalRgbShaders = [];
+		if (bfIcon != null) FlxTween.cancelTweensOf(bfIcon);
 		super.destroy();
 	}
 }

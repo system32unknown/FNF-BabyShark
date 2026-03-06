@@ -81,6 +81,20 @@ class PlatformUtil {
 		registerDPIAware();
 	}
 
+	/**
+	 * Sends a native desktop notification with a title and description.
+	 *
+	 * On Windows, uses `Shell_NotifyIcon` to display a system tray balloon notification
+	 * via `NOTIFYICONDATA`, attached to the current foreground window.
+	 *
+	 * On Linux, delegates to the `notify-send` CLI utility with normal urgency.
+	 *
+	 * Returns `true` if the notification was sent successfully, `false` otherwise.
+	 * Always returns `false` on unsupported targets.
+	 *
+	 * @param title The notification title. Defaults to an empty string.
+	 * @param desc  The notification body text. Defaults to an empty string.
+	 */
 	#if cpp
 	#if windows
 	@:functionCode('
@@ -121,6 +135,15 @@ class PlatformUtil {
 	#end
 	public static function sendWindowsNotification(title:String = "", desc:String = ""):Bool return false;
 
+	/**
+	 * Removes the icon and system menu from the active window's title bar on Windows (cpp target only).
+	 *
+	 * Strips the `WS_SYSMENU` style from the active window, which hides the title bar icon
+	 * and disables the right-click context menu on the taskbar entry.
+	 * Forces a frame redraw via `SetWindowPos` with `SWP_FRAMECHANGED` to apply the change immediately.
+	 *
+	 * Only compiled and functional on `cpp` Windows targets, and is a no-op elsewhere.
+	 */
 	#if (cpp && windows)
 	@:functionCode('
 		HWND window = GetActiveWindow();
@@ -154,6 +177,15 @@ class PlatformUtil {
 	#end
 	public static function showMessageBox(caption:String, message:String, icon:MessageBoxIcon = MSG_WARNING):Int return 0;
 
+	/**
+	 * Allocates a new console window for the current process on Windows (cpp target only).
+	 *
+	 * Opens `stdin`, `stdout`, and `stderr` streams to the allocated console,
+	 * and sets the console's input/output code page to UTF-8 (CP 65001).
+	 *
+	 * This is useful for attaching a debug console to a GUI application at runtime.
+	 * Only compiled and functional on `cpp` Windows targets, and is a no-op elsewhere.
+	 */
 	#if (cpp && windows)
 	@:functionCode('
 		if (!AllocConsole()) return;
@@ -166,7 +198,7 @@ class PlatformUtil {
 		SetConsoleCP(65001);
 	')
 	#end
-	public static function allocConsole() {}
+	public static function allocConsole():Void {}
 
 	#if windows
 	@:functionCode('

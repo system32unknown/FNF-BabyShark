@@ -10,7 +10,7 @@
 - `git`
 - (Windows only) Microsoft Visual Studio Community 2022
 - (Linux only) VLC
-- Haxe (4.3.4 or greater)
+- Haxe (4.3.7 or greater)
 
 ---
 

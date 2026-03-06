@@ -161,8 +161,8 @@ class NoteProcessor {
 	 * notes group or handles them as missed/skipped notes.
 	 */
 	function noteSpawn():Void {
-		var frameStart:Float = Timer.stamp();
 		if (game.unspawnNotes.length <= totalCnt) return;
+		var frameStart:Float = Timer.stamp();
 
 		var target:Note = game.unspawnNotes[totalCnt];
 		adjustedPosition = Conductor.songPosition - Settings.data.noteOffset;
@@ -237,9 +237,7 @@ class NoteProcessor {
 		if (Conductor.songPosition - daNote.strumTime > game.noteKillOffset) {
 			if (daNote.mustPress) {
 				if (botPlay) game.goodNoteHit(daNote);
-				else if (!daNote.ignoreNote && !game.endingSong && (daNote.tooLate || !daNote.wasGoodHit)) {
-					game.noteMiss(daNote);
-				}
+				else if (!daNote.ignoreNote && !game.endingSong && (daNote.tooLate || !daNote.wasGoodHit)) game.noteMiss(daNote);
 			} else {
 				if (!daNote.hitByOpponent) game.opponentNoteHit(daNote);
 				if (daNote.ignoreNote && !game.endingSong) game.noteMiss(daNote, true);

@@ -2,21 +2,6 @@ package utils.system;
 
 #if cpp
 import cpp.vm.Gc;
-
-#if windows
-@:cppFileCode('
-	#include <windows.h>
-	#include <psapi.h>
-')
-#elseif linux
-@:cppFileCode('#include <stdio.h>')
-#elseif mac
-@:cppFileCode('
-	#include <unistd.h>
-	#include <sys/resource.h>
-	#include <mach/mach.h>
-')
-#end
 #elseif hl
 import hl.Gc;
 #end
@@ -67,6 +52,8 @@ class MemoryUtil {
 		cpp.NativeGc.enable(isGcOn);
 		#elseif hl
 		Gc.enable(isGcOn);
+		#else
+		throw 'Not implemented!';
 		#end
 	}
 
@@ -78,6 +65,8 @@ class MemoryUtil {
 	public static function collect(major:Bool = false):Void {
 		#if cpp
 		Gc.run(major);
+		#else
+		throw 'Not implemented!';
 		#end
 	}
 
@@ -90,6 +79,8 @@ class MemoryUtil {
 	public static function compact():Void {
 		#if cpp
 		Gc.compact();
+		#else
+		throw 'Not implemented!';
 		#end
 	}
 

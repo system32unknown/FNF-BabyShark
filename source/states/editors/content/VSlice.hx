@@ -274,7 +274,7 @@ class VSlice {
 		}
 
 		var notes:Array<VSliceNote> = [];
-		var generatedBy:String = 'Psych Engine - Chart Editor V-Slice Exporter';
+		var generatedBy:String = 'Alter Engine - Chart Editor V-Slice Exporter';
 		var timeChanges:Array<VSliceTimeChange> = [];
 
 		var time:Float = 0;

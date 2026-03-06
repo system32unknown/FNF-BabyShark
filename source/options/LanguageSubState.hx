@@ -97,7 +97,7 @@ class LanguageSubState extends FlxSubState {
 		}
 	}
 
-	function changeSelected(change:Int = 0) {
+	function changeSelected(change:Int = 0):Void {
 		curSelected = FlxMath.wrap(curSelected + change, 0, languages.length - 1);
 		for (num => lang in grpLanguages) {
 			lang.targetY = num - curSelected;
