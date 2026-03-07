@@ -187,6 +187,8 @@ class GameOverSubstate extends MusicBeatSubstate {
 			FlxG.camera.fade(FlxColor.BLACK, 2);
 			FlxTimer.wait((snd.length / 1000) - .7, () -> {
 				MusicBeatState.skipNextTransIn = true;
+
+				PlayState.instance.unloadNotes();
 				FlxG.resetState();
 			});
 		});

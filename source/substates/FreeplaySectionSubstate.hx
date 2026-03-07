@@ -153,8 +153,8 @@ class FreeplaySectionSubstate extends FlxSubState {
 	}
 
 	function applySectionVisuals():Void {
-		var g:FlxGraphic = sectionImageMap.get(daSection.toLowerCase());
-		if (g != null) sectionSpr.loadGraphic(g);
+		var graphic:FlxGraphic = sectionImageMap.get(daSection.toLowerCase());
+		if (graphic != null) sectionSpr.loadGraphic(graphic);
 
 		sectionSpr.updateHitbox();
 		sectionSpr.gameCenter();

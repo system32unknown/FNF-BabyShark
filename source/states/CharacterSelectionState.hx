@@ -167,7 +167,7 @@ class CharacterSelectionState extends MusicBeatState {
 			}
 
 			if (pressedTheFunny) return;
-			else pressedTheFunny = true;
+			pressedTheFunny = true;
 
 			selectedCharacter = true;
 			if (char.hasAnimation('hey') && char.animation.getByName('hey') != null)

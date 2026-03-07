@@ -46,8 +46,7 @@ class HScript extends AlterHscript {
 		this.varsToBring = varsToBring;
 		if (!manualRun) {
 			try {
-				var ret:Dynamic = execute();
-				returnValue = ret;
+				returnValue = execute();
 			} catch (e:AlterError) {
 				returnValue = null;
 				this.destroy();
