@@ -35,7 +35,6 @@ class NotesColorSubState extends MusicBeatSubstate {
 	var modeBG:FlxSprite;
 	var notesBG:FlxSprite;
 
-	// controller support
 	var tipTxt:FlxText;
 
 	public function new() {
@@ -61,7 +60,7 @@ class NotesColorSubState extends MusicBeatSubstate {
 		modeBG.alpha = 0.4;
 		add(modeBG);
 
-		notesBG = new FlxSprite(10, 190).makeGraphic(700, 100, FlxColor.BLACK);
+		notesBG = new FlxSprite(140, 190).makeGraphic(480, 125, FlxColor.BLACK);
 		notesBG.visible = false;
 		notesBG.alpha = 0.4;
 		add(notesBG);
@@ -134,13 +133,11 @@ class NotesColorSubState extends MusicBeatSubstate {
 		var tip:FlxText = new FlxText(tipX, tipY, 0, Language.getPhrase('note_colors_tip', 'Press RESET to Reset the selected Note Part.'), 16);
 		tip.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		tip.borderSize = 2;
-		tip.antialiasing = Settings.data.antialiasing;
 		add(tip);
 
 		tipTxt = new FlxText(tipX, tipY + 24, 0, '', 16);
 		tipTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, LEFT, OUTLINE, FlxColor.BLACK);
 		tipTxt.borderSize = 2;
-		tipTxt.antialiasing = Settings.data.antialiasing;
 		add(tipTxt);
 		tipTxt.text = Language.getPhrase('note_colors_hold_tip', 'Hold {1} + Press RESET key to fully reset the selected Note.', [Language.getPhrase('note_colors_shift', 'Shift')]);
 
@@ -334,7 +331,7 @@ class NotesColorSubState extends MusicBeatSubstate {
 				}
 			} 
 		} else if (Controls.justPressed('reset') && hexTypeNum < 0) {
-			var chosenRGB:Array<Array<FlxColor>> = (!onPixel ? Settings.default_data.arrowRGBExtra : Settings.default_data.arrowRGBPixelExtra);
+			var chosenRGB:Array<Array<FlxColor>> = (!onPixel ? Settings.default_data.arrowRGB : Settings.default_data.arrowRGBPixel);
 			if (FlxG.keys.pressed.SHIFT) {
 				for (i in 0...3) {
 					var strumRGB:RGBShaderReference = myNotes.members[curSelectedNote].rgbShader;
@@ -359,11 +356,12 @@ class NotesColorSubState extends MusicBeatSubstate {
 	function pointerFlxPoint():FlxPoint return FlxG.mouse.getViewPosition();
 
 	function centerHexTypeLine() {
+		var letterMembers = alphabetHex.members[0];
 		if (hexTypeNum > 0) {
-			var letter:AlphabetGlyph = alphabetHex.members[0].members[hexTypeNum - 1];
+			var letter:AlphabetGlyph = letterMembers.members[hexTypeNum - 1];
 			hexTypeLine.x = letter.x - letter.offset.x + letter.width;
 		} else {
-			var letter:AlphabetGlyph = alphabetHex.members[0].members[0];
+			var letter:AlphabetGlyph = letterMembers.members[0];
 			hexTypeLine.x = letter.x - letter.offset.x;
 		}
 		hexTypeLine.x += hexTypeLine.width;
@@ -408,7 +406,7 @@ class NotesColorSubState extends MusicBeatSubstate {
 	var myNotes:FlxTypedGroup<StrumNote>;
 	var bigNote:Note;
 	public function spawnNotes() {
-		dataArray = !onPixel ? Settings.data.arrowRGBExtra : Settings.data.arrowRGBPixelExtra;
+		dataArray = !onPixel ? Settings.data.arrowRGB : Settings.data.arrowRGBPixel;
 		if (onPixel) PlayState.stageUI = "pixel";
 
 		// clear groups
@@ -459,9 +457,9 @@ class NotesColorSubState extends MusicBeatSubstate {
 		Note.globalRgbShaders = [];
 		for (i in 0...dataArray.length) {
 			Note.initializeGlobalRGBShader(i);
-			var newNote:StrumNote = new StrumNote(20 + (680 / dataArray.length * i), 200, i, 0);
+			var newNote:StrumNote = new StrumNote(150 + (480 / dataArray.length * i), 200, i, 0);
 			newNote.useRGBShader = true;
-			newNote.setGraphicSize(80);
+			newNote.setGraphicSize(102);
 			newNote.updateHitbox();
 			newNote.ID = i;
 			myNotes.add(newNote);
@@ -474,9 +472,9 @@ class NotesColorSubState extends MusicBeatSubstate {
 		bigNote.updateHitbox();
 		bigNote.rgbShader.parent = Note.globalRgbShaders[curSelectedNote];
 		bigNote.shader = Note.globalRgbShaders[curSelectedNote].shader;
-		for (i in 0...EK.colArray.length) {
-			if (!onPixel) bigNote.animation.addByPrefix('note$i', EK.colArray[i] + '0', 24, true);
-			else bigNote.animation.add('note$i', [i + 9], 24, true);
+		for (i => v in Note.colArray) {
+			if (!onPixel) bigNote.animation.addByPrefix('note$i', v + '0', 24, true);
+			else bigNote.animation.add('note$i', [i + 4], 24, true);
 		}
 		insert(members.indexOf(myNotes) + 1, bigNote);
 		_storedColor = getShaderColor();
@@ -524,8 +522,8 @@ class NotesColorSubState extends MusicBeatSubstate {
 		}
 	}
 
-	function fixColors() {
-		var chosenRGB:Array<Array<FlxColor>> = (!onPixel ? Settings.default_data.arrowRGBExtra : Settings.default_data.arrowRGBPixelExtra);
+	function fixColors():Void {
+		var chosenRGB:Array<Array<FlxColor>> = (!onPixel ? Settings.default_data.arrowRGB : Settings.default_data.arrowRGBPixel);
 		for (i in 0...3) {
 			var strumRGB:RGBShaderReference = myNotes.members[curSelectedNote].rgbShader;
 			var color:FlxColor = chosenRGB[curSelectedNote][i];
@@ -540,11 +538,12 @@ class NotesColorSubState extends MusicBeatSubstate {
 		updateColors();
 	}
 
-	function setShaderColor(value:FlxColor) dataArray[curSelectedNote][curSelectedMode] = value;
+	function setShaderColor(value:FlxColor):Void dataArray[curSelectedNote][curSelectedMode] = value;
 	function getShaderColor():FlxColor return dataArray[curSelectedNote][curSelectedMode];
 	function getShader():RGBPalette return Note.globalRgbShaders[curSelectedNote];
 
 	override function destroy() {
+		Note.globalRgbShaders = [];
 		backend.NoteLoader.dispose();
 		super.destroy();
 	}

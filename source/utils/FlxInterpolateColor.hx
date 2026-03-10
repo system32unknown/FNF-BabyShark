@@ -1,9 +1,13 @@
 package utils;
 
 /**
- * Additional class for FlxColor lerping.
- * Gets rid of precision issues with `FlxColor.interpolate`.
+ * A wrapper around `FlxColor` that stores RGBA channels as `Float` values,
+ * enabling smooth, precision-safe color interpolation via `lerpTo` and `fpsLerpTo`.
+ *
+ * Prefer this over `FlxColor.interpolate` when floating-point precision matters
+ * (e.g. per-frame lerping in game loops).
  */
+@:nullSafety
 class FlxInterpolateColor {
 	public var red:Float = 0;
 	public var green:Float = 0;

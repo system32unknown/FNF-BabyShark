@@ -756,7 +756,7 @@ class NoteSplashEditorState extends MusicBeatState {
 		var i:Int = 0;
 		var k:Int = 1;
 		while (true) {
-			for (col in EK.colArray) {
+			for (col in objects.Note.colArray) {
 				var anim:String = k <= 1 ? col : '$col' + k;
 				var offset:Array<Null<Float>> = offsets[FlxMath.wrap(i, 0, Std.int(offsets.length - 1))];
 

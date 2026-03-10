@@ -136,7 +136,6 @@ class PlayState extends MusicBeatState {
 	var songPercent:Float = 0;
 
 	public var judgeData:Array<Judgement> = Judgement.loadDefault();
-	public static var mania:Int = 3;
 
 	var generatedMusic:Bool = false;
 	public var endingSong:Bool = false;
@@ -184,7 +183,7 @@ class PlayState extends MusicBeatState {
 	public var defaultHudCamZoom:Float = 1.;
 
 	public static var daPixelZoom:Float = 6; // how big to stretch the pixel art assets
-	var singAnimations:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT', 'singUP'];
+	var singAnimations:Array<String> = ['singLEFT', 'singDOWN', 'singUP', 'singRIGHT'];
 
 	public var inCutscene:Bool = false;
 	public var skipCountdown:Bool = false;
@@ -206,7 +205,7 @@ class PlayState extends MusicBeatState {
 	public var introSoundsSuffix:String = '';
 	public var introSoundNames:Array<String> = [];
 
-	var keysArray:Array<String>;
+	var keysArray:Array<String> = ['note_left', 'note_down', 'note_up', 'note_right'];
 
 	public var popUpGroup:FlxTypedSpriteGroup<Popup>;
 	public var uiGroup:FlxSpriteGroup;
@@ -265,11 +264,8 @@ class PlayState extends MusicBeatState {
 		Conductor.setBPMChanges(SONG);
 		Conductor.bpm = SONG.bpm;
 
-		if (SONG.mania == null || SONG.mania < EK.minMania || SONG.mania > EK.maxMania) SONG.mania = EK.defaultMania;
-		mania = SONG.mania;
-		keysArray = EK.fillKeys()[mania];
-		splashUsing = [for (_ in 0...EK.keys(mania)) []];
-		splashMoment = new Vector<Int>(EK.keys(mania), 0);
+		splashUsing = [for (_ in 0...4) []];
+		splashMoment = new Vector<Int>(4, 0);
 
 		storyDifficultyText = Difficulty.getString();
 		#if DISCORD_ALLOWED
@@ -758,7 +754,6 @@ class PlayState extends MusicBeatState {
 				setOnHScript('defaultOpponentStrumX$i', opponentStrums.members[i].x);
 				setOnHScript('defaultOpponentStrumY$i', opponentStrums.members[i].y);
 			}
-			setOnHScript('mania', SONG.mania);
 
 			startedCountdown = true;
 			Conductor.songPosition = -Conductor.crochet * 5 + Conductor.offset;
@@ -963,7 +958,7 @@ class PlayState extends MusicBeatState {
 		
 		if (!loaded) {
 			var daBpm:Float = Conductor.bpm;
-			var strumTimeVector:Vector<Float> = new Vector<Float>(EK.strums(mania), 0.0);
+			var strumTimeVector:Vector<Float> = new Vector<Float>(8, 0.0);
 
 			var oldNote:Note = null;
 			var sectionNoteCnt:Float = 0;
@@ -972,10 +967,10 @@ class PlayState extends MusicBeatState {
 				if (section.changeBPM != null && section.changeBPM && section.bpm != null && daBpm != section.bpm) daBpm = section.bpm;
 				for (songNotes in section.sectionNotes) {
 					var strumTime:Float = songNotes[0];
-					var noteColumn:Int = Std.int(songNotes[1] % EK.keys(mania));
+					var noteColumn:Int = Std.int(songNotes[1] % 4);
 					var holdLength:Float = songNotes[2];
 					var noteType:String = !Std.isOfType(songNotes[3], String) ? Note.DEFAULT_NOTE_TYPES[songNotes[3]] : songNotes[3];
-					var gottaHitNote:Bool = (songNotes[1] < EK.keys(mania));
+					var gottaHitNote:Bool = (songNotes[1] < 4);
 
 					if (Settings.data.skipGhostNotes && sectionNoteCnt != 0) {
 						if (Math.abs(strumTimeVector[noteColumn] - strumTime) <= Settings.data.ghostRange) continue;
@@ -1087,9 +1082,7 @@ class PlayState extends MusicBeatState {
 	public var skipArrowStartTween:Bool = false; // for hscript
 	public function generateStaticArrows(player:Int):Void {
 		var strumLine:FlxPoint = FlxPoint.get(middleScroll ? STRUM_X_MIDDLESCROLL : STRUM_X, downScroll ? (FlxG.height - 150) : 50);
-		for (i in 0...EK.keys(mania)) {
-			var tempMania:Int = mania;
-			if (tempMania == 0) tempMania = 1;
+		for (i in 0...4) {
 			var targetAlpha:Float = 1;
 			if (player < 1) {
 				if (!Settings.data.opponentStrums) targetAlpha = 0;
@@ -1098,13 +1091,13 @@ class PlayState extends MusicBeatState {
 
 			var babyArrow:StrumNote = new StrumNote(strumLine.x, strumLine.y, i, player);
 			babyArrow.downScroll = downScroll;
-			if (((!isStoryMode || deathCounter > 0) && !skipArrowStartTween) && mania > 1) {
+			if ((!isStoryMode || deathCounter > 0) && !skipArrowStartTween) {
 				babyArrow.alpha = 0;
-				FlxTween.tween(babyArrow, {alpha: targetAlpha}, (4 / tempMania) * playbackRate, {ease: FlxEase.circOut, startDelay: .5 + ((.8 / tempMania) * i) * playbackRate});
+				FlxTween.tween(babyArrow, {alpha: targetAlpha}, 1 * playbackRate, {ease: FlxEase.circOut, startDelay: .5 + (.2 * i) * playbackRate});
 			} else babyArrow.alpha = targetAlpha;
 
 			if (player < 1 && middleScroll) {
-				if (i > EK.midArray[mania]) babyArrow.x += FlxG.width / 2; //Up and Right
+				if (i > 1) babyArrow.x += FlxG.width / 2 + 25; // Up and Right
 			}
 
 			(player == 1 ? playerStrums : opponentStrums).add(babyArrow);
@@ -1942,14 +1935,13 @@ class PlayState extends MusicBeatState {
 		if (char != null && (note == null || !note.noMissAnimation) && char.hasMissAnimations) {
 			var postfix:String = '';
 			if (note != null) postfix = note.animSuffix;
-			char.playAnim(singAnimations[EK.gfxHud[mania][Std.int(Math.abs(direction))]] + 'miss$postfix', true);
+			char.playAnim(singAnimations[Std.int(Math.min(singAnimations.length - 1, direction))] + 'miss$postfix', true);
 			if (char != gf && combo > 5 && gf != null && gf.hasAnimation('sad')) {
 				gf.playAnim('sad');
 				gf.specialAnim = true;
 			}
 		}
-		combo = 0;
-		vocals.volume = 0;
+		combo = 0; vocals.volume = 0;
 		if (note != null) note.missed = true;
 	}
 
@@ -1965,7 +1957,7 @@ class PlayState extends MusicBeatState {
 		var result:Dynamic = callOnHScript('opponentNoteHitPre', [note]);
 		if (result == ScriptUtils.Function_Stop) return;
 
-		var animToPlay:String = singAnimations[EK.gfxHud[mania][leData]];
+		var animToPlay:String = singAnimations[Std.int(Math.min(singAnimations.length - 1, leData))];
 		if (leType == 'Hey!' && dad.hasAnimation('hey')) {
 			dad.playAnim('hey', true);
 			dad.specialAnim = true;
@@ -1973,7 +1965,7 @@ class PlayState extends MusicBeatState {
 		} else if (!note.noAnimation) {
 			var char:Character = note.gfNote ? gf : dad;
 			if (char != null) {
-				var canPlay:Bool = !note.isSustainNote || !Settings.data.holdAnim;
+				var canPlay:Bool = !isSus || !Settings.data.holdAnim;
 				if (isSus) {
 					var holdAnim:String = animToPlay + '-hold';
 					if (char.animation.exists(holdAnim)) animToPlay = holdAnim;
@@ -2023,7 +2015,7 @@ class PlayState extends MusicBeatState {
 		note.wasGoodHit = true;
 		if (note.hitsoundVolume > 0 && !note.hitsoundDisabled) FlxG.sound.play(Paths.sound(note.hitsound), note.hitsoundVolume);
 
-		var animToPlay:String = singAnimations[EK.gfxHud[mania][leData]];
+		var animToPlay:String = singAnimations[Std.int(Math.min(singAnimations.length - 1, leData))];
 		if (Settings.data.camMovement && bfturn) moveCamOnNote(animToPlay);
 
 		if (!dontZoomCam) camZooming = true;
@@ -2037,7 +2029,7 @@ class PlayState extends MusicBeatState {
 				}
 
 				if (char != null) {
-					var canPlay:Bool = !note.isSustainNote || !Settings.data.holdAnim;
+					var canPlay:Bool = !isSus || !Settings.data.holdAnim;
 					if (isSus) {
 						var holdAnim:String = animToPlay + note.animSuffix + '-hold';
 						if (char.animation.exists(holdAnim)) animToPlay = holdAnim;
@@ -2055,7 +2047,7 @@ class PlayState extends MusicBeatState {
 				}
 			}
 
-			strumPlayAnim(false, leData % EK.keys(mania));
+			strumPlayAnim(false, leData);
 			vocals.volume = 1;
 
 			if (!isSus) {
@@ -2291,7 +2283,7 @@ class PlayState extends MusicBeatState {
 	public var strumHitId:Int = -1;
 	function strumPlayAnim(isDad:Bool, id:Int):Void {
 		if (!Settings.data.lightStrum) return;
-		strumHitId = id + (isDad ? 0 : EK.keys(mania));
+		strumHitId = id + (isDad ? 0 : 4);
 		if (!Util.toBool(processor.hit & 1 << strumHitId)) {
 			var strumSpr:StrumNote = (isDad ? opponentStrums : playerStrums).members[id];
 			if (strumSpr != null) {

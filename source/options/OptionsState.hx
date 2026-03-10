@@ -29,12 +29,8 @@ class OptionsState extends MusicBeatState {
 	var curSelected:Int = 0;
 	var curPage:Int = 0;
 
-	var lastMania:Int = 3;
 	override function create() {
 		#if DISCORD_ALLOWED DiscordClient.changePresence("Options Menu"); #end
-
-		lastMania = PlayState.mania;
-		PlayState.mania = 8;
 
 		var bg:FlxSprite = new FlxSprite(Paths.image('menuDesat'));
 		bg.antialiasing = Settings.data.antialiasing;
@@ -122,7 +118,6 @@ class OptionsState extends MusicBeatState {
 	}
 
 	override function destroy() {
-		PlayState.mania = lastMania;
 		Controls.save();
 		Settings.save();
 		if (!Settings.data.disableGC && !MemoryUtil.isGcOn) {

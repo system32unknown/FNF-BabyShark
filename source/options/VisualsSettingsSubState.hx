@@ -24,7 +24,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		// for note skins and splash skins
 		notes = new FlxTypedGroup<StrumNote>();
 		splashes = new FlxTypedGroup<NoteSplash>();
-		for (i in 0...EK.colArray.length) {
+		for (i in 0...Note.colArray.length) {
 			var note:StrumNote = new StrumNote(45 + 140 * i, -200, i, 0);
 			changeNoteSkin(note);
 			note.setGraphicSize(112);
@@ -184,7 +184,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 	}
 
 	function changeNoteSkin(note:StrumNote) {
-		var skin:String = Note.defaultNoteSkin;
+		var skin:String = Note.DEFAULT_NOTE_SKIN;
 		var customSkin:String = skin + Note.getNoteSkinPostfix();
 		if (Paths.fileExists('images/$customSkin.png', IMAGE)) skin = customSkin;
 
@@ -207,7 +207,7 @@ class VisualsSettingsSubState extends BaseOptionsMenu {
 		for (splash in splashes) {
 			splash.revive();
 			splash.spawnSplashNote(0, 0, splash.ID, null, false);
-			if (splash.maxAnims > 1) splash.noteData = splash.noteData % EK.colArray.length + (rand * EK.colArray.length);
+			if (splash.maxAnims > 1) splash.noteData = splash.noteData % Note.colArray.length + (rand * Note.colArray.length);
 			var anim:String = splash.playDefaultAnim();
 			var conf:NoteSplashAnim = splash.config.animations.get(anim);
 			var offsets:Array<Float> = [0, 0];

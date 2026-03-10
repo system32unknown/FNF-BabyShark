@@ -1,7 +1,9 @@
 package utils;
 
 import flixel.graphics.FlxGraphic;
+import haxe.ds.IntMap;
 
+@:nullSafety
 class SpriteUtil {
 	/**
 	 * Returns the most present color in a FlxSprite.
@@ -14,7 +16,7 @@ class SpriteUtil {
 			return FlxColor.TRANSPARENT;
 		}
 
-		var weights:Map<Int, Float> = new Map<Int, Float>();
+		var weights:IntMap<Float> = new IntMap<Float>();
 
 		var bestKey:Int = 0;
 		var bestWeight:Float = -1;
@@ -26,18 +28,14 @@ class SpriteUtil {
 				var a:Int = (argb >>> 24) & 0xFF;
 				if (a == 0) continue; // skip fully transparent pixels
 
-				// Force alpha to 0xFF, preserve RGB
-				var key:Int = 0xFF000000 | (argb & 0x00FFFFFF);
+				var key:Int = 0xFF000000 | (argb & 0x00FFFFFF); // Force alpha to 0xFF, preserve RGB
 
 				var w:Null<Float> = weights.get(key);
 				if (w == null) w = 0;
 
 				var alphaW:Float = a / 255;
-
 				if (saturated) {
-					// Only compute HSL if needed
-					var c:FlxColor = FlxColor.fromInt(key);
-
+					var c:FlxColor = FlxColor.fromInt(key); // Only compute HSL if needed
 					var l:Float = c.lightness;
 					w += alphaW * 0.33 + 0.67 * (c.saturation * (2 * ((l > .5) ? (1 - l) : l)));
 				} else w += alphaW;
@@ -55,33 +53,44 @@ class SpriteUtil {
 	}
 
 	/**
-	 * Determines the dominant color in a sprite by counting occurrences.
-	 * @param sprite The sprite to analyze
-	 * @return The most frequent color with full opacity
+	 * Determines the dominant (most frequently occurring) opaque colour in the
+	 * current frame of a sprite.
+	 *
+	 * Transparent pixels (alpha < 5 %) are ignored so background fill does not
+	 * skew the result. Black is also excluded because it is almost always an
+	 * artefact of the sprite sheet rather than a meaningful character colour.
+	 *
+	 * In the event of a tie the first colour that reached the highest count wins.
+	 *
+	 * @param sprite The sprite whose `pixels` BitmapData will be sampled.
+	 * @return The dominant colour with alpha forced to fully opaque (0xFF).
 	 */
 	public static function dominantColor(sprite:FlxSprite):FlxColor {
 		var countByColor:Map<Int, Int> = [];
+
 		for (col in 0...sprite.frameWidth) {
 			for (row in 0...sprite.frameHeight) {
-				var colorOfThisPixel:FlxColor = sprite.pixels.getPixel32(col, row);
-				if (colorOfThisPixel.alphaFloat < .05) continue;
+				var pixel:FlxColor = sprite.pixels.getPixel32(col, row);
+				if (pixel.alphaFloat < .05) continue;
 
-				colorOfThisPixel = FlxColor.fromRGB(colorOfThisPixel.red, colorOfThisPixel.green, colorOfThisPixel.blue, 255);
-				var count:Int = countByColor.exists(colorOfThisPixel) ? countByColor[colorOfThisPixel] : 0;
-				countByColor[colorOfThisPixel] = count + 1;
+				pixel = (pixel : Int) | 0xFF000000;
+				if (pixel == FlxColor.BLACK) continue;
+
+				countByColor[pixel] = (countByColor[pixel] ?? 0) + 1;
 			}
 		}
 
 		var maxCount:Int = 0;
-		var maxKey:FlxColor = 0; // after the loop this will store the max color
-		countByColor[FlxColor.BLACK] = 0;
-		for (key => count in countByColor) {
+		var dominant:FlxColor = FlxColor.BLACK; // sensible fallback if sprite is empty
+
+		for (color => count in countByColor) {
 			if (count <= maxCount) continue;
 			maxCount = count;
-			maxKey = key;
+			dominant = color;
 		}
+
 		countByColor.clear();
-		return FlxColor.fromInt(maxKey);
+		return dominant;
 	}
 
 	/**

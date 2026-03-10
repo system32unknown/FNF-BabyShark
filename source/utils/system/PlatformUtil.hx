@@ -336,10 +336,19 @@ class PlatformUtil {
 	#if (cpp && windows)
 	@:functionCode('return Beep(freq, duration);')
 	#end
-	public static function beep(freq:Int, duration:Int):Bool {
-		return false;
-	}
+	public static function beep(freq:Int, duration:Int):Bool return false;
 
+	/**
+	 * Makes a specific window color transparent, creating a chroma-key effect.
+	 *
+	 * Finds the window by title, then applies `WS_EX_LAYERED` and `LWA_COLORKEY`
+	 * to punch out pixels matching `color`. No-op on non-Windows targets.
+	 *
+	 * @param winName  Title of the target window. Falls back to the active window if not found.
+	 * @param alpha Unused directly — reserved for future opacity control.
+	 * @param color The RGB color value to key out as transparent.
+	 * @return `true` on success, `false` if any Win32 call fails or on non-Windows targets.
+	 */
 	#if (cpp && windows)
 	@:functionCode('
 		HWND win = FindWindowA(NULL, winName.c_str());
@@ -357,6 +366,14 @@ class PlatformUtil {
 	#end
 	public static function setTransparency(winName:String, alpha:Int, color:Int):Bool return false;
 
+	/**
+	 * Returns the current time as a high-resolution timestamp in seconds since epoch.
+	 *
+	 * Uses `std::chrono::high_resolution_clock` for maximum precision.
+	 * Returns `-1` on non-C++ targets.
+	 *
+	 * @return Current time in seconds as a `Float64` (C++) or `Float` (other targets).
+	 */
 	#if (cpp && windows)
 	@:functionCode('
 		// Get the current time
@@ -366,15 +383,32 @@ class PlatformUtil {
 		auto duration = now.time_since_epoch();
 		auto seconds = std::chrono::duration_cast<std::chrono::duration<double>>(duration);
 		
-		// Returns the second as double
-		return seconds.count();
+		return seconds.count(); // Returns the second as double
 	')
 	#end
 	public static function getNanoTime():#if cpp cpp.Float64 #else Float #end return -1;
 
+	/**
+	 * Returns the number of hardware threads available on the current CPU,
+	 * as reported by `std::thread::hardware_concurrency`.
+	 *
+	 * Typically reflects logical core count (including hyperthreading).
+	 * Returns `-1` if the value cannot be determined.
+	 *
+	 * @return Number of available hardware threads.
+	 */
 	@:functionCode('return std::thread::hardware_concurrency();')
 	public static function getCPUThreadsCount():Int return -1;
 
+	/**
+	 * Opts the process into Windows DPI awareness, preventing blurry or incorrectly
+	 * scaled rendering on high-DPI displays.
+	 *
+	 * Uses `DPI_AWARENESS_CONTEXT_PER_MONITOR_AWARE_V2` when available,
+	 * falling back to `DPI_AWARENESS_CONTEXT_SYSTEM_AWARE` for older Windows versions.
+	 *
+	 * No-op on non-Windows targets.
+	 */
 	public static function registerDPIAware():Void {
 		#if (cpp && windows)
 		// DPI Scaling fix for windows
@@ -438,9 +472,7 @@ class PlatformUtil {
 		return isAdmin == TRUE;
 	')
 	#end
-	public static function isRunningAsAdmin():Bool {
-		return false;
-	}
+	public static function isRunningAsAdmin():Bool return false;
 
 	#if (cpp && windows)
 	@:functionCode('
@@ -452,9 +484,7 @@ class PlatformUtil {
 		return false;
 	')
 	#end
-	public static function detectWine():Bool {
-		return false;
-	}
+	public static function detectWine():Bool return false;
 
 	/**
 	* Flashes the application window in the taskbar and/or title bar.

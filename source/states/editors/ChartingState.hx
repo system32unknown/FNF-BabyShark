@@ -2001,7 +2001,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 						if (strum == null) continue;
 						var tex:String = noteTextureInputText.text;
 						if (tex.trim() == '') { // ok
-							tex = Note.defaultNoteSkin;
+							tex = Note.DEFAULT_NOTE_SKIN;
 							var customSkin:String = tex + Note.getNoteSkinPostfix();
 							if (Paths.fileExists('images/$customSkin.png', IMAGE)) tex = customSkin;
 						}

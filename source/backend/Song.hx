@@ -17,8 +17,6 @@ typedef SwagSong = {
 	var stage:String;
 	var format:String;
 
-	@:optional var mania:Int;
-
 	@:optional var gameOverChar:String;
 	@:optional var gameOverSound:String;
 	@:optional var gameOverLoop:String;
@@ -50,7 +48,6 @@ class Song {
 			needsVoices: true,
 			speed: 1,
 			offset: 0,
-			mania: 3,
 
 			player1: 'bf',
 			player2: 'dad',
@@ -87,7 +84,6 @@ class Song {
 		var sectionsData:Array<Section> = songJson.notes;
 		if (sectionsData == null) return;
 
-		var maniaKey:Int = EK.keys(PlayState.mania);
 		for (section in sectionsData) {
 			var beats:Null<Int> = cast section.sectionBeats;
 			if (beats == null || Math.isNaN(beats)) {
@@ -96,8 +92,8 @@ class Song {
 			}
 
 			for (note in section.sectionNotes) {
-				var gottaHitNote:Bool = (note[1] < maniaKey) ? section.mustHitSection : !section.mustHitSection;
-				note[1] = (note[1] % maniaKey) + (gottaHitNote ? 0 : maniaKey);
+				var gottaHitNote:Bool = (note[1] < 4) ? section.mustHitSection : !section.mustHitSection;
+				note[1] = (note[1] % 4) + (gottaHitNote ? 0 : 4);
 
 				if (note[3] != null && !Std.isOfType(note[3], String) && !Std.isOfType(note[3], Array))
 					note[3] = Note.DEFAULT_NOTE_TYPES[note[3]]; // compatibility with Week 7 and 0.1-0.3 psych charts

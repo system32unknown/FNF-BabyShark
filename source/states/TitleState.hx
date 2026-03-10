@@ -105,7 +105,7 @@ class TitleState extends MusicBeatState {
 
 		add(textGroup = new FlxTypedGroup<FlxText>());
 		introGroup.add(gf);
-		introGroup.add(logo); //FNF Logo
+		introGroup.add(logo); // FNF Logo
 		introGroup.add(titleText); //"Press Enter to Begin" text
 	}
 

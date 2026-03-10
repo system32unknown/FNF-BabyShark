@@ -20,7 +20,7 @@ class Language {
 				continue;
 			}
 
-			if (phrase.length < 4 || phrase.startsWith('//')) continue; 
+			if (phrase.length < 4 || phrase.startsWith('//')) continue;
 
 			var n:Int = phrase.indexOf(':');
 			if (n < 0) continue;

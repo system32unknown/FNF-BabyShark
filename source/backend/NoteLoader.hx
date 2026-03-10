@@ -16,34 +16,18 @@ class NoteLoader {
 
 		var spr:FlxSprite = new FlxSprite();
 		spr.frames = Paths.getSparrowAtlas(noteSkin);
-		initAnimations(spr);
 
-		noteSkinFramesMap.set(noteSkin, spr.frames);
-		noteSkinAnimsMap.set(noteSkin, spr.animation);
-	}
-
-	static function initAnimations(spr:FlxSprite):Void {
-		for (d in 0...EK.keys(PlayState.mania)) {
-			var gfx:Int = EK.gfxIndex[PlayState.mania][d];
-			var anim:String = EK.colArray[gfx];
-			var animAlt:String = EK.colArrayAlt[gfx];
-
-			if (anim == null) continue;
-
-			SpriteUtil.addAnimSafe(spr, 'Aholdend', 'pruple end hold');
-
-			SpriteUtil.addAnimSafe(spr, anim + 'holdend', anim + ' tail0');
-			SpriteUtil.addAnimSafe(spr, anim + 'hold', anim + ' hold0');
-
-			SpriteUtil.addAnimSafe(spr, anim + 'holdend', animAlt + ' hold end');
-			SpriteUtil.addAnimSafe(spr, anim + 'hold', animAlt + ' hold piece');
+		SpriteUtil.addAnimSafe(spr, 'purpleholdend', 'pruple end hold');
+		for (i in 0...4) {
+			var anim:String = objects.Note.colArray[i];
 
 			SpriteUtil.addAnimSafe(spr, anim + 'holdend', anim + ' hold end');
 			SpriteUtil.addAnimSafe(spr, anim + 'hold', anim + ' hold piece');
-
-			SpriteUtil.addAnimSafe(spr, anim + 'Scroll', animAlt + '0');
 			SpriteUtil.addAnimSafe(spr, anim + 'Scroll', anim + '0');
 		}
+
+		noteSkinFramesMap.set(noteSkin, spr.frames);
+		noteSkinAnimsMap.set(noteSkin, spr.animation);
 	}
 
 	public static function dispose():Void {

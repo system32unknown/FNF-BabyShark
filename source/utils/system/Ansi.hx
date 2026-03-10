@@ -34,6 +34,7 @@ enum abstract AnsiColor(Int) from Int to Int {
 	public var WHITE:AnsiColor = 15;
 }
 
+@:nullSafety
 class Ansi {
 	// Index 0..15 maps to ANSI SGR codes (foreground)
 	static final ANSI_FG:Array<Int> = [

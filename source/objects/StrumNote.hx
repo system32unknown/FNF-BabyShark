@@ -42,11 +42,11 @@ class StrumNote extends FlxSprite {
 		this.ID = noteData;
 		super(x, y);
 
-		rgbShader = new RGBShaderReference(this, Note.initializeGlobalRGBShader(strumData));
+		rgbShader = new RGBShaderReference(this, Note.initializeGlobalRGBShader(noteData));
 		rgbShader.enabled = false;
 
 		useRGBShader = !(PlayState.SONG != null && PlayState.SONG.disableNoteRGB) && Settings.data.noteShaders;
-		applyRGBFromSettings(strumData);
+		applyRGBFromSettings(noteData);
 
 		texture = resolveSkin(); // loads frames + anims
 		scrollFactor.set();
@@ -54,7 +54,7 @@ class StrumNote extends FlxSprite {
 	}
 
 	function resolveSkin():String {
-		var skin:String = Note.defaultNoteSkin;
+		var skin:String = Note.DEFAULT_NOTE_SKIN;
 
 		if (PlayState.SONG != null) {
 			var s:String = PlayState.SONG.arrowSkin;
@@ -68,11 +68,7 @@ class StrumNote extends FlxSprite {
 	}
 
 	function applyRGBFromSettings(strumData:Int):Void {
-		if (strumData > PlayState.mania) return;
-
-		var idx:Int = EK.gfxIndex[PlayState.mania][strumData];
-		var arr:Array<FlxColor> = PlayState.isPixelStage ? Settings.data.arrowRGBPixelExtra[idx] : Settings.data.arrowRGBExtra[idx];
-
+		var arr:Array<FlxColor> = (PlayState.isPixelStage ? Settings.data.arrowRGBPixel : Settings.data.arrowRGB)[strumData];
 		if (arr == null || arr.length < 3) return;
 
 		@:bypassAccessor {
@@ -86,10 +82,8 @@ class StrumNote extends FlxSprite {
 		var lastAnim:String = null;
 		if (animation.curAnim != null) lastAnim = animation.curAnim.name;
 
-		var dataNum:Int = EK.gfxIndex[PlayState.mania][noteData];
-
-		if (PlayState.isPixelStage) loadPixelAnims(dataNum);
-		else loadSparrowAnims(dataNum);
+		if (PlayState.isPixelStage) loadPixelAnims(noteData);
+		else loadSparrowAnims(noteData);
 
 		updateHitbox();
 		if (lastAnim != null) playAnim(lastAnim, true);
@@ -97,60 +91,69 @@ class StrumNote extends FlxSprite {
 
 	function loadPixelAnims(dataNum:Int):Void {
 		final graphic:flixel.graphics.FlxGraphic = Paths.image('pixelUI/$texture');
-		loadGraphic(graphic, true, Math.floor(graphic.width / 9), Math.floor(graphic.height / 5));
+		loadGraphic(graphic, true, Math.floor(graphic.width / 4), Math.floor(graphic.height / 5));
 
 		antialiasing = false;
-		setGraphicSize(Std.int(width * PlayState.daPixelZoom * EK.scalesPixel[PlayState.mania]));
+		setGraphicSize(Std.int(width * PlayState.daPixelZoom));
 
-		animation.add('purple', [9]);
-		animation.add('blue', [10]);
-		animation.add('green', [11]);
-		animation.add('red', [12]);
-		animation.add('white', [13]);
-		animation.add('yellow', [14]);
-		animation.add('violet', [15]);
-		animation.add('black', [16]);
-		animation.add('dark', [17]);
-
-		animation.add('static', [dataNum]);
-		animation.add('pressed', [9 + dataNum, 18 + dataNum], 12, false);
-		animation.add('confirm', [27 + dataNum, 36 + dataNum], 12, false);
+		animation.add('green', [6]);
+		animation.add('red', [7]);
+		animation.add('blue', [5]);
+		animation.add('purple', [4]);
+		switch (Math.abs(noteData) % 4) {
+			case 0:
+				animation.add('static', [0]);
+				animation.add('pressed', [4, 8], 12, false);
+				animation.add('confirm', [12, 16], 12, false);
+			case 1:
+				animation.add('static', [1]);
+				animation.add('pressed', [5, 9], 12, false);
+				animation.add('confirm', [13, 17], 12, false);
+			case 2:
+				animation.add('static', [2]);
+				animation.add('pressed', [6, 10], 12, false);
+				animation.add('confirm', [14, 18], 12, false);
+			case 3:
+				animation.add('static', [3]);
+				animation.add('pressed', [7, 11], 12, false);
+				animation.add('confirm', [15, 19], 12, false);
+		}
 	}
 
 	function loadSparrowAnims(dataNum:Int):Void {
 		frames = Paths.getSparrowAtlas(texture);
 
-		animation.addByPrefix('purple', 'arrowLEFT');
-		animation.addByPrefix('blue', 'arrowDOWN');
 		animation.addByPrefix('green', 'arrowUP');
+		animation.addByPrefix('blue', 'arrowDOWN');
+		animation.addByPrefix('purple', 'arrowLEFT');
 		animation.addByPrefix('red', 'arrowRIGHT');
-		animation.addByPrefix('white', 'arrowSPACE');
-		animation.addByPrefix('yellow', 'arrowLEFT');
-		animation.addByPrefix('violet', 'arrowDOWN');
-		animation.addByPrefix('black', 'arrowUP');
-		animation.addByPrefix('dark', 'arrowRIGHT');
 
 		antialiasing = Settings.data.antialiasing;
-		setGraphicSize(Std.int(width * EK.scales[PlayState.mania]));
-
-		var pressName:String = EK.colArray[dataNum];
-		var pressNameAlt:String = EK.pressArrayAlt[dataNum];
-
-		animation.addByPrefix('static', 'arrow' + EK.gfxDir[EK.gfxHud[PlayState.mania][noteData]]);
-
-		// Prefer alt if exists, then fall back to normal (your original did both)
-		SpriteUtil.addAnimSafe(this, 'pressed', pressNameAlt + ' press', 24, false);
-		SpriteUtil.addAnimSafe(this, 'confirm', pressNameAlt + ' confirm', 24, false);
-
-		animation.addByPrefix('pressed', pressName + ' press', 24, false);
-		animation.addByPrefix('confirm', pressName + ' confirm', 24, false);
+		setGraphicSize(Std.int(width * .7));
+		switch (Math.abs(noteData) % 4) {
+			case 0:
+				animation.addByPrefix('static', 'arrowLEFT');
+				animation.addByPrefix('pressed', 'left press', 24, false);
+				animation.addByPrefix('confirm', 'left confirm', 24, false);
+			case 1:
+				animation.addByPrefix('static', 'arrowDOWN');
+				animation.addByPrefix('pressed', 'down press', 24, false);
+				animation.addByPrefix('confirm', 'down confirm', 24, false);
+			case 2:
+				animation.addByPrefix('static', 'arrowUP');
+				animation.addByPrefix('pressed', 'up press', 24, false);
+				animation.addByPrefix('confirm', 'up confirm', 24, false);
+			case 3:
+				animation.addByPrefix('static', 'arrowRIGHT');
+				animation.addByPrefix('pressed', 'right press', 24, false);
+				animation.addByPrefix('confirm', 'right confirm', 24, false);
+		}
 	}
 
 	public function playerPosition():Void {
-		x += EK.swidths[PlayState.mania] * noteData;
+		x += Note.swagWidth * noteData;
 		x += 50;
 		x += ((FlxG.width / 2) * player);
-		x -= EK.posRest[PlayState.mania];
 	}
 
 	override function update(elapsed:Float):Void {

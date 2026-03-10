@@ -295,7 +295,7 @@ class LoadingState extends MusicBeatState {
 		new Future<Bool>(() -> {
 			stateText = 'Loading Note Assets';
 			// LOAD NOTE IMAGE
-			var noteSkin:String = Note.defaultNoteSkin;
+			var noteSkin:String = Note.DEFAULT_NOTE_SKIN;
 			if (song.arrowSkin != null && song.arrowSkin.length > 1) noteSkin = song.arrowSkin;
 
 			var customSkin:String = noteSkin + Note.getNoteSkinPostfix();

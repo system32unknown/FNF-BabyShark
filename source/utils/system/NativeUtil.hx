@@ -11,7 +11,7 @@ class NativeUtil {
 	/**
 	 * Allocates a new console. The console will automatically be opened
 	 */
-	public static function allocConsole() {
+	public static function allocConsole():Void {
 		#if windows
 		PlatformUtil.allocConsole();
 		PlatformUtil.clearScreen();

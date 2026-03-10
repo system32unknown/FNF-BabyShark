@@ -40,7 +40,7 @@ class MetaNote extends Note {
 		if (Note.globalRgbShaders.contains(rgbShader.parent)) // Is using a default shader
 			rgbShader = new RGBShaderReference(this, Note.initializeGlobalRGBShader(noteData));
 
-		var scrollAnim:String = EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'Scroll';
+		var scrollAnim:String = Note.colArray[this.noteData % Note.colArray.length] + 'Scroll';
 		if (animation.exists(scrollAnim)) animation.play(scrollAnim);
 		updateHitbox();
 		if (width > height) setGraphicSize(ChartingState.GRID_SIZE);
@@ -136,7 +136,7 @@ class EditorSustain extends Note {
 		super(0, data, null, true, true);
 		updateSkin();
 
-		var holdendAnim:String = EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'holdend';
+		var holdendAnim:String = Note.colArray[this.noteData % Note.colArray.length] + 'holdend';
 		if (animation.exists(holdendAnim)) animation.play(holdendAnim);
 		scale.set(scale.x, scale.x);
 		updateHitbox();
@@ -169,7 +169,7 @@ class EditorSustain extends Note {
 		sustainTile.frames = frames;
 		sustainTile.antialiasing = antialiasing;
 		sustainTile.animation.copyFrom(animation);
-		var holdendAnim:String = EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'hold';
+		var holdendAnim:String = Note.colArray[this.noteData % Note.colArray.length] + 'hold';
 		if (sustainTile.animation.exists(holdendAnim)) sustainTile.animation.play(holdendAnim);
 		sustainTile.clipRect = flixel.math.FlxRect.get(0, 1, sustainTile.frameWidth, 1);
 	}
@@ -181,7 +181,7 @@ class EditorSustain extends Note {
 		else loadPixelNoteAnims();
 
 		reloadSustainTile();
-		var holdendAnim:String = EK.colArray[EK.gfxIndex[PlayState.mania][this.noteData]] + 'holdend';
+		var holdendAnim:String = Note.colArray[this.noteData % Note.colArray.length] + 'holdend';
 		if (animation.exists(holdendAnim)) animation.play(holdendAnim);
 	}
 

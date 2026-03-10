@@ -178,7 +178,7 @@ class NoteProcessor {
 
 			if ((!shouldSkip || !Settings.data.optimizeSpawnNote) && isCanPass) spawnNote(target, pastHitTime);
 			else {
-				game.strumHitId = (target.noteData + (isPlayerNote ? EK.keys(PlayState.mania) : 0)) & 255;
+				game.strumHitId = (target.noteData + (isPlayerNote ? 4 : 0)) & 255;
 				if (botPlay) {
 					if (!isHold && isPlayerNote && skipNote) ++skipped;
 				} else if (isPlayerNote) @:privateAccess game.noteMissCommon(target.noteData);

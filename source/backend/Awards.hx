@@ -222,5 +222,5 @@ typedef Award = {
 
 	// handled automatically, ignore these two
 	var ?mod:String;
-	var ?ID:Int; 
+	var ?ID:Int;
 }
