@@ -110,8 +110,8 @@ class PlayState extends MusicBeatState {
 	public var playerStrums:FlxTypedGroup<StrumNote> = new FlxTypedGroup<StrumNote>();
 	public var grpNoteSplashes:FlxTypedGroup<NoteSplash> = new FlxTypedGroup<NoteSplash>();
 
-	public static var splashUsing:Array<Array<NoteSplash>>;
-	public static var splashMoment:Vector<Int>;
+	public static var splashUsing:Array<Array<NoteSplash>> = [[], [], [], []];
+	var splashMoment:Vector<Int> = new Vector<Int>(4, 0);
 	var splashCount:Int = Settings.data.splashCount != 0 ? Settings.data.splashCount : 2147483647;
 
 	public var canTweenCamZoom:Bool = false;
@@ -263,9 +263,6 @@ class PlayState extends MusicBeatState {
 
 		Conductor.setBPMChanges(SONG);
 		Conductor.bpm = SONG.bpm;
-
-		splashUsing = [for (_ in 0...4) []];
-		splashMoment = new Vector<Int>(4, 0);
 
 		storyDifficultyText = Difficulty.getString();
 		#if DISCORD_ALLOWED

@@ -61,8 +61,7 @@ class Popup extends FlxSprite {
 				gameCenter(Y).y -= 60 + comboOffset[0][1];
 				setGraphicSize(Std.int(width * (isPixel ? (.85 * zoom) : .7)));
 			case CUSTOM(popX, popY, size):
-				x = popX;
-				y = popY;
+				setPosition(popX, popY);
 				setGraphicSize(Std.int(width * size));
 			case NONE:
 		}

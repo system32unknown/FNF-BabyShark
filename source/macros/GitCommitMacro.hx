@@ -8,15 +8,15 @@ import haxe.macro.Expr;
 
 class GitCommitMacro {
 	/**
-	 * Returns the current commit number
+	 * Returns the current commit number.
 	 */
 	public static var commitNumber(get, null):Int;
 	/**
-	 * Returns the current commit hash
+	 * Returns the current commit hash.
 	 */
 	public static var commitHash(get, null):String;
 	/**
-	 * Returns the current commit branch
+	 * Returns the current commit branch.
 	 */
 	public static var commitBranch(get, null):String;
 

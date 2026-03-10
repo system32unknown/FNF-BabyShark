@@ -3,7 +3,11 @@ package effects;
 import objects.Character;
 
 /**
- * FlxTrail but it uses delta time.
+ * A delta-time-based trail effect for `FlxSprite` objects.
+ *
+ * Extends `FlxTrail` to update at a fixed time interval using elapsed delta time,
+ * rather than on a per-frame basis, ensuring consistent trail behavior regardless of framerate.
+ *
  * @author Rozebud :]
  */
 class DeltaTrail extends flixel.addons.effects.FlxTrail {

@@ -28,10 +28,12 @@ typedef NoteSplashConfig = {
 
 class NoteSplash extends FlxSprite {
 	public var rgbShader:PixelSplashShaderRef;
-	public var texture:String;
+	public var texture:String = "";
 	public var config(default, set):NoteSplashConfig;
 	public var babyArrow:StrumNote;
 	public var noteData:Int = 0;
+
+	var animId:Int = 0;
 
 	public var copyX:Bool = true;
 	public var copyY:Bool = true;
@@ -179,11 +181,23 @@ class NoteSplash extends FlxSprite {
 		if (babyArrow != null) setPosition(babyArrow.x - Note.originalWidth * .95, babyArrow.y - Note.originalHeight); // To prevent it from being misplaced for one game tick
 		if (note != null) noteData = note.noteData;
 
-		if (randomize && maxAnims > 1)
-			noteData = noteData % Note.colArray.length + (FlxG.random.int(0, maxAnims - 1) * Note.colArray.length);
+		if (randomize) {
+			var anims:Int = 0;
+			var datas:Int = 0;
+
+			while (true) {
+				var data:Int = noteData % Note.colArray.length + (datas * Note.colArray.length);
+				if (!noteDataMap.exists(data) || !animation.exists(noteDataMap[data])) break;
+
+				datas++;
+				anims++;
+			}
+
+			animId = anims > 1 ? FlxG.random.int(0, anims - 1) : 0;
+		}
 
 		this.noteData = noteData;
-		var anim:String = playDefaultAnim();
+		var anim:String = playDefaultAnim(noteData % Note.colArray.length + animId * Note.colArray.length);
 
 		var tempShader:RGBPalette = null;
 		if (config.allowRGB) {
@@ -253,25 +267,24 @@ class NoteSplash extends FlxSprite {
 		if (note != null) antialiasing = note.noteSplashData.antialiasing;
 		if (PlayState.isPixelStage && config.allowPixel) antialiasing = false;
 
-		var minFps:Int = 22;
-		var maxFps:Int = 26;
-		if (conf != null) {
-			minFps = conf.fps[0];
+		if (animation.curAnim != null && conf != null) {
+			var minFps:Int = conf.fps[0];
 			if (minFps < 0) minFps = 0;
 
-			maxFps = conf.fps[1];
+			var maxFps:Int = conf.fps[1];
 			if (maxFps < 0) maxFps = 0;
-		}
 
-		if (animation.curAnim != null)
 			animation.curAnim.frameRate = FlxG.random.int(minFps, maxFps);
+		}
 
 		spawned = true;
 	}
 
-	public function playDefaultAnim():String {
-		var anim:String = noteDataMap.get(noteData);
-		if (anim != null && animation.exists(anim)) animation.play(anim, true);
+	public function playDefaultAnim(noteAnim:Int = 0):String {
+		var anim:String = noteDataMap.get(noteAnim);
+		if (anim != null && this.animation.exists(anim))
+			this.animation.play(anim, true);
+		else kill();
 		return anim;
 	}
 
@@ -283,7 +296,7 @@ class NoteSplash extends FlxSprite {
 	}
 
 	var aliveTime:Float = 0;
-	static var buggedKillTime:Float = .5; //automatically kills note splashes if they break to prevent it from flooding your HUD
+	var buggedKillTime:Float = .5; // automatically kills note splashes if they break to prevent it from flooding your HUD
 	override function update(elapsed:Float) {
 		if (spawned) {
 			aliveTime += elapsed;

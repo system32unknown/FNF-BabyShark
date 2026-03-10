@@ -12,10 +12,9 @@ class FlxMacro {
 	 */
 	public static macro function buildZindex():Array<Field> {
 		var pos:Position = Context.currentPos();
-		// The FlxBasic class. We can add new properties to this class.
-		var cls:haxe.macro.Type.ClassType = Context.getLocalClass().get();
-		// The fields of the FlxClass.
-		var fields:Array<Field> = Context.getBuildFields();
+		
+		var cls:haxe.macro.Type.ClassType = Context.getLocalClass().get(); // The FlxBasic class. We can add new properties to this class.
+		var fields:Array<Field> = Context.getBuildFields(); // The fields of the FlxClass.
 
 		var hasZIndex:Bool = false;
 		for (f in fields) {

@@ -89,10 +89,9 @@ class Controls {
 		return -1;
 	}
 
-    public static function convertLimeKeyCode(code:lime.ui.KeyCode):Int {
-        @:privateAccess
-        return openfl.ui.Keyboard.__convertKeyCode(code);
-    }
+	public static function convertLimeKeyCode(code:lime.ui.KeyCode):Int @:privateAccess {
+		return openfl.ui.Keyboard.__convertKeyCode(code);
+	}
 
 	public static function reset():Void {
 		for (key in binds.keys()) {
