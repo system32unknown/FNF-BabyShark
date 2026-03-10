@@ -5,60 +5,17 @@ import objects.AttachedSprite;
 
 import flixel.input.keyboard.FlxKey;
 
-class ControlsSubState extends FlxSubState {
+class ControlsSubState extends MusicBeatSubstate {
 	var curSelected:Int = 0;
 	var curAlt:Bool = false;
 
 	// Show on gamepad - Display name - Save file key - Rebind display name
-	var curNoteKeys:Int = 4;
 	var options:Array<Dynamic> = [
 		[true, 'NOTES'],
-		[true, '4 KEY'],
-		[true, 'Note', 'note_1', '1 Key Note', 1],
-		[true, 'Left', 'note_left', '2 Key Note Left', 2],
-		[true, 'Right', 'note_right', '2 Key Note Right', 2],
-		[true, 'Left', 'note_left', '3 Key Note Left', 3],
-		[true, 'Center', 'note_3a', '3 Key Note Center', 3],
-		[true, 'Right', 'note_right', '3 Key Note Right', 3],
-		[true, 'Left', 'note_left', '4 Key Note Left', 4],
-		[true, 'Down', 'note_down', '4 Key Note Down', 4],
-		[true, 'Up', 'note_up', '4 Key Note Up', 4],
-		[true, 'Right', 'note_right', '4 Key Note Right', 4],
-		[true, 'Left', 'note_left', '5 Key Note Left', 5],
-		[true, 'Down', 'note_down', '5 Key Note Down', 5],
-		[true, 'Center', 'note_5a', '5 Key Note Center', 5],
-		[true, 'Up', 'note_up', '5 Key Note Up', 5],
-		[true, 'Right', 'note_right', '5 Key Note Right', 5],
-		[true, 'Left 1', 'note_6a', '6 Key Note Left 1', 6],
-		[true, 'Up', 'note_6b', '6 Key Note Up', 6],
-		[true, 'Right 1', 'note_6c', '6 Key Note Right 1', 6],
-		[true, 'Left 2', 'note_6d', '6 Key Note Left 2', 6],
-		[true, 'Down', 'note_6e', '6 Key Note Down', 6],
-		[true, 'Right 1', 'note_6f', '6 Key Note Right 2', 6],
-		[true, 'Left 1', 'note_7a', '7 Key Note Left 1', 7],
-		[true, 'Up', 'note_7b', '7 Key Note Up', 7],
-		[true, 'Right 1', 'note_7c', '7 Key Note Right 1', 7],
-		[true, 'Center', 'note_7d', '7 Key Note Center', 7],
-		[true, 'Left 2', 'note_7e', '7 Key Note Left 2', 7],
-		[true, 'Down', 'note_7f', '7 Key Note Down', 7],
-		[true, 'Right 2', 'note_7g', '7 Key Note Right 2', 7],
-		[true, 'Left 1', 'note_8a', '8 Key Note Left 1', 8],
-		[true, 'Down 1', 'note_8b', '8 Key Note Down 1', 8],
-		[true, 'Up 1', 'note_8c', '8 Key Note Up 1', 8],
-		[true, 'Right 1', 'note_8d', '8 Key Note Right 1', 8],
-		[true, 'Left 2', 'note_8e', '8 Key Note Left 2', 8],
-		[true, 'Down 2', 'note_8f', '8 Key Note Down 2', 8],
-		[true, 'Up 2', 'note_8g', '8 Key Note Up 2', 8],
-		[true, 'Right 2', 'note_8h', '8 Key Note Right 2', 8],
-		[true, 'Left 1', 'note_9a', '9 Key Note Left 1', 9],
-		[true, 'Down 1', 'note_9b', '9 Key Note Down 1', 9],
-		[true, 'Up 1', 'note_9c', '9 Key Note Up 1', 9],
-		[true, 'Right 1', 'note_9d', '9 Key Note Right 1', 9],
-		[true, 'Center', 'note_9e', '9 Key Note Center', 9],
-		[true, 'Left 2', 'note_9f', '9 Key Note Left 2', 9],
-		[true, 'Down 2', 'note_9g', '9 Key Note Down 2', 9],
-		[true, 'Up 2', 'note_9h', '9 Key Note Up 2', 9],
-		[true, 'Right 2', 'note_9i', '9 Key Note Right 2', 9],
+		[true, 'Left', 'note_left', 'Note Left'],
+		[true, 'Down', 'note_down', 'Note Down'],
+		[true, 'Up', 'note_up', 'Note Up'],
+		[true, 'Right', 'note_right', 'Note Right'],
 		[true],
 		[true, 'UI'],
 		[true, 'Left', 'ui_left', 'UI Left'],
@@ -82,6 +39,7 @@ class ControlsSubState extends FlxSubState {
 	];
 	var curOptions:Array<Int>;
 	var curOptionsValid:Array<Int>;
+
 	static var defaultKey:String = 'Reset to Default Keys';
 
 	var grpDisplay:FlxTypedGroup<Alphabet>;
@@ -121,10 +79,6 @@ class ControlsSubState extends FlxSubState {
 		add(selectSpr);
 		add(grpBinds = new FlxTypedGroup<Alphabet>());
 
-		var text:Alphabet = new Alphabet(50, 600, 'SHIFT + < or > to\nChange Key Number');
-		text.updateScale(.4, .4);
-		add(text);
-
 		createTexts();
 	}
 
@@ -143,7 +97,7 @@ class ControlsSubState extends FlxSubState {
 
 		var myID:Int = 0;
 		for (i => option in options) {
-			if (option[0] && (option.length > 4 && option[4] == curNoteKeys || option.length <= 4)) {
+			if (option[0]) {
 				if (option.length > 1) {
 					var isCentered:Bool = (option.length < 3);
 					var isDefaultKey:Bool = (option[1] == defaultKey);
@@ -157,7 +111,6 @@ class ControlsSubState extends FlxSubState {
 					text.changeX = false;
 					text.distancePerItem.y = 60;
 					text.targetY = myID;
-					if (text.text.endsWith('KEY')) text.text = '$curNoteKeys KEY';
 					text.ID = myID;
 					lastID = myID;
 
@@ -186,6 +139,7 @@ class ControlsSubState extends FlxSubState {
 		text.gameCenter(X).y -= 55;
 		text.spawnPos.y -= 55;
 	}
+
 	function addKeyText(text:Alphabet, option:Array<Dynamic>) {
 		var keys:Array<Null<FlxKey>> = Controls.binds.get(option[2]);
 		if (keys == null) keys = Controls.default_binds.get(option[2]).copy();
@@ -239,9 +193,9 @@ class ControlsSubState extends FlxSubState {
 	var bindingText:Alphabet;
 	var bindingText2:Alphabet;
 
-	var timeForMoving:Float = 0.1;
+	var timeForMoving:Float = .1;
 	override function update(elapsed:Float) {
-		if (timeForMoving > 0) { //Fix controller bug
+		if (timeForMoving > 0)  { // Fix controller bug
 			timeForMoving = Math.max(0, timeForMoving - elapsed);
 			super.update(elapsed);
 			return;
@@ -253,10 +207,7 @@ class ControlsSubState extends FlxSubState {
 				return;
 			}
 
-			if (FlxG.keys.pressed.SHIFT) {
-				if (FlxG.keys.justPressed.LEFT) keyChange(-1);
-				if (FlxG.keys.justPressed.RIGHT) keyChange(1);
-			} else if (FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.RIGHT) updateAlt(true);
+			if (FlxG.keys.justPressed.LEFT || FlxG.keys.justPressed.RIGHT) updateAlt(true);
 
 			if (FlxG.keys.justPressed.UP) updateText(-1);
 			else if (FlxG.keys.justPressed.DOWN) updateText(1);
@@ -383,17 +334,6 @@ class ControlsSubState extends FlxSubState {
 		FlxG.sound.play(Paths.sound('scrollMenu'));
 	}
 
-	function keyChange(?move:Int = 0) {
-		curNoteKeys += move;
-
-		if (curNoteKeys > 9) curNoteKeys = 1;
-		if (curNoteKeys < 1) curNoteKeys = 9;
-
-		curSelected = 0;
-		curAlt = false;
-		createTexts();
-	}
-	
 	function updateAlt(?doSwap:Bool = false) {
 		if (doSwap) {
 			curAlt = !curAlt;
