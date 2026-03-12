@@ -2,6 +2,7 @@ package states.editors;
 
 import objects.NoteSplash;
 import objects.StrumNote;
+import objects.Note;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
@@ -79,8 +80,7 @@ class NoteSplashEditorState extends MusicBeatState {
 		add(strums);
 		add(splashes);
 
-		splash = new NoteSplash(0, 0, imageSkin); // this cannot be recycled
-		splash.inEditor = true;
+		splash = new NoteSplash(imageSkin); // this cannot be recycled
 		splash.alpha = .0;
 		splashes.add(splash);
 
@@ -220,6 +220,12 @@ class NoteSplashEditorState extends MusicBeatState {
 			curAnim = name_input.text;
 			playStrumAnim(curAnim, cast numericStepperData.value);
 			setAnimDropDown();
+
+			if (errorText.alpha == 1) {
+				config.animations.remove(curAnim);
+				curAnim = null;
+				setAnimDropDown();
+			}
 		});
 		UI.add(addButton);
 
@@ -316,7 +322,7 @@ class NoteSplashEditorState extends MusicBeatState {
 		allowRGBCheck.onClick = check;
 		allowRGBCheck.checked = config != null && cast(config.allowRGB, Null<Bool>) != null ? config.allowRGB : false;
 
-		var rgbText = new FlxText(allowRGBCheck.x + 20);
+		var rgbText:FlxText = new FlxText(allowRGBCheck.x + 20);
 		rgbText.text = "Allow RGB?";
 		rgbText.y = allowRGBCheck.y + 2.5;
 		ui.add(rgbText);
@@ -523,11 +529,37 @@ class NoteSplashEditorState extends MusicBeatState {
 					} else {
 						strum.playAnim('confirm', true);
 
-						var splash:NoteSplash = new NoteSplash(0, 0, imageSkin);
-						splash.inEditor = true;
+						var splash:NoteSplash = new NoteSplash(imageSkin);
+						splash.alpha = 0.00001;
 						splash.config = config;
+
+						var anims:Int = 0;
+						var datas:Int = 0;
+						var animArray:Array<Int> = [];
+
+						while (true) {
+							var data:Int = strum.ID % 4 + (datas * 4);
+							if (!splash.noteDataMap.exists(data) || !splash.animation.exists(splash.noteDataMap[data])) break;
+
+							datas++;
+							anims++;
+						}
+
+						if (anims > 1) {
+							for (i in 0...anims) {
+								animArray.push(strum.ID % 4 + (i * 4));
+							}
+						}
+
+						var int:Int = strum.ID % 4;
+						if (!splash.noteDataMap.exists(int) && splash.noteDataMap.exists(strum.ID % 4 + 4))
+							int = strum.ID % 4 + 4;
+
+						if (animArray.length > 1) int = animArray[FlxG.random.bool() ? 0 : 1];
+
 						splash.babyArrow = strum;
-						splash.spawnSplashNote(0, 0, strum.ID % 4);
+						splash.spawnSplashNote(null, int);
+						splash.alpha = 1;
 						splashes.add(splash);
 					}
 				} else strum.playAnim('static');
@@ -536,17 +568,18 @@ class NoteSplashEditorState extends MusicBeatState {
 	}
 
 	function playStrumAnim(?name:String, noteData:Int) {
-		var splash:NoteSplash = new NoteSplash(0, 0, imageSkin);
-		splash.inEditor = true;
+		var splash:NoteSplash = new NoteSplash(imageSkin);
+		splash.alpha = 1;
 		splash.config = config;
 		if (noteData < 0) noteData = 0;
 
-		if (name != null && splash.animation.exists(name)) {
+		if (name != null && splash.animation.exists(name) && noteData > -1) {
 			splash.babyArrow = strums.members[noteData % 4];
-			splash.spawnSplashNote(0, 0, noteData, null, false);
+			splash.spawnSplashNote(null, noteData, false);
 			splash.alpha = 1;
 			splashes.add(splash);
 		} else {
+			splashes.remove(splash);
 			errorText.alpha = 1;
 			errorText.text = "ERROR while playing splash";
 
@@ -737,34 +770,53 @@ class NoteSplashEditorState extends MusicBeatState {
 			if (fps[1] == null) fps[1] = 26;
 		}
 
+		var hasOneOffset:Bool = false;
 		var offsets:Array<Array<Null<Float>>> = [[0, 0]];
-		if (configs.length > 2) {
-			offsets = [];
-			for (i in 2...configs.length) {
-				var offset = configs[i].trim();
+		if (configs.length == 3 || configs.length == 2) {
+			hasOneOffset = true;
+			if (configs.length == 3) {
+				offsets = [];
+				var offset:String = configs[2].trim();
 				if (offset != "") {
 					var offset:Array<String> = offset.split(" ");
-					var x:Float = Std.parseFloat(offset[0]);
-					var y:Float = Std.parseFloat(offset[1]);
+					var x:Null<Float> = Std.parseFloat(offset[0]);
+					var y:Null<Float> = Std.parseFloat(offset[1]);
 					if (Math.isNaN(x)) x = 0;
 					if (Math.isNaN(y)) y = 0;
 					offsets.push([x, y]);
 				}
 			}
+		} else if (configs.length > 3) {
+			offsets = [];
+			var i:Int = 2;
+			while (true) {
+				var offset:String = configs[i].trim();
+				if (offset != "") {
+					var offset:Array<String> = offset.split(" ");
+					var x:Null<Float> = Std.parseFloat(offset[0]);
+					var y:Null<Float> = Std.parseFloat(offset[1]);
+					if (Math.isNaN(x)) x = 0;
+					if (Math.isNaN(y)) y = 0;
+					offsets.push([x, y]);
+				}
+				i++;
+
+				if (i + 1 > configs.length) break;
+			}
 		}
 
-		var i:Int = 0;
-		var k:Int = 1;
-		while (true) {
-			for (col in objects.Note.colArray) {
-				var anim:String = k <= 1 ? col : '$col' + k;
-				var offset:Array<Null<Float>> = offsets[FlxMath.wrap(i, 0, Std.int(offsets.length - 1))];
+		for (i in 0...Note.colArray.length) {
+			var offset:Array<Null<Float>> = offsets[hasOneOffset ? 0 : i];
+			if (i + 1 > configs.length && !hasOneOffset) break;
+			config = NoteSplash.addAnimationToConfig(config, 1, Note.colArray[i], '$animation ${Note.colArray[i]} 10', fps, offset, [], i);
+		}
 
-				config = NoteSplash.addAnimationToConfig(config, 1, anim, '$animation $col $k', fps, offset, [], i);
-				i++;
+		if (offsets.length > 4) {
+			for (i in 0...Note.colArray.length) {
+				var offset:Array<Null<Float>> = offsets[i + 4];
+				if (i + 1 > offsets.length) break;
+				config = NoteSplash.addAnimationToConfig(config, 1, Note.colArray[i] + "2", '$animation ${Note.colArray[i]} 20', fps, offset, [], i + 4);
 			}
-			if (offsets[i] == null) break;
-			k++;
 		}
 
 		return config;
@@ -812,7 +864,7 @@ class NoteSplashEditorHelpSubState extends FlxSubState {
 
 		var noteDataText:FlxText = new FlxText();
 		noteDataText.setFormat(null, 24, FlxColor.WHITE, RIGHT, OUTLINE_FAST, FlxColor.BLACK);
-		noteDataText.text = "NOTE DATAS:\nLEFT: 0\nDOWN: 1\nUP: 2\nRIGHT: 3";
+		noteDataText.text = "NOTE DATAS:\nLEFT: 0 and 4\nDOWN: 1 and 5\nUP: 2 and 6\nRIGHT: 3 and 7";
 		noteDataText.x = FlxG.width - noteDataText.width - 5;
 		noteDataText.y = FlxG.height - noteDataText.height - 5;
 

@@ -37,7 +37,6 @@ class NoteSplash extends FlxSprite {
 
 	public var copyX:Bool = true;
 	public var copyY:Bool = true;
-	public var inEditor:Bool = false;
 
 	var spawned:Bool = false;
 	var noteDataMap:Map<Int, String> = new Map<Int, String>();
@@ -164,22 +163,14 @@ class NoteSplash extends FlxSprite {
 		configs.set(path, this.config);
 	}
 
-	public function spawnSplashNote(?x:Float = 0, ?y:Float = 0, ?noteData:Int = 0, ?note:Note, ?randomize:Bool = true) {
-		if (note != null && note.noteSplashData.disabled) return;
-		aliveTime = 0;
-
-		if (!inEditor) {
-			var loadedTexture:String = defaultNoteSplash + getSplashSkinPostfix();
-			if (note != null && note.noteSplashData.texture != null) loadedTexture = note.noteSplashData.texture;
-			else if (PlayState.SONG != null && PlayState.SONG.splashSkin != null && PlayState.SONG.splashSkin.length > 0) loadedTexture = PlayState.SONG.splashSkin;
-
-			if (texture != loadedTexture) loadSplash(loadedTexture);
+	public function spawnSplashNote(note:Note, ?noteData:Null<Int>, ?randomize:Bool = true) {
+		if (note != null) {
+			if (note.noteSplashData.texture != null) loadSplash(note.noteSplashData.texture);
+			if (note.noteSplashData.disabled) return;
 		}
 
-		setPosition(x, y);
-
 		if (babyArrow != null) setPosition(babyArrow.x - Note.originalWidth * .95, babyArrow.y - Note.originalHeight); // To prevent it from being misplaced for one game tick
-		if (note != null) noteData = note.noteData;
+		if (noteData == null) noteData = note?.noteData ?? 0;
 
 		if (randomize) {
 			var anims:Int = 0;
@@ -199,16 +190,36 @@ class NoteSplash extends FlxSprite {
 		this.noteData = noteData;
 		var anim:String = playDefaultAnim(noteData % Note.colArray.length + animId * Note.colArray.length);
 
+		if (note != null) {
+			alpha = note.noteSplashData.a - (1 - note.strum.alpha);
+			antialiasing = note.noteSplashData.antialiasing;
+		} else {
+			alpha = Settings.data.splashAlpha;
+			antialiasing = !PlayState.isPixelStage;
+		}
+
+		if (PlayState.isPixelStage) antialiasing = false;
+
 		var tempShader:RGBPalette = null;
 		if (config.allowRGB) {
-			Note.initializeGlobalRGBShader(noteData % Note.colArray.length);
-			if (inEditor || (note == null || note.noteSplashData.useRGBShader) && (PlayState.SONG == null || !PlayState.SONG.disableNoteRGB)) {
-				tempShader = new RGBPalette();
-				var _noteData:Int = noteData % Note.colArray.length;
+			if (note == null) {
+				note = new Note(0, noteData);
+				note.visible = false;
+			}
+			var inSplashEditor:Bool = ((cast FlxG.state) is states.editors.NoteSplashEditorState);
+			var _noteData:Int = noteData % Note.colArray.length;
+
+			Note.initializeGlobalRGBShader(_noteData);
+			function useDefault():Void {
+				tempShader = Note.globalRgbShaders[_noteData];
+			}
+
+			if (inSplashEditor || (note.noteSplashData.useRGBShader && (PlayState.SONG == null || !PlayState.SONG.disableNoteRGB))) {
 				// If Note RGB is enabled:
-				if ((note == null || !note.noteSplashData.useGlobalShader) || inEditor) {
+				if (!note.noteSplashData.useGlobalShader || inSplashEditor) {
 					var colors:Array<RGB> = config.rgb;
 					if (colors != null) {
+						tempShader = new RGBPalette();
 						for (i in 0...colors.length) {
 							if (i > 2) break;
 
@@ -235,14 +246,14 @@ class NoteSplash extends FlxSprite {
 							else if (i == 1) tempShader.g = color;
 							else if (i == 2) tempShader.b = color;
 						}
-					} else tempShader.copyValues(Note.globalRgbShaders[_noteData]);
+					} else useDefault();
 
 					if (note != null) {
 						if (note.noteSplashData.r != -1) tempShader.r = note.noteSplashData.r;
 						if (note.noteSplashData.g != -1) tempShader.g = note.noteSplashData.g;
 						if (note.noteSplashData.b != -1) tempShader.b = note.noteSplashData.b;
 					}
-				} else tempShader.copyValues(Note.globalRgbShaders[_noteData]);
+				} else useDefault();
 			}
 		}
 		rgbShader.copyValues(tempShader);
@@ -259,13 +270,6 @@ class NoteSplash extends FlxSprite {
 			PlayState.instance != null ? killLimit() : kill();
 			spawned = false;
 		});
-
-		alpha = Settings.data.splashAlpha;
-		if (note != null) alpha = note.noteSplashData.a;
-
-		antialiasing = Settings.data.antialiasing;
-		if (note != null) antialiasing = note.noteSplashData.antialiasing;
-		if (PlayState.isPixelStage && config.allowPixel) antialiasing = false;
 
 		if (animation.curAnim != null && conf != null) {
 			var minFps:Int = conf.fps[0];
