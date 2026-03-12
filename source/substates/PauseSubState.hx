@@ -3,6 +3,7 @@ package substates;
 import options.OptionsState;
 import utils.StringUtil;
 import backend.Song;
+import states.CharacterSelectionState;
 
 class PauseSubState extends MusicBeatSubstate {
 	var grpMenuShit:FlxTypedGroup<Alphabet>;
@@ -235,8 +236,9 @@ class PauseSubState extends MusicBeatSubstate {
 					deleteSkipTimeText();
 					regenMenu();
 				case 'Change Character':
-					FlxG.switchState(() -> new states.CharacterSelectionState());
+					FlxG.switchState(() -> new CharacterSelectionState());
 					pSte.unloadNotes();
+					CharacterSelectionState.onPlayState = true;
 				case 'Toggle Practice Mode':
 					pSte.practiceMode = !pSte.practiceMode;
 					PlayState.changedDifficulty = true;
@@ -252,7 +254,7 @@ class PauseSubState extends MusicBeatSubstate {
 				case 'End Song':
 					close();
 					pSte.notes.clear();
-					pSte.unspawnNotes = [];
+					pSte.unloadNotes();
 					pSte.finishSong(true);
 				case 'Toggle Botplay':
 					pSte.cpuControlled = !pSte.cpuControlled;

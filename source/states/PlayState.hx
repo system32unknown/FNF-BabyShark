@@ -227,8 +227,8 @@ class PlayState extends MusicBeatState {
 	static var _lastLoadedModDirectory:String = '';
 	public static var nextReloadAll:Bool = false;
 	override public function create():Void {
-		_lastLoadedModDirectory = Mods.currentModDirectory;
 		inPlayState = true;
+		_lastLoadedModDirectory = Mods.currentModDirectory;
 		Paths.clearStoredMemory();
 		if (nextReloadAll) {
 			Paths.clearUnusedMemory();
@@ -514,7 +514,9 @@ class PlayState extends MusicBeatState {
 	function set_songSpeed(value:Float):Float {
 		if (generatedMusic) {
 			final ratio:Float = value / songSpeed; //funny word huh
-			if (ratio != 1) for (note in notes.members) note.resizeByRatio(ratio);
+			if (ratio != 1) for (note in notes.members) {
+				if (note.exists && note.visible) note.resizeByRatio(ratio);
+			}
 		}
 		songSpeed = value;
 		noteKillOffset = Math.max(Conductor.stepCrochet, noteKillTime / songSpeed * playbackRate);
@@ -824,7 +826,7 @@ class PlayState extends MusicBeatState {
 		spr.gameCenter();
 		spr.antialiasing = popupAntialias;
 		insert(members.indexOf(noteGroup), spr);
-		FlxTween.tween(spr, {alpha: 0}, Conductor.crochet / 1000, {ease: FlxEase.cubeInOut, onComplete: (twn:FlxTween) -> {remove(spr, true); spr.destroy();}});
+		FlxTween.tween(spr, {alpha: 0}, Conductor.crochet / 1000, {ease: FlxEase.cubeInOut, onComplete: (twn:FlxTween) -> {remove(spr); spr.destroy();}});
 		return spr;
 	}
 
@@ -1093,7 +1095,7 @@ class PlayState extends MusicBeatState {
 				FlxTween.tween(babyArrow, {alpha: targetAlpha}, 1 * playbackRate, {ease: FlxEase.circOut, startDelay: .5 + (.2 * i) * playbackRate});
 			} else babyArrow.alpha = targetAlpha;
 
-			if (player < 1 && middleScroll) {
+			if (player == 1 && middleScroll) {
 				if (i > 1) babyArrow.x += FlxG.width / 2 + 25; // Up and Right
 			}
 

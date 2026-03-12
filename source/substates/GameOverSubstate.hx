@@ -48,7 +48,6 @@ class GameOverSubstate extends MusicBeatSubstate {
 	}
 
 	override function create() {
-		super.create();
 		instance = this;
 
 		if (!Settings.data.disableGC) utils.system.MemoryUtil.clearMajor(true);
@@ -86,10 +85,10 @@ class GameOverSubstate extends MusicBeatSubstate {
 		add(camFollow);
 
 		// HScript hooks
-		if (ins != null) {
-			ins.setOnHScript('inGameOver', true);
-			ins.callOnHScript('onGameOverStart');
-		}
+		ins.setOnHScript('inGameOver', true);
+		ins.callOnHScript('onGameOverStart');
+
+		super.create();
 	}
 
 	function resetExtraCameras() {

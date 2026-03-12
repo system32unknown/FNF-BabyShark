@@ -237,6 +237,8 @@ class MainMenuState extends MusicBeatState {
 			}
 
 			FlxFlicker.flicker(item, 1, .06, false, false, (_:FlxFlicker) -> {
+				if (option == 'story_mode' || option == 'freeplay') CharacterSelectionState.onPlayState = false;
+
 				switch (option) {
 					case 'story_mode': FlxG.switchState(() -> new StoryMenuState());
 					case 'freeplay': FlxG.switchState(() -> new FreeplayState());

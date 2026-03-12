@@ -181,9 +181,8 @@ class MusicPlayer extends flixel.group.FlxGroup {
 
 	public function pauseOrResume(resume:Bool = false) {
 		if (resume) {
-			if (!FlxG.sound.music.playing)
-				FlxG.sound.music.resume();
-			if (FreeplayState.vocals != null) FreeplayState.vocals.resume();
+			if (!FlxG.sound.music.playing) FlxG.sound.music.resume();
+			if (FreeplayState.vocals != null && FreeplayState.vocals.length > FlxG.sound.music.time && !FreeplayState.vocals.playing) FreeplayState.vocals.resume();
 		} else {
 			FlxG.sound.music.pause();
 			if (FreeplayState.vocals != null) FreeplayState.vocals.pause();

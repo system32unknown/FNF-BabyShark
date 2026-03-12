@@ -48,6 +48,7 @@ class CharacterSelectionState extends MusicBeatState {
 	var gf:Character;
 
 	public static var characterFile:String = 'bf';
+	public static var onPlayState:Bool = false;
 
 	final BF_POS:Array<Float> = [770, 100];
 	final GF_POS:Array<Float> = [400, 130];
@@ -173,27 +174,31 @@ class CharacterSelectionState extends MusicBeatState {
 			pressedTheFunny = true;
 
 			selectedCharacter = true;
-			if (char.hasAnimation('hey') && char.animation.getByName('hey') != null)
-				char.playAnim('hey', true);
-			else char.playAnim('singUP', true);
-			if (gf.hasAnimation('cheer') && gf.animation.getByName('cheer') != null)
-				gf.playAnim('cheer', true);
+			if (!onPlayState) {
+				if (char.hasAnimation('hey') && char.animation.getByName('hey') != null) char.playAnim('hey', true);
+				else char.playAnim('singUP', true);
+				if (gf.hasAnimation('cheer') && gf.animation.getByName('cheer') != null) gf.playAnim('cheer', true);
 
-			FlxG.sound.playMusic(Paths.music('gameOverEnd'));
+				FlxG.sound.playMusic(Paths.music('gameOverEnd'));
 
-			FlxTimer.wait(1.9, () -> {
-				if (!noGFSkin) PlayState.SONG.gfVersion = switch (characterFile) {
-					case 'bf-pixel': 'gf-pixel';
-					case 'bf-christmas': 'gf-christmas';
-					case 'bs' | 'pico-player' | 'nate-player': 'gfbf';
-					case 'bf-holding-gf': 'speaker';
-					default: PlayState.SONG.gfVersion;
-				}
-				PlayState.SONG.player1 = characterFile;
-				LoadingState.prepareToSong();
+				FlxTimer.wait(1.9, () -> {
+					@:privateAccess
+					if (PlayState._lastLoadedModDirectory != Mods.currentModDirectory) {
+						trace('CHANGED MOD DIRECTORY, RELOADING STUFF');
+						Paths.freeGraphicsFromMemory();
+					}
+
+					setData();
+					LoadingState.prepareToSong();
+					LoadingState.loadAndSwitchState(() -> new PlayState());
+					FlxG.sound.music.volume = 0;
+				});
+			} else {
+				setData();
+				data.StageData.loadDirectory(PlayState.SONG);
 				LoadingState.loadAndSwitchState(() -> new PlayState());
-				#if !SHOW_LOADING_SCREEN FlxG.sound.music.stop(); #end
-			});
+				FlxG.sound.music.volume = 0;
+			}
 		}
 
 		if (!selectedCharacter) {
@@ -225,9 +230,23 @@ class CharacterSelectionState extends MusicBeatState {
 
 		if (Controls.justPressed('back')) {
 			FlxG.sound.play(Paths.sound('cancelMenu'));
-			FlxG.switchState(() -> new FreeplayState());
-			FlxG.sound.playMusic(Paths.music('freakyMenu'));
+			if (onPlayState) LoadingState.loadAndSwitchState(() -> new PlayState());
+			else {
+				FlxG.switchState(() -> new FreeplayState());
+				FlxG.sound.playMusic(Paths.music('freakyMenu'));
+			}
 		}
+	}
+
+	function setData():Void {
+		if (!noGFSkin) PlayState.SONG.gfVersion = switch (characterFile) {
+			case 'bf-pixel': 'gf-pixel';
+			case 'bf-christmas': 'gf-christmas';
+			case 'bs' | 'pico-player' | 'nate-player': 'gfbf';
+			case 'bf-holding-gf': 'speaker';
+			default: PlayState.SONG.gfVersion;
+		}
+		PlayState.SONG.player1 = characterFile;
 	}
 
 	public static function unlockCharacter(character:String, save:Bool = false) {
