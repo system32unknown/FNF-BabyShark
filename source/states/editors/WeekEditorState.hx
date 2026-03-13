@@ -49,7 +49,7 @@ class WeekEditorState extends MusicBeatState implements PsychUIEventHandler.Psyc
 		grpWeekCharacters = new FlxTypedGroup<MenuCharacter>();
 
 		lock = new FlxSprite();
-		lock.frames = Paths.getSparrowAtlas('campaign_menu_UI_assets');
+		lock.frames = Paths.sparrowAtlas('campaign_menu_UI_assets');
 		lock.animation.addByPrefix('lock', 'lock');
 		lock.animation.play('lock');
 		lock.antialiasing = Settings.data.antialiasing;

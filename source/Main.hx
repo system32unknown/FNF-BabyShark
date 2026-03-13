@@ -59,7 +59,6 @@ class Main extends Sprite {
 		#if (linux || mac) stage.window.setIcon(lime.graphics.Image.fromFile("icon.png")); #end
 
 		utils.system.PlatformUtil.fixScaling();
-		#if CRASH_HANDLER debug.CrashHandler.init(); #end
 
 		#if HSCRIPT_ALLOWED
 		AlterHscript.warn = function(x:String, ?pos:PosInfos) {

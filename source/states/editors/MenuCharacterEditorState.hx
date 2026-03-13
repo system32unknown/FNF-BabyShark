@@ -143,7 +143,7 @@ class MenuCharacterEditorState extends MusicBeatState implements PsychUIEventHan
 		var char:MenuCharacter = grpWeekCharacters.members[characterTypeRadio.checked];
 
 		char.alpha = 1;
-		char.frames = Paths.getSparrowAtlas('menucharacters/' + characterFile.image);
+		char.frames = Paths.sparrowAtlas('menucharacters/' + characterFile.image);
 		char.animation.addByPrefix('idle', characterFile.idle, 24);
 		if (characterTypeRadio.checked == 1 && characterFile.confirm != null && characterFile.confirm != '' && characterFile.confirm != characterFile.idle) char.animation.addByPrefix('confirm', characterFile.confirm, 24, false);
 		char.flipX = (characterFile.flipX == true);

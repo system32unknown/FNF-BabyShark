@@ -111,7 +111,7 @@ class MainMenuState extends MusicBeatState {
 		final item:FlxSprite = new FlxSprite(x, y);
 		item.antialiasing = Settings.data.antialiasing;
 		item.scrollFactor.set();
-		item.frames = Paths.getSparrowAtlas('mainmenu/menu_$name');
+		item.frames = Paths.sparrowAtlas('mainmenu/menu_$name');
 		item.animation.addByPrefix('idle', '$name idle', 24, true);
 		item.animation.addByPrefix('selected', '$name selected', 24, !looping);
 		item.animation.play('idle');
@@ -237,7 +237,7 @@ class MainMenuState extends MusicBeatState {
 			}
 
 			FlxFlicker.flicker(item, 1, .06, false, false, (_:FlxFlicker) -> {
-				if (option == 'story_mode' || option == 'freeplay') CharacterSelectionState.onPlayState = false;
+				if (CharacterSelectionState.onPlayState && (option == 'story_mode' || option == 'freeplay')) CharacterSelectionState.onPlayState = false;
 
 				switch (option) {
 					case 'story_mode': FlxG.switchState(() -> new StoryMenuState());

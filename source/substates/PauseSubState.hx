@@ -238,7 +238,7 @@ class PauseSubState extends MusicBeatSubstate {
 				case 'Change Character':
 					FlxG.switchState(() -> new CharacterSelectionState());
 					pSte.unloadNotes();
-					CharacterSelectionState.onPlayState = true;
+					if (!CharacterSelectionState.onPlayState) CharacterSelectionState.onPlayState = true;
 				case 'Toggle Practice Mode':
 					pSte.practiceMode = !pSte.practiceMode;
 					PlayState.changedDifficulty = true;
@@ -292,6 +292,7 @@ class PauseSubState extends MusicBeatSubstate {
 					#if DISCORD_ALLOWED DiscordClient.resetClientID(); #end
 					PlayState.deathCounter = 0;
 					PlayState.seenCutscene = false;
+					if (CharacterSelectionState.onPlayState) CharacterSelectionState.onPlayState = false;
 					// ! not yet
 					Mods.loadTopMod();
 					FlxG.switchState(() -> PlayState.isStoryMode ? new states.StoryMenuState() : new states.FreeplayState());

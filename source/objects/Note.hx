@@ -370,7 +370,7 @@ class Note extends FlxSprite {
 			pixelWidth[isSustainNote ? 1 : 0] = frameWidth;
 			pixelHeight[isSustainNote ? 1 : 0] = frameHeight;
 		} else {
-			frames = Paths.getSparrowAtlas(skin);
+			frames = Paths.sparrowAtlas(skin);
 			loadNoteAnims();
 			if (!isSustainNote) {
 				centerOffsets();

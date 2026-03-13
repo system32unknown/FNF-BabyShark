@@ -267,7 +267,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 					}
 
 					if (animateGhost == null || animateGhostImage != character.imageFile)
-						animateGhost.frames = Paths.getTextureAtlas(character.imageFile);
+						animateGhost.frames = Paths.animateAtlas(character.imageFile);
 
 					if (myAnim.indices != null && myAnim.indices.length > 0)
 						animateGhost.anim.addBySymbolIndices('anim', myAnim.name, myAnim.indices, 0, false);
@@ -676,13 +676,13 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 		character.alpha = 1;
 
 		if (Paths.fileExists('images/${character.imageFile}/Animation.json')) {
-			character.frames = Paths.getTextureAtlas(character.imageFile);
+			character.frames = Paths.animateAtlas(character.imageFile);
 			character.isAnimateAtlas = true;
 		} else if (Paths.fileExists('images/${character.imageFile}.txt'))
-			character.frames = Paths.getPackerAtlas(character.imageFile);
+			character.frames = Paths.packerAtlas(character.imageFile);
 		else if (Paths.fileExists('images/${character.imageFile}.json'))
-			character.frames = Paths.getAsepriteAtlas(character.imageFile);
-		else character.frames = Paths.getSparrowAtlas(character.imageFile);
+			character.frames = Paths.asepriteAtlas(character.imageFile);
+		else character.frames = Paths.sparrowAtlas(character.imageFile);
 
 		for (anim in anims) {
 			var animAnim:String = '' + anim.anim;

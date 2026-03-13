@@ -50,7 +50,7 @@ class MenuCharacter extends FlxSprite {
 		try {
 			_file = haxe.Json.parse(NativeFileSystem.getContent(path));
 		} catch (e:Dynamic) Logs.error('Error loading menu character file of "$value": $e');
-		frames = Paths.getSparrowAtlas('menucharacters/${_file.image}');
+		frames = Paths.sparrowAtlas('menucharacters/${_file.image}');
 		animation.addByPrefix('idle', _file.idle, 24);
 
 		var confirmAnim:String = _file.confirm;

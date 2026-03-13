@@ -69,13 +69,10 @@ class CharacterSelectionState extends MusicBeatState {
 	var currentSelectedCharacter:CharacterInSelect;
 
 	override function create() {
-		Paths.clearStoredMemory();
-		Paths.clearUnusedMemory();
-
 		#if DISCORD_ALLOWED DiscordClient.changePresence('Selecting Character'); #end
 
 		unlockedChrs = Settings.data.unlockedCharacters;
-		if (unlockedChrs == null) unlockedChrs = []; // avoid null crashes
+		unlockedChrs ??= []; // avoid null crashes
 
 		persistentUpdate = true;
 

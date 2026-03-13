@@ -53,7 +53,7 @@ class StoryMenuState extends MusicBeatState {
 			return;
 		}
 
-		var ui_tex:flixel.graphics.frames.FlxAtlasFrames = Paths.getSparrowAtlas('campaign_menu_UI_assets');
+		var ui_tex:flixel.graphics.frames.FlxAtlasFrames = Paths.sparrowAtlas('campaign_menu_UI_assets');
 		add(weekSprGroup = new FlxTypedGroup<MenuItem>());
 		add(new FlxSprite().makeGraphic(FlxG.width, 56, FlxColor.BLACK));
 		var bgYellow:FlxSprite = new FlxSprite(0, 56).makeGraphic(FlxG.width, 386, 0xFFF9CF51);
@@ -338,7 +338,7 @@ class StoryMenuState extends MusicBeatState {
 				// Needs an offset thingie
 				if (isLocked) {
 					var lock:FlxSprite = new FlxSprite(weekSprite.width + 10 + weekSprite.x);
-					lock.frames = Paths.getSparrowAtlas('campaign_menu_UI_assets');
+					lock.frames = Paths.sparrowAtlas('campaign_menu_UI_assets');
 					lock.animation.addByPrefix('lock', 'lock');
 					lock.animation.play('lock');
 					grpLocks.add(lock);

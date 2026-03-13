@@ -155,7 +155,7 @@ class Character extends FlxAnimate {
 				spriteType = TEXTURE_ATLAS;
 				isAnimateAtlas = true;
 				isMultiAtlas = false;
-				frames = Paths.getTextureAtlas(json.image);
+				frames = Paths.animateAtlas(json.image);
 			} else {
 				spriteType = SPRITE;
 				isMultiAtlas = isAnimateAtlas = false;

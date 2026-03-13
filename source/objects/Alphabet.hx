@@ -258,14 +258,14 @@ class AlphabetGlyph extends FlxSprite {
 
 	@:noCompletion function set_image(value:String):String {
 		if (frames == null) {
-			frames = Paths.getSparrowAtlas(image = value);
+			frames = Paths.sparrowAtlas(image = value);
 			return value;
 		}
 
 		var lastAnim:String = null;
 		if (animation != null) lastAnim = animation.name;
 
-		frames = Paths.getSparrowAtlas(image = value);
+		frames = Paths.sparrowAtlas(image = value);
 
 		if (lastAnim != null) {
 			animation.addByPrefix(lastAnim, lastAnim, 24);
@@ -282,7 +282,7 @@ class AlphabetGlyph extends FlxSprite {
 	}
 
 	@:noCompletion inline function set_char(newChar:String):String {
-		frames = Paths.getSparrowAtlas(image);
+		frames = Paths.sparrowAtlas(image);
 
 		var converted:String = newChar.toLowerCase();
 		final isLowerCase:Bool = converted == newChar;

@@ -15,7 +15,7 @@ class NoteLoader {
 		trace('Initializing noteSkin: $noteSkin');
 
 		var spr:FlxSprite = new FlxSprite();
-		spr.frames = Paths.getSparrowAtlas(noteSkin);
+		spr.frames = Paths.sparrowAtlas(noteSkin);
 
 		SpriteUtil.addAnimSafe(spr, 'purpleholdend', 'pruple end hold');
 		for (i in 0...4) {

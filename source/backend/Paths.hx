@@ -246,10 +246,10 @@ class Paths {
 			var myJson:Dynamic = getPath('images/$key.json', TEXT, parentFolder, true);
 			if (NativeFileSystem.exists(myJson)) return FlxAtlasFrames.fromTexturePackerJson(imageLoaded, NativeFileSystem.getContent(myJson));
 		}
-		return getPackerAtlas(key, parentFolder);
+		return packerAtlas(key, parentFolder);
 	}
 
-	inline public static function getSparrowAtlas(key:String, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxAtlasFrames {
+	inline public static function sparrowAtlas(key:String, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxAtlasFrames {
 		var imageLoaded:FlxGraphic = image(key, parentFolder, allowGPU);
 		#if MODS_ALLOWED
 		var xmlExists:Bool = false;
@@ -262,7 +262,7 @@ class Paths {
 		#end
 	}
 
-	inline public static function getPackerAtlas(key:String, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxAtlasFrames {
+	inline public static function packerAtlas(key:String, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxAtlasFrames {
 		var imageLoaded:FlxGraphic = image(key, parentFolder, allowGPU);
 		#if MODS_ALLOWED
 		var txtExists:Bool = false;
@@ -275,7 +275,7 @@ class Paths {
 		#end
 	}
 
-	inline public static function getAsepriteAtlas(key:String, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxAtlasFrames {
+	inline public static function asepriteAtlas(key:String, ?parentFolder:String = null, ?allowGPU:Bool = true):FlxAtlasFrames {
 		var imageLoaded:FlxGraphic = image(key, parentFolder, allowGPU);
 		#if MODS_ALLOWED
 		var json:String = modsImagesJson(key);
@@ -287,7 +287,7 @@ class Paths {
 		#end
 	}
 
-	public static function getTextureAtlas(key:String, ?parentFolder:String = null, ?settings:FlxAnimateSettings):FlxAnimateFrames {
+	public static function animateAtlas(key:String, ?parentFolder:String = null, ?settings:FlxAnimateSettings):FlxAnimateFrames {
 		var animateFolder:String = getPath('images/$key', TEXT, parentFolder);
 		if (settings == null) settings = {};
 		if (settings.filterQuality == null && Settings.data.lowQuality) settings.filterQuality = FilterQuality.LOW;

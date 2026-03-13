@@ -21,7 +21,7 @@ class CreditsPopUp extends FlxSpriteGroup {
 			if (headingPath.animation == null) bg.loadGraphic(Paths.image(headingPath.path));
 			else {
 				var info:Animation = headingPath.animation;
-				bg.frames = Paths.getSparrowAtlas(headingPath.path);
+				bg.frames = Paths.sparrowAtlas(headingPath.path);
 				bg.animation.addByPrefix(info.name, info.prefixName, info.frames, info.looped);
 				bg.animation.play(info.name);
 			}
@@ -41,7 +41,7 @@ class CreditsPopUp extends FlxSpriteGroup {
 			if (newHeading.animation == null) bg.loadGraphic(Paths.image(newHeading.path));
 			else {
 				var info:Animation = newHeading.animation;
-				bg.frames = Paths.getSparrowAtlas(newHeading.path);
+				bg.frames = Paths.sparrowAtlas(newHeading.path);
 				bg.animation.addByPrefix(info.name, info.prefixName, info.frames, info.looped);
 				bg.animation.play(info.name);
 			}

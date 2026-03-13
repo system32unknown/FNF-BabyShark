@@ -65,7 +65,7 @@ class TitleState extends MusicBeatState {
 			logo.setGraphicSize(Std.int(logo.width * titleSize));
 		} else {
 			foundXml = true;
-			logo.frames = Paths.getSparrowAtlas('logobumpin');
+			logo.frames = Paths.sparrowAtlas('logobumpin');
 			logo.animation.addByPrefix('bump', 'logo bumpin', 24, false);
 			logo.animation.play('bump');
 		}
@@ -73,7 +73,7 @@ class TitleState extends MusicBeatState {
 		logo.angle = -4;
 
 		gf = new FlxSprite(gfPosition.x, gfPosition.y);
-		gf.frames = Paths.getSparrowAtlas(characterImage);
+		gf.frames = Paths.sparrowAtlas(characterImage);
 		gf.antialiasing = Settings.data.antialiasing;
 
 		if (!useIdle) {
@@ -86,7 +86,7 @@ class TitleState extends MusicBeatState {
 		}
 		
 		titleText = new FlxSprite(enterPosition.x, enterPosition.y);
-		titleText.frames = Paths.getSparrowAtlas('titleEnter');
+		titleText.frames = Paths.sparrowAtlas('titleEnter');
 
 		var animFrames:Array<flixel.graphics.frames.FlxFrame> = [];
 		@:privateAccess {

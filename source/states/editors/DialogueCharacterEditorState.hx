@@ -86,7 +86,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 
 		box = new FlxSprite(70, 370);
 		box.antialiasing = Settings.data.antialiasing;
-		box.frames = Paths.getSparrowAtlas('speech_bubble');
+		box.frames = Paths.sparrowAtlas('speech_bubble');
 		box.scrollFactor.set();
 		box.animation.addByPrefix('normal', 'speech bubble normal', 24);
 		box.animation.addByPrefix('center', 'speech bubble middle', 24);
@@ -331,7 +331,7 @@ class DialogueCharacterEditorState extends MusicBeatState implements PsychUIEven
 
 	function reloadCharacter() {
 		for (char in [character, ghostLoop, ghostIdle]) {
-			char.frames = Paths.getSparrowAtlas('dialogue/' + character.jsonFile.image);
+			char.frames = Paths.sparrowAtlas('dialogue/' + character.jsonFile.image);
 			char.jsonFile = character.jsonFile;
 			char.reloadAnimations();
 			char.setGraphicSize(Std.int(char.width * DialogueCharacter.DEFAULT_SCALE * character.jsonFile.scale));

@@ -95,7 +95,7 @@ class HealthIcon extends FlxSprite {
 			iconOffset.set((width - ICON_TARGET) / iSize, (height - ICON_TARGET) / iSize);
 			animation.play(char);
 		} else {
-			frames = Paths.getSparrowAtlas(name);
+			frames = Paths.sparrowAtlas(name);
 
 			for (stateName in animatedIconStates) {
 				if (getIconAnims(name).contains(stateName)) {

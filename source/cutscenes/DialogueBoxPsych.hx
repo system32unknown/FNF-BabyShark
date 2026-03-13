@@ -505,7 +505,7 @@ class DialogueBoxPsych extends FlxSpriteGroup {
 
 		// Box
 		box = new FlxSprite();
-		box.frames = Paths.getSparrowAtlas(dialogueList.bubble ?? 'speech_bubble');
+		box.frames = Paths.sparrowAtlas(dialogueList.bubble ?? 'speech_bubble');
 		box.animation.addByPrefix('normal', 'speech bubble normal', 24);
 		box.animation.addByPrefix('normalOpen', 'Speech Bubble Normal Open', 24, false);
 		box.animation.addByPrefix('angry', 'AHH speech bubble', 24);

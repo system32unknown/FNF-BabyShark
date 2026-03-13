@@ -66,13 +66,13 @@ class NoteSplash extends FlxSprite {
 		}
 
 		texture = splash;
-		frames = Paths.getSparrowAtlas(texture);
+		frames = Paths.sparrowAtlas(texture);
 		if (frames == null) {
 			texture = defaultNoteSplash + getSplashSkinPostfix();
-			frames = Paths.getSparrowAtlas(texture);
+			frames = Paths.sparrowAtlas(texture);
 			if (frames == null) {
 				texture = defaultNoteSplash;
-				frames = Paths.getSparrowAtlas(texture);
+				frames = Paths.sparrowAtlas(texture);
 			}
 		}
 

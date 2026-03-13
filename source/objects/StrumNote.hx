@@ -121,7 +121,7 @@ class StrumNote extends FlxSprite {
 	}
 
 	function loadSparrowAnims(dataNum:Int):Void {
-		frames = Paths.getSparrowAtlas(texture);
+		frames = Paths.sparrowAtlas(texture);
 
 		animation.addByPrefix('green', 'arrowUP');
 		animation.addByPrefix('blue', 'arrowDOWN');

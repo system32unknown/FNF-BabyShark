@@ -46,6 +46,8 @@ class Init extends flixel.FlxState {
 			utils.plugins.EvacuateDebugPlugin.init();
 			FunkinCache.init();
 
+			#if CRASH_HANDLER debug.CrashHandler.init(); #end
+
 			NativeFileSystem.openFlAssets = openfl.Assets.list();
 			_coreInitialized = true;
 		}
