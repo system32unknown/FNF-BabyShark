@@ -14,6 +14,6 @@ extern class Memory {
 	 * @return The resident set size (RSS) in bytes if successful; otherwise, returns 0 on failure.
 	 */
 	@:native('GetCurrentRSS')
-	static function GetCurrentRSS():cpp.SizeT;
+	static function getCurrentRSS():cpp.SizeT;
 }
 #end
