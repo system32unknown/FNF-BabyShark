@@ -10,9 +10,7 @@
 
 size_t GetCurrentRSS() {
 	PROCESS_MEMORY_COUNTERS_EX pmc;
-
 	if (GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(pmc)))
 		return pmc.WorkingSetSize;
-
 	return 0;
 }

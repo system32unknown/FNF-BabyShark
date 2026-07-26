@@ -25,15 +25,17 @@ class GitCommit {
 	static macro function __getCommitHash():ExprOf<String> {
 		if (Context.defined('display')) return macro '';
 
-		var proc:Process = new Process('git', ['rev-parse', '--short', 'HEAD']);
+		var proc:Process = new Process('git', ['rev-parse', 'HEAD']);
 
 		var pos:Position = Context.currentPos();
 		if (proc.exitCode() != 0) Context.warning('Could not determine current git commit; is this a proper Git repository?', pos);
 
 		var commitHash:String = proc.stdout.readLine();
+		var commitHashSplice:String = commitHash.substr(0, 7);
+
 		proc.close();
 
-		return macro $v{commitHash};
+		return macro $v{commitHashSplice};
 	}
 
 	static macro function __getCommitBranch():ExprOf<String> {

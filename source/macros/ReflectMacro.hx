@@ -30,7 +30,7 @@ import haxe.macro.Expr;
  * @param argsName  The name of the array identifier from which arguments are unpacked.
  */
 class ReflectMacro {
-	macro public static function generateReflectionLike(totalArgs:Int, funcName:String, argsName:String):Expr {
+	public static macro function generateReflectionLike(totalArgs:Int, funcName:String, argsName:String):Expr {
 		#if macro
 		totalArgs++;
 

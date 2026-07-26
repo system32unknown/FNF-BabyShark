@@ -25,7 +25,7 @@ class LinkerMacro {
 		final pos:Position = Context.currentPos();
 
 		final sourcePath:String = Path.directory(Context.getPosInfos(pos).file);
-		final absSourcePath:String = Path.removeTrailingSlashes(sys.FileSystem.absolutePath(sourcePath));
+		final absSourcePath:String = Path.removeTrailingSlashes(FileSystem.absolutePath(sourcePath));
 		final fileToInclude:String = Path.join([absSourcePath, fileName?.length > 0 ? fileName : 'Build.xml']);
 
 		if (!FileSystem.exists(fileToInclude)) Context.error('The specified file "$fileToInclude" could not be found at "$absSourcePath".', pos);
