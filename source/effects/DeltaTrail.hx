@@ -8,8 +8,9 @@ import objects.Character;
  * Extends `FlxTrail` to update at a fixed time interval using elapsed delta time,
  * rather than on a per-frame basis, ensuring consistent trail behavior regardless of framerate.
  *
- * @author Rozebud :]
+ * @author Rozebud And Altertoriel
  */
+@:nullSafety
 class DeltaTrail extends flixel.addons.effects.FlxTrail {
 	var _timer:Float = 0;
 	var timerMax:Float;

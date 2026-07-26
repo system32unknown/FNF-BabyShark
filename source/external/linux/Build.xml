@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xml>
+	<pragma once="true" />
+
+	<files id="haxe">
+		<compilerflag value="-I${this_dir}/include" />
+	</files>
+
+	<files id="__main__">
+		<compilerflag value="-I${this_dir}/include" />
+	</files>
+
+	<files id="external-linux">
+		<compilerflag value="-I${this_dir}/include" />
+		<file name="${this_dir}/src/memory.cpp" />
+	</files>
+
+	<target id="haxe">
+		<files id="external-linux" />
+	</target>
+</xml>

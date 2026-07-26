@@ -32,6 +32,11 @@ class BezierUtil {
 	/**
 	 * A bezier curve with two points.
 	 * This is really just linear interpolation but whatever.
+	 *
+	 * @param p The percentage of the way through the curve.
+	 * @param a The start point.
+	 * @param b The end point.
+	 * @return The point on the curve.
 	 */
 	public static function bezier2(p:Float, a:FlxPoint, b:FlxPoint):FlxPoint {
 		return FlxPoint.get(mix2(p, a.x, b.x), mix2(p, a.y, b.y));
@@ -39,10 +44,12 @@ class BezierUtil {
 
 	/**
 	 * A bezier curve with three points.
+	 *
 	 * @param p The percentage of the way through the curve.
 	 * @param a The start point.
 	 * @param b The control point.
 	 * @param c The end point.
+	 * @return The point on the curve.
 	 */
 	public static function bezier3(p:Float, a:FlxPoint, b:FlxPoint, c:FlxPoint):FlxPoint {
 		return FlxPoint.get(mix3(p, a.x, b.x, c.x), mix3(p, a.y, b.y, c.y));
@@ -50,11 +57,13 @@ class BezierUtil {
 
 	/**
 	 * A bezier curve with four points.
+	 *
 	 * @param p The percentage of the way through the curve.
 	 * @param a The start point.
 	 * @param b The first control point.
 	 * @param c The second control point.
 	 * @param d The end point.
+	 * @return The point on the curve.
 	 */
 	public static function bezier4(p:Float, a:FlxPoint, b:FlxPoint, c:FlxPoint, d:FlxPoint):FlxPoint {
 		return FlxPoint.get(mix4(p, a.x, b.x, c.x, d.x), mix4(p, a.y, b.y, c.y, d.y));
@@ -62,12 +71,14 @@ class BezierUtil {
 
 	/**
 	 * A bezier curve with four points.
+	 *
 	 * @param p The percentage of the way through the curve.
 	 * @param a The start point.
 	 * @param b The first control point.
 	 * @param c The second control point.
-	 * @param c The third control point.
-	 * @param d The end point.
+	 * @param d The third control point.
+	 * @param e The end point.
+	 * @return The point on the curve.
 	 */
 	public static function bezier5(p:Float, a:FlxPoint, b:FlxPoint, c:FlxPoint, d:FlxPoint, e:FlxPoint):FlxPoint {
 		return FlxPoint.get(mix5(p, a.x, b.x, c.x, d.x, e.x), mix5(p, a.y, b.y, c.y, d.y, e.y));

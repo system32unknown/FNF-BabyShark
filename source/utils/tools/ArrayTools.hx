@@ -46,22 +46,6 @@ class ArrayTools {
 	}
 
 	/**
-	 * Deep flattens an array.
-	 * Example: `deepFlatten([1, [2, 3], 4])` will return `[1, 2, 3, 4]`
-	 * @param arr Array to flatten
-	 * @param result Result array
-	 */
-	public static function deepFlatten(arr:Array<Dynamic>, ?result:Array<Dynamic>):Array<Dynamic> {
-		if (arr == null) return [];
-		if (result == null) result = [];
-		for (e in arr) {
-			if (Std.isOfType(e, Array)) deepFlatten(e, result);
-			else result.push(e);
-		}
-		return result;
-	}
-
-	/**
 	 * Like `join` but adds a word before the last element.
 	 * @param array The array to join.
 	 * @param separator The separator to use between elements.

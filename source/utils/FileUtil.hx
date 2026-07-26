@@ -39,7 +39,7 @@ class FileUtil {
 		];
 
 		#if sys
-		for (i in 0...protected.length) protected[i] = FileSystem.fullPath(Path.join([gameDirectory, protected[i]]));
+		for (i in 0...protected.length) protected[i] = #if !linux FileSystem.fullPath #end (Path.join([gameDirectory, protected[i]]));
 		#end
 		return protected;
 	}
@@ -50,7 +50,7 @@ class FileUtil {
 	public static final INVALID_CHARS:EReg = ~/[:*?"<>|\n\r\t]/g;
 
 	#if sys
-	static var _gameDirectory:Null<String> = null;
+	private static var _gameDirectory:Null<String> = null;
 	public static var gameDirectory(get, never):String;
 
 	public static function get_gameDirectory():String {
@@ -228,15 +228,15 @@ class FileUtil {
 		var file:FileReference = new FileReference();
 		file.addEventListener(Event.COMPLETE, (e:Event) -> {
 			trace('Successfully wrote file: "$path"');
-			callback("success");
+			callback('success');
 		});
 		file.addEventListener(Event.CANCEL, (e:Event) -> {
 			trace('Cancelled writing file: "$path"');
-			callback("info");
+			callback('info');
 		});
 		file.addEventListener(IOErrorEvent.IO_ERROR, (e:IOErrorEvent) -> {
 			trace('IO error writing file: "$path"');
-			callback("error");
+			callback('error');
 		});
 		file.save(data, path);
 	}
@@ -425,8 +425,16 @@ class FileUtil {
 		// thats why the above comment is there!
 		Sys.command('open', [pathFolder]);
 		#elseif linux
-		// TODO: implement linux
-		// some shit with xdg-open :thinking: emoji...
+		var exitCode = Sys.command('xdg-open', [pathFolder]);
+		if (exitCode == 0) return;
+
+		for (fm in ['dolphin', 'nautilus', 'nemo', 'thunar', 'caja', 'konqueror', 'spacefm', 'pcmanfm']) {
+			if (Sys.command('which', [fm]) == 0) {
+				exitCode = Sys.command(fm, [pathFolder]);
+				if (exitCode == 0) return;
+			}
+		}
+		Logs.warn('No compatible file manager found for Linux.');
 		#end
 		#else
 		throw 'External folder open is not supported on this platform.';
@@ -447,8 +455,9 @@ class FileUtil {
 		#elseif mac
 		Sys.command('open', ['-R', path]);
 		#elseif linux
-		// TODO: unsure of the linux equivalent to opening a folder and then "selecting" a file.
-		Sys.command('open', [path]);
+		Logs.warn('File selection not reliably supported on Linux, opening parent folder instead.');
+		path = Path.directory(path);
+		openFolder(path);
 		#end
 		#else
 		throw 'External file selection is not supported on this platform.';
@@ -500,8 +509,24 @@ class FileUtilSandboxed {
 
 		#if sys
 		// TODO: figure out how to get "real" path of symlinked paths
-		final realPath:String = FileSystem.fullPath(Path.join([FileUtil.gameDirectory, sanitized.join('/')]));
-		if (!realPath.startsWith(FileUtil.gameDirectory)) return FileUtil.gameDirectory;
+		#if linux
+		// The implementation on Linux fails if the path doesn't exist
+		var realPath:Null<String> = null;
+		var unresolvedSegments:Array<String> = [];
+		while (realPath == null && sanitized.length > 0) {
+			realPath = FileSystem.fullPath(Path.join([FileUtil.gameDirectory].concat(sanitized)));
+			if (realPath == null) unresolvedSegments.unshift(sanitized.pop() ?? continue);
+		}
+
+		if (unresolvedSegments.length > 0) {
+			if (realPath != null) unresolvedSegments.unshift(realPath);
+			realPath = Path.join(unresolvedSegments);
+		}
+		#else
+		final realPath:Null<String> = FileSystem.fullPath(Path.join([FileUtil.gameDirectory].concat(sanitized)));
+		#end
+
+		if (realPath == null || !realPath.startsWith(FileUtil.gameDirectory)) return FileUtil.gameDirectory;
 		return realPath;
 		#else
 		return sanitized.join('/');

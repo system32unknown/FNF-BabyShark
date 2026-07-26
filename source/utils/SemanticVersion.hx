@@ -1,6 +1,6 @@
 package utils;
 
-import macros.GitCommitMacro;
+import macros.GitCommit;
 
 /**
  * Represents a semantic-style game version string.
@@ -45,18 +45,13 @@ abstract SemanticVersion(String) from String to String {
 	 * Git commit hash of the current build, generated at compile time.
 	 */
 	public var COMMIT_HASH(get, never):String;
-
-	function get_COMMIT_HASH():String
-		return GitCommitMacro.commitHash;
+	function get_COMMIT_HASH():String return GitCommit.commitHash;
 
 	/**
-	 * Git commit number of the current build, generated at compile time.
+	 * Git commit branch of the current build, generated at compile time.
 	 */
-	public var COMMIT_NUM(get, never):Int;
-
-	function get_COMMIT_NUM():Int
-		return GitCommitMacro.commitNumber;
-
+	public var COMMIT_BRANCH(get, never):String;
+	function get_COMMIT_BRANCH():String return GitCommit.commitBranch;
 	
 	inline function get_prereleaseId():String {
 		var parts:Array<String> = this.split("-");

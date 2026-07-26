@@ -1,9 +1,8 @@
 package debug;
 
 import utils.system.FPSUtil;
+import utils.system.MemoryUtil;
 import flixel.util.FlxStringUtil;
-
-import _external.memory.Memory;
 
 /**
  * The FPS class provides an easy-to-use monitor to display
@@ -17,6 +16,7 @@ class FPSCounter extends openfl.text.TextField {
 	public var memDisplay:String = "";
 
 	public var fpsManager:FPSUtil;
+	var hasTaskMem:Bool;
 
 	/**
 	 * The current memory usage (WARNING: this is NOT your total program memory usage, rather it shows the garbage collector memory)
@@ -31,7 +31,9 @@ class FPSCounter extends openfl.text.TextField {
 
 	public var taskMEM(get, never):Float;
 	@:noCompletion function get_taskMEM():Float {
-		var mem:Float = Memory.getCurrentUsage();
+		if (!hasTaskMem) return 0.0;
+
+		var mem:Float = MemoryUtil.getTaskMemory();
 		if (mem > taskPeakMEM) taskPeakMEM = mem;
 		return mem;
 	}
@@ -53,6 +55,7 @@ class FPSCounter extends openfl.text.TextField {
 		sharpness = 100;
 		multiline = true;
 		fpsManager = new FPSUtil();
+		hasTaskMem = MemoryUtil.supportsTaskMem();
 	}
 
 	public dynamic function preUpdateText():Void {
@@ -78,10 +81,10 @@ class FPSCounter extends openfl.text.TextField {
 		var newStr:String = '${fpsManager.curFPS}FPS';
 		switch (memDisplay) {
 			case 'GC': newStr += '\n' + FlxStringUtil.formatBytes(gcMEM) + ' / ' + FlxStringUtil.formatBytes(gcPeakMEM);
-			case 'TASK': newStr += '\n' + FlxStringUtil.formatBytes(taskMEM) + ' / ' + FlxStringUtil.formatBytes(taskPeakMEM);
+			case 'TASK': if (hasTaskMem) newStr += '\n' + FlxStringUtil.formatBytes(taskMEM) + ' / ' + FlxStringUtil.formatBytes(taskPeakMEM);
 			case 'BOTH':
 				newStr += '\nGC: ' + FlxStringUtil.formatBytes(gcMEM) + ' / ' + FlxStringUtil.formatBytes(gcPeakMEM);
-				newStr += '\nTASK: ' + FlxStringUtil.formatBytes(taskMEM) + ' / ' + FlxStringUtil.formatBytes(taskPeakMEM);
+				newStr += '\nTASK: ' + (hasTaskMem ? (FlxStringUtil.formatBytes(taskMEM) + ' / ' + FlxStringUtil.formatBytes(taskPeakMEM)) : "Not Supported");
 		}
 
 		if (newStr != lastText) {

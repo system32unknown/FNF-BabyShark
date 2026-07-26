@@ -7,6 +7,7 @@ import alterhscript.AlterHscript;
 import hscript.Expr.Error as AlterError;
 import hscript.Printer;
 import haxe.ValueException;
+import macros.GitCommit;
 
 typedef HScriptInfos = {
 	> haxe.PosInfos,
@@ -136,8 +137,7 @@ class HScript extends AlterHscript {
 			"version" => Main.engineVer,
 			"engine" => {
 				app_version: Application.current.meta.get('version'),
-				commit: macros.GitCommitMacro.commitNumber,
-				hash: macros.GitCommitMacro.commitHash.trim(),
+				hash: GitCommit.commitHash.trim(),
 				name: "Alter Engine"
 			}
 		];
@@ -281,8 +281,7 @@ class HScript extends AlterHscript {
 		var defines:Map<String, Dynamic> = macros.DefinesMacro.defines;
 		defines.set("ALTER_ENGINE", true);
 		defines.set("ALTER_VER", Main.engineVer);
-		defines.set("ALTER_COMMIT", macros.GitCommitMacro.commitNumber);
-		defines.set("ALTER_HASH", macros.GitCommitMacro.commitHash);
+		defines.set("ALTER_HASH", GitCommit.commitHash);
 		return defines;
 	}
 

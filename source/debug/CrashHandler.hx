@@ -94,17 +94,13 @@ class CrashHandler {
 		var error:String = "";
 		for (stackItem in haxe.CallStack.exceptionStack(true)) {
 			switch (stackItem) {
-				case FilePos(p, file, line, column):
-					switch (p) {
-						case Method(cla, func): error += '[$file] ${cla.split(".")[cla.split(".").length - 1]}.$func() - (line $line)';
-						case _: error += '$file (line $line)';
-					}
-					if (column != null) error += ':$column';
-				case CFunction: error += "Non-Haxe (C) Function";
-				case Module(c): error += 'Module $c';
-				case Method(cl, m): error += '$cl - $m';
-				case LocalFunction(v): error += 'Local Function $v';
-				default: Sys.println(stackItem);
+				case FilePos(_, file, line, column):
+					error += ' in ${file}#${line}';
+					if (column != null) error += ':${column}';
+				case CFunction: error += '[Function] ';
+				case Module(m): error += '[Module(${m})] ';
+				case Method(cl, m): error += '[Function(${cl}.${m})] ';
+				case LocalFunction(v): error += '[LocalFunction(${v})] ';
 			}
 			error += '\n';
 		}

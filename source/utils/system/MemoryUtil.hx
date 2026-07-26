@@ -85,10 +85,21 @@ class MemoryUtil {
 	}
 
 	public static function supportsTaskMem():Bool {
-		#if ((cpp && (windows || macos)) || linux)
-		return true;
+		return #if ((cpp && (windows || macos)) || linux) true #else false #end;
+	}
+
+	/**
+	 * @return The current task memory for the game process.
+	 */
+	public static function getTaskMemory():Float {
+		#if (windows && cpp)
+		return external.windows.Memory.getCurrentRSS();
+		#elseif (macos && cpp)
+		return external.apple.Memory.getCurrentRSS();
+		#elseif linux
+		return external.linux.Memory.getCurrentRSS();
 		#else
-		return false;
+		return 0.0;
 		#end
 	}
 }

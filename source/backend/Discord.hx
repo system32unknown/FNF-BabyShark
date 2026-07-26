@@ -69,7 +69,7 @@ class DiscordClient {
 		handlers.ready = CppFunction.fromStaticFunction(onReady);
 		handlers.disconnected = CppFunction.fromStaticFunction(onDisconnected);
 		handlers.errored = CppFunction.fromStaticFunction(onError);
-		Discord.Initialize(clientID, cpp.RawPointer.addressOf(handlers), false, null);
+		Discord.Initialize(clientID, cpp.RawPointer.addressOf(handlers), false, '');
 
 		if (!isInitialized) trace("Discord Client initialized");
 
@@ -145,6 +145,7 @@ final class DiscordPresence {
 
 	function new():Void {
 		__presence = new DiscordRichPresence();
+		__presence.type = DiscordActivityType_Playing;
 	}
 
 	public function toString():String {
