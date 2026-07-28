@@ -17,16 +17,20 @@ class Socket implements flixel.util.FlxDestroyUtil.IFlxDestroyable {
 	public function read():String {
 		try {
 			return this.socket.input.readUntil('\n'.code).replace("\\n", "\n");
-		} catch (e:Dynamic) Logs.error('ERROR SOCKET ON READ - $e');
-		return null;
+		} catch (e:Dynamic) {
+			Logs.error('ERROR SOCKET ON READ - $e');
+			return null;
+		}
 	}
 
 	public function write(str:String):Bool {
 		try {
 			this.socket.output.writeString(str.replace("\n", "\\n"));
 			return true;
-		} catch (e:Dynamic) Logs.error('ERROR SOCKET ON WRITE - $e');
-		return false;
+		} catch (e:Dynamic) {
+			Logs.error('ERROR SOCKET ON WRITE - $e');
+			return false;
+		}
 	}
 
 	public function host(host:Host, port:Int, nbConnections:Int = 1) {

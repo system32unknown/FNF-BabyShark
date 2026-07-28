@@ -67,7 +67,6 @@ class Sequence {
 	 * The current event being executed. Will be null if this sequence has finished.
 	 */
 	public var currentEvent(get, never):Null<SequenceEvent>;
-
 	inline function get_currentEvent():Null<SequenceEvent> {
 		return events[eventCount];
 	}

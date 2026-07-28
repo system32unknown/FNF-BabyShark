@@ -4,14 +4,12 @@ import haxe.Http;
 import haxe.io.Bytes;
 
 /**
- * Helper utilities for performing HTTP operations.
- *
- * Provides simple methods for GET and POST requests,
- * automatic redirect handling, and basic connectivity checks.
+ * Utility class for making synchronous HTTP requests with automatic redirect handling.
+ * All methods are blocking and throw `HttpError` on failure. Redirects (301, 302, 307, 308) are followed recursively using the `Location` response header.
  */
 final class HttpUtil {
 	/**
-	 * Value used for the `User-Agent` header in all requests.
+	 * The User-Agent header sent with every request.
 	 */
 	public static var userAgent:String = "request";
 
@@ -21,25 +19,21 @@ final class HttpUtil {
 	public static var maxRedirects:Int = 10;
 
 	/**
-	 * Retrieves the contents of a URL as a String.
-	 *
-	 * Redirects are followed automatically up to `maxRedirects`.
-	 *
-	 * @param url Target URL.
-	 * @return Response body as text.
-	 * @throws HttpError If the request fails.
+	 * Makes a synchronous GET request and returns the response body as a string.
+	 * Automatically follows redirects.
+	 * @param url The URL to request.
+	 * @return The response body as a `String`.
+	 * @throws HttpError If the request fails, redirects without a `Location` header, or returns an empty response.
 	 */
 	public static function requestText(url:String):String
 		return cast fetch(url, false, 0);
 
 	/**
-	 * Retrieves the contents of a URL as raw Bytes.
-	 *
-	 * Redirects are followed automatically up to `maxRedirects`.
-	 *
-	 * @param url Target URL.
-	 * @return Response body as bytes.
-	 * @throws HttpError If the request fails.
+	 * Makes a synchronous GET request and returns the response body as raw bytes.
+	 * This automatically follows redirects.
+	 * @param url The URL to request.
+	 * @return The response body as `haxe.io.Bytes`.
+	 * @throws HttpError If the request fails, redirects without a `Location` header, or returns an empty response.
 	 */
 	public static function requestBytes(url:String):Bytes
 		return cast fetch(url, true, 0);
@@ -63,35 +57,30 @@ final class HttpUtil {
 	}
 
 	/**
-	 * Performs a lightweight connectivity check.
-	 *
-	 * Uses a minimal endpoint that returns a 204 response
-	 * to determine whether outbound internet access is available.
-	 *
-	 * @return `true` if reachable, otherwise `false`.
+	 * Checks whether an internet connection is available by pinging (or requesting) `google.com`.
+	 * @return `true` if the request succeeded, `false` if it threw an `HttpError`.
 	 */
 	public static function hasInternet():Bool {
 		try {
 			requestText("https://connectivitycheck.gstatic.com/generate_204");
 			return true;
-		} catch (_:HttpError) return false;
+		} catch (e:HttpError) {
+			Logs.warn('[HttpUtil.hasInternet] Failed: ${e.toString()}');
+			return false;
+		}
 	}
 
 	/**
-	 * Internal request handler with redirect support.
-	 *
-	 * Recursively follows redirects until a final response is received
-	 * or the redirect limit is exceeded.
-	 *
-	 * @param url Initial request URL.
+	 * Makes a synchronous GET request and returns the response body as raw bytes.
+	 * This automatically follows redirects.
+	 * @param url The URL to request.
 	 * @param asBytes Whether the response should be returned as Bytes.
 	 * @param depth Current redirect depth.
 	 * @return Response data (String or Bytes).
-	 * @throws HttpError On failure, invalid redirect, or empty response.
+	 * @throws HttpError If the request fails, redirects without a `Location` header, or returns an empty response.
 	 */
 	static function fetch(url:String, asBytes:Bool, depth:Int):Dynamic {
-		if (depth > maxRedirects)
-			throw new HttpError('Redirect limit ($maxRedirects) exceeded', url);
+		if (depth > maxRedirects) throw new HttpError('Redirect limit ($maxRedirects) exceeded', url);
 
 		var result:Dynamic = null;
 		var error:HttpError = null;
@@ -113,7 +102,7 @@ final class HttpUtil {
 
 		if (error != null) throw error;
 		if (redirectUrl != null) return fetch(redirectUrl, asBytes, depth + 1);
-		if (result == null) throw new HttpError("Empty response", url);
+		if (result == null) throw new HttpError("Unknown error or empty byte response", url);
 
 		return result;
 	}
@@ -133,16 +122,10 @@ final class HttpUtil {
 	}
 
 	/**
-	 * Determines whether a status code represents an HTTP redirect.
-	 *
-	 * Recognized redirect codes:
-	 * - 301 (Moved Permanently)
-	 * - 302 (Found)
-	 * - 307 (Temporary Redirect)
-	 * - 308 (Permanent Redirect)
-	 *
-	 * @param status HTTP status code.
-	 * @return `true` if redirect, otherwise `false`.
+	 * Returns whether an HTTP status code represents a redirect.
+	 * It handles 301, 302, 307, and 308.
+	 * @param status The HTTP status code to check.
+	 * @return `true` if the status is a redirect code.
 	 */
 	static function isRedirect(status:Int):Bool {
 		return switch (status) {
@@ -151,7 +134,7 @@ final class HttpUtil {
 					{fgColor: BLUE, text: "[Connection Status] "},
 					{fgColor: YELLOW, text: "Redirected with status code: "},
 					{fgColor: GREEN, text: Std.string(status)}
-				], WARNING);
+				], VERBOSE);
 				true;
 			case _: false;
 		}
@@ -159,47 +142,43 @@ final class HttpUtil {
 }
 
 /**
- * Represents an HTTP-related failure.
- *
- * Stores the error message, request URL, and optional status code.
+ * Represents an HTTP error with context about the failed request.
  */
 private class HttpError {
-	/**
-	 * Human-readable error message.
-	 */
-	public final message:String;
+	/** The error message. */
+	public var message:String;
+
+	/** The URL that triggered the error. */
+	public var url:String;
+
+	/** The HTTP status code, or `-1` if not applicable. */
+	public var status:Int;
+
+	/** Whether the error occurred during a redirect. */
+	public var redirected:Bool;
 
 	/**
-	 * URL associated with the failed request.
+	 * @param message Description of the Error
+	 * @param url The URL associated with the failed request.
+	 * @param status HTTP status code. Defaults to `-1`.
+	 * @param redirected Whether this error occurred mid-redirect. Defaults to `false`.
 	 */
-	public final url:String;
-
-	/**
-	 * HTTP status code, or -1 if unavailable.
-	 */
-	public final status:Int;
-
-	/**
-	 * Creates a new HttpError instance.
-	 *
-	 * @param message Description of the failure.
-	 * @param url Request URL.
-	 * @param status Optional HTTP status code.
-	 */
-	public function new(message:String, url:String, status:Int = -1) {
+	public function new(message:String, url:String, ?status:Int = -1, ?redirected:Bool = false) {
 		this.message = message;
 		this.url = url;
 		this.status = status;
+		this.redirected = redirected;
 	}
 
 	/**
-	 * Converts the error into a readable string format.
-	 *
-	 * @return Formatted error details.
+	 * Returns a formatted string representation of the error.
+	 * The format should look like this: `[HttpError] | Status: N | (Redirected) | URL: ... | Message: ...`
+	 * @return An error summary in a string
 	 */
 	public function toString():String {
 		final parts:Array<String> = ['[HttpError]'];
 		if (status != -1) parts.push('Status: $status');
+		if (redirected) parts.push('(Redirected)');
 		parts.push('URL: $url');
 		parts.push('Message: $message');
 		return parts.join(' | ');

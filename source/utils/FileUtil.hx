@@ -17,7 +17,6 @@ class FileUtil {
 	 * Paths which should not be deleted or modified by scripts.
 	 */
 	public static var PROTECTED_PATHS(get, never):Array<String>;
-
 	public static function get_PROTECTED_PATHS():Array<String> {
 		final protected:Array<String> = [
 			'',
@@ -182,21 +181,6 @@ class FileUtil {
 		Logs.warn('saveMultipleFiles not implemented for this platform');
 		if (onCancel != null) onCancel();
 		return false;
-		#end
-	}
-
-	/**
-	 * Read bytes file contents directly from a given path.
-	 * Only works on native.
-	 *
-	 * @param path The path to the file.
-	 * @return The file contents.
-	 */
-	public static function readBytesFromPath(path:String):Bytes {
-		#if sys
-		return File.getBytes(path);
-		#else
-		throw 'Direct file reading by path is not supported on this platform.';
 		#end
 	}
 
@@ -401,7 +385,6 @@ class FileUtil {
 		#end
 	}
 
-
 	/**
 	 * Runs platform-specific code to open a path in the file explorer.
 	 *
@@ -425,7 +408,7 @@ class FileUtil {
 		// thats why the above comment is there!
 		Sys.command('open', [pathFolder]);
 		#elseif linux
-		var exitCode = Sys.command('xdg-open', [pathFolder]);
+		var exitCode:Int = Sys.command('xdg-open', [pathFolder]);
 		if (exitCode == 0) return;
 
 		for (fm in ['dolphin', 'nautilus', 'nemo', 'thunar', 'caja', 'konqueror', 'spacefm', 'pcmanfm']) {
@@ -540,7 +523,7 @@ class FileUtilSandboxed {
 	 */
 	public static function isProtected(path:String, sanitizeFirst:Bool = true):Bool {
 		if (sanitizeFirst) path = sanitizePath(path);
-		@:privateAccess for (protected in FileUtil.PROTECTED_PATHS) {
+		for (protected in FileUtil.PROTECTED_PATHS) {
 			if (path == protected || (protected.contains('*') && path.startsWith(protected.substring(0, protected.indexOf('*'))))) {
 				return true;
 			}
@@ -549,7 +532,13 @@ class FileUtilSandboxed {
 	}
 
 	public static function readBytesFromPath(path:String):Bytes {
-		return FileUtil.readBytesFromPath(sanitizePath(path));
+		#if sys
+		return File.getBytes(sanitizePath(path));
+		#else
+		throw 'Direct file reading by path is not supported on this platform.';
+		return null;
+		#end
+
 	}
 	public static function writeStringToPath(path:String, data:String, mode:FileWriteMode = Skip):Void {
 		if (isProtected(path = sanitizePath(path), false)) throw 'Cannot write to protected path: $path';
