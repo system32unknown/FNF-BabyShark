@@ -9,7 +9,7 @@ import lime.system.System;
 /**
  * Global crash handler for capturing and logging uncaught errors.
  *
- * This class hooks into both native (C++/HL) and OpenFL error systems
+ * This class hooks into native (C++) and OpenFL error systems
  * to ensure crashes are properly logged and reported.
  */
 class CrashHandler {
@@ -20,11 +20,7 @@ class CrashHandler {
 	 * an OpenFL uncaught error listener.
 	 */
 	public static function init():Void {
-		#if cpp
-		untyped __global__.__hxcpp_set_critical_error_handler(onError);
-		#elseif hl
-		hl.Api.setErrorHandler(onError);
-		#end
+		#if cpp untyped __global__.__hxcpp_set_critical_error_handler(onError); #end
 		FlxG.stage.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onErrorOFL);
 	}
 

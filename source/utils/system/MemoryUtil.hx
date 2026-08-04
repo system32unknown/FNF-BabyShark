@@ -2,8 +2,6 @@ package utils.system;
 
 #if cpp
 import cpp.vm.Gc;
-#elseif hl
-import hl.Gc;
 #end
 
 /**
@@ -33,10 +31,6 @@ class MemoryUtil {
 		#if cpp
 		Gc.run(major);
 		if (major) Gc.compact();
-		#elseif hl
-		Gc.blocking(true);
-		Gc.major();
-		Gc.blocking(false);
 		#else
 		openfl.system.System.gc();
 		#end
@@ -48,9 +42,6 @@ class MemoryUtil {
 	public static function enable(on:Bool = true):Void {
 		isGcOn = on;
 		#if cpp
-		Gc.enable(isGcOn);
-		cpp.NativeGc.enable(isGcOn);
-		#elseif hl
 		Gc.enable(isGcOn);
 		#else
 		throw 'Not implemented!';

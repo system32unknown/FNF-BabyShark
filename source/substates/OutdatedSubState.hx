@@ -44,7 +44,7 @@ class OutdatedSubState extends MusicBeatSubstate {
 
 		if (Controls.justPressed('accept')) {
 			leftState = true;
-			Util.browserLoad("https://github.com/system32unknown/AlterEngine/releases");
+			utils.WindowUtil.openURL("https://github.com/system32unknown/AlterEngine/releases");
 		} else if (Controls.justPressed('back')) leftState = true;
 
 		if (leftState) {

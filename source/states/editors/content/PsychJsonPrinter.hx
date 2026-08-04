@@ -94,7 +94,7 @@ class PsychJsonPrinter extends haxe.format.JsonPrinter {
 		switch (Type.typeof(v)) {
 			case TUnknown: add('"???"');
 			case TObject: objString(v);
-			case TInt: add(#if (jvm || hl) Std.string(v) #else v #end);
+			case TInt: add(#if jvm Std.string(v) #else v #end);
 			case TFloat: add(Math.isFinite(v) ? Std.string(v) : 'null');
 			case TFunction: add('"<fun>"');
 			case TClass(c):
@@ -153,7 +153,7 @@ class PsychJsonPrinter extends haxe.format.JsonPrinter {
 					quote(v.toString());
 				} else classString(v);
 			case TEnum(_): add(Std.string(Type.enumIndex(v)));
-			case TBool: add(#if (php || jvm || hl) (v ? 'true' : 'false') #else v #end);
+			case TBool: add(#if (php || jvm) (v ? 'true' : 'false') #else v #end);
 			case TNull: add('null');
 		}
 	}

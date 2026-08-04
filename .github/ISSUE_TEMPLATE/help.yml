@@ -27,7 +27,7 @@ body:
         - "Windows x64"
         - "Linux"
         - "Mac"
-        - "HashLink, or other build system"
+        - "Other build system"
     validations:
       required: true
 

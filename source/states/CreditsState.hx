@@ -376,7 +376,7 @@ class CreditSectionState extends MusicBeatState {
 			bg.color = interpColor.color;
 
 			if (Controls.justPressed('accept') && (creditsStuff[curSelected][3] == null || creditsStuff[curSelected][3].length > 4))
-				Util.browserLoad(creditsStuff[curSelected][3]);
+				utils.WindowUtil.openURL(creditsStuff[curSelected][3]);
 
 			if (Controls.justPressed('back')) {
 				FlxG.sound.play(Paths.sound('cancelMenu'));

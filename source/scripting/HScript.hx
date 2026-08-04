@@ -59,7 +59,23 @@ class HScript extends AlterHscript {
 
 	var varsToBring(default, set):Any = null;
 
-	function getDefaultVariables():Map<String, Dynamic> {
+	/**
+	 * Gets the default variables for a script.
+	 */
+	public static function getDefaultVariables():Map<String, Dynamic> {
+		var vars:Map<String, Dynamic> = _defaultVariablesTemplate ?? (_defaultVariablesTemplate = buildDefaultVariables());
+		var copy:Map<String, Dynamic> = vars.copy();
+		copy.set("state", FlxG.state); // `state` changes on state switch, so it can't be cached
+		copy.set("window", Application.current.window); // same for `window`: evaluated at script creation time like before
+		return copy;
+	}
+
+	/**
+	 * Cached template of the default variables.
+	 * Built once (including the `Type.resolveClass` lookups) and shallow-copied per script.
+	 */
+	private static var _defaultVariablesTemplate:Map<String, Dynamic> = null;
+	private static function buildDefaultVariables():Map<String, Dynamic> {
 		return [
 			"Type" => Type,
 			"Sys" => Sys,
@@ -76,11 +92,11 @@ class HScript extends AlterHscript {
 			"File" => File,
 			"FileSystem" => FileSystem,
 			#end
-			"Assets" => openfl.Assets,
 
 			// OpenFL & Lime related stuff
+			"Assets" => openfl.Assets,
 			"Application" => Application,
-			"window" => Application.current.window,
+			"Main" => Main,
 
 			// Flixel related stuff
 			"FlxG" => FlxG,
@@ -285,7 +301,7 @@ class HScript extends AlterHscript {
 		return defines;
 	}
 
-	@:noUsing inline function getClassHSC(className:String):Class<Dynamic> {
+	@:noUsing inline static function getClassHSC(className:String):Class<Dynamic> {
 		return Type.resolveClass('${className}_HSC');
 	}
 

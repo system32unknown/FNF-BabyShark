@@ -2,32 +2,9 @@ package utils;
 
 import haxe.Http;
 import flixel.addons.display.FlxBackdrop;
-import flixel.input.keyboard.FlxKey;
 import backend.NativeFileSystem;
 
 class Util {
-	/**
-	 * A regex to match valid URLs.
-	 */
-	public static final URL_REGEX:EReg = ~/^https?:\/?\/?(?:www\.)?[-a-zA-Z0-9@:%_\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&\/=]*)$/;
-
-	/**
-	 * Sanitizes a URL via a regex.
-	 *
-	 * @param targetUrl The URL to sanitize.
-	 * @return The sanitized URL, or an empty string if the URL is invalid.
-	 */
-	public static function sanitizeURL(targetUrl:String):String {
-		targetUrl = (targetUrl ?? '').trim();
-		if (targetUrl == '') return '';
-
-		final lowerUrl:String = targetUrl.toLowerCase();
-		if (!lowerUrl.startsWith('http:') && !lowerUrl.startsWith('https:')) targetUrl = 'http://' + targetUrl;
-		if (URL_REGEX.match(targetUrl)) return URL_REGEX.matched(0);
-
-		return '';
-	}
-
 	/**
 	 * Checks for available updates by sending an HTTP request to a remote changelog file.
 	 *
@@ -107,25 +84,6 @@ class Util {
 
 	inline public static function listFromString(string:String):Array<String> {
 		return [for (txt in string.trim().split('\n')) txt.trim()];
-	}
-
-	/**
-	 * Runs platform-specific code to open a URL in a web browser.
-	 * @param site The URL to open.
-	 * @return Results URL status.
-	 */
-	public static function browserLoad(site:String):Int {
-		site = sanitizeURL(site);
-		if (site == '') throw 'Invalid URL: "$site"';
-
-		#if linux
-		var cmd:Int = Sys.command("xdg-open", [site]); // generally `xdg-open` should work in every distro
-		if (cmd != 0) cmd = Sys.command("/usr/bin/xdg-open", [site]); // run old command JUST IN CASE it fails, which it shouldn't
-		return cmd;
-		#else
-		FlxG.openURL(site);
-		return 1;
-		#end
 	}
 
 	@:access(flixel.util.FlxSave.validate)

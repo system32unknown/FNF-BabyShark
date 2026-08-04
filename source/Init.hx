@@ -3,10 +3,7 @@ package;
 import states.FlashingState;
 import backend.NativeFileSystem;
 import utils.FunkinCache;
-#if DEBUG_TRACY
-import cpp.vm.tracy.TracyProfiler;
-import openfl.events.Event;
-#end
+import utils.WindowUtil;
 
 @:nullSafety
 class Init extends flixel.FlxState {
@@ -17,9 +14,10 @@ class Init extends flixel.FlxState {
 	@:noCompletion
 	static var _coreInitialized:Bool = false;
 
-	override function create():Void {
-		setupShit();
+	override public function create():Void {
+		setup();
 
+		Settings.load();
 		flixel.addons.transition.FlxTransitionableState.skipNextTransOut = true;
 		startGame();
 	}
@@ -27,17 +25,17 @@ class Init extends flixel.FlxState {
 	/**
 	 * Setup a bunch of important Flixel stuff.
 	 */
-	function setupShit():Void {
+	function setup():Void {
 		if (!_coreInitialized) {
 			#if cpp untyped __cpp__("setbuf(stdout, 0)"); #end
 
-			#if DEBUG_TRACY
-			FlxG.stage.addEventListener(Event.EXIT_FRAME, (e:Event) -> TracyProfiler.frameMark());
-			TracyProfiler.setThreadName("main");
-			#end
+			// Setup window events (like callbacks for onWindowClose)
+			WindowUtil.initWindowEvents();
+			#if DEBUG_TRACY WindowUtil.initTracy(); #end
 
 			FlxG.fixedTimestep = false;
-			FlxG.game.focusLostFramerate = 60;
+			FlxG.game.soundTray.active = true;
+			FlxG.game.focusLostFramerate = 30;
 			FlxG.keys.preventDefaultKeys = [TAB];
 			FlxG.cameras.useBufferLocking = true;
 			FlxG.inputs.resetOnStateSwitch = false;
@@ -55,7 +53,6 @@ class Init extends flixel.FlxState {
 		#if AWARDS_ALLOWED Awards.load(); #end
 		Controls.load();
 		backend.Highscore.load();
-		Settings.load();
 
 		Paths.clearStoredMemory();
 		FunkinCache.instance.clearSecondLayer();

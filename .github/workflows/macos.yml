@@ -13,6 +13,10 @@ on:
         required: false
         type: string
 
+env:
+  HAXE_VERSION: 4.3.7
+  HXCPP_COMPILE_CACHE: ${{ github.workspace }}/.hxcpp_cache
+
 jobs:
   build:
     name: MacOS Build (${{ matrix.arch.name }})
@@ -38,7 +42,7 @@ jobs:
       - name: Setup Haxe
         uses: krdlab/setup-haxe@master
         with:
-          haxe-version: 4.3.7
+          haxe-version: {{ env.HAXE_VERSION }}
 
       - name: Restore action cache
         uses: actions/cache/restore@main
