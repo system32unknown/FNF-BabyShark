@@ -77,6 +77,8 @@ class Init extends flixel.FlxState {
 			FlxG.switchState(() -> new FlashingState());
 			return;
 		}
+
+		var params:Array<String> = utils.CLIUtil.processArgs();
 		FlxG.switchState(Main.game.initialState);
 	}
 }

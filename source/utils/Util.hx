@@ -94,7 +94,7 @@ class Util {
 	public static function removeDupString(string:Array<String>):Array<String> {
 		var tempArray:Array<String> = [];
 		var lastSeen:String = '';
-		string.sort((a:String, b:String) -> return (a == b) ? 0 : (a > b) ? 1 : -1);
+		string.sort(SortUtil.alphabetically);
 		for (str in string) {
 			if (str != lastSeen) tempArray.push(str);
 			lastSeen = str;

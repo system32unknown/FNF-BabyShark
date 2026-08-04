@@ -21,4 +21,22 @@ class SortUtil {
 		if (b == null) return -order;
 		return FlxSort.byValues(order, a.zIndex, b.zIndex);
 	}
+
+	/**
+	 * Sort predicate for sorting strings alphabetically.
+	 * @param a The first string to compare.
+	 * @param b The second string to compare.
+	 * @return 1 if `a` comes before `b`, -1 if `b` comes before `a`, 0 if they are equal
+	 */
+	public static inline function alphabetically(a:String, b:String):Int {
+		// Sort alphabetically. Yes that's how this works.
+		return a == b ? 0 : a > b ? 1 : -1;
+	}
+
+	public static function uppercaseAlphabetically(a:String, b:String):Int {
+		a = a.toUpperCase();
+		b = b.toUpperCase();
+
+		return alphabetically(a, b);
+	}
 }

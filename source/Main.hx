@@ -52,7 +52,6 @@ class Main extends Sprite {
 
 	public function new() {
 		super();
-		#if sys backend.CommandLineHandler.parse(Sys.args()); #end
 
 		debug.Logs.init();
 		#if (linux || mac) stage.window.setIcon(lime.graphics.Image.fromFile("icon.png")); #end

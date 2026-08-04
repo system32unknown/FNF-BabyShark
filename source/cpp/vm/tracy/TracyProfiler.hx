@@ -1,13 +1,26 @@
 /*
- * Pulled from Tracey profiler PR
- * @see https://github.com/HaxeFoundation/haxe/pull/11772
+ * Copyright (C)2005-2019 Haxe Foundation
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a
+ * copy of this software and associated documentation files (the "Software"),
+ * to deal in the Software without restriction, including without limitation
+ * the rights to use, copy, modify, merge, publish, distribute, sublicense,
+ * and/or sell copies of the Software, and to permit persons to whom the
+ * Software is furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+ * FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
+ * DEALINGS IN THE SOFTWARE.
  */
 
 package cpp.vm.tracy;
-
-#if !HXCPP_TRACY
-#error "This class cannot be used without -D HXCPP_TRACY"
-#end
 
 import cpp.UInt8;
 
@@ -24,27 +37,6 @@ extern class Native_TracyProfiler {
 	 */
 	@:native('::__hxcpp_tracy_framemark')
 	public static function frameMark():Void;
-
-	/**
-	 * Mark a named frame. Allows creating multiple frame sets for different timing categories.
-	 * Each unique name creates a separate frame set in the Tracy timeline.
-	 */
-	@:native('::__hxcpp_tracy_framemark_named')
-	public static function frameMarkNamed(_name:String):Void;
-
-	/**
-	 * Mark the start of a discontinuous frame. Use for periodic work with gaps.
-	 * Must be paired with frameMarkEnd() using the same name.
-	 */
-	@:native('::__hxcpp_tracy_framemark_start')
-	public static function frameMarkStart(_name:String):Void;
-
-	/**
-	 * Mark the end of a discontinuous frame. Use for periodic work with gaps.
-	 * Must be paired with frameMarkStart() using the same name.
-	 */
-	@:native('::__hxcpp_tracy_framemark_end')
-	public static function frameMarkEnd(_name:String):Void;
 
 	/**
 	 * Print a message into Tracy's log.
@@ -90,15 +82,6 @@ extern class Native_TracyProfiler {
 class Cppia_TracyProfiler {
 	@:inheritDoc(cpp.vm.tracy.Native_TracyProfiler.frameMark)
 	public static function frameMark() Native_TracyProfiler.frameMark();
-
-	@:inheritDoc(cpp.vm.tracy.Native_TracyProfiler.frameMarkNamed)
-	public static function frameMarkNamed(_name:String) Native_TracyProfiler.frameMarkNamed(_name);
-
-	@:inheritDoc(cpp.vm.tracy.Native_TracyProfiler.frameMarkStart)
-	public static function frameMarkStart(_name:String) Native_TracyProfiler.frameMarkStart(_name);
-
-	@:inheritDoc(cpp.vm.tracy.Native_TracyProfiler.frameMarkEnd)
-	public static function frameMarkEnd(_name:String) Native_TracyProfiler.frameMarkEnd(_name);
 
 	@:inheritDoc(cpp.vm.tracy.Native_TracyProfiler.message)
 	public static function message(_msg:String, ?_color:Int = 0x000000) Native_TracyProfiler.message(_msg, _color);
