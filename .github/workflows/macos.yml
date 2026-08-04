@@ -42,7 +42,7 @@ jobs:
       - name: Setup Haxe
         uses: krdlab/setup-haxe@master
         with:
-          haxe-version: {{ env.HAXE_VERSION }}
+          haxe-version: ${{ env.HAXE_VERSION }}
 
       - name: Restore action cache
         uses: actions/cache/restore@main
