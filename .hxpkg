@@ -51,7 +51,7 @@
 			{
 				"name": "grig.audio",
 				"link": "https://github.com/FunkinCrew/grig.audio",
-				"branch": "refactor/fft-cam-version"
+				"branch": "FuroYT/fix-memory-leak"
 			},
 			{
 				"name": "thx.core",

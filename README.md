@@ -36,6 +36,7 @@ to start you off, disabling Videos should be simple, simply Delete the line `"VI
 ### Codename Engine:
 * WizardMantis441 - Programmer.
 * YoshiCrafter29 - Ex-Programmer.
+* Raltyro - Programmer.
 
 ### Special Thanks:
 * Rudyrue - Programmer of Custom-Psych.
