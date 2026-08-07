@@ -148,8 +148,7 @@ class Note extends FlxSprite {
 	public var hitsoundForce:Bool = false;
 	public var hitsoundVolume(get, default):Float = 1.0;
 	function get_hitsoundVolume():Float {
-		if (Settings.data.hitsoundVolume > 0)
-			return Settings.data.hitsoundVolume;
+		if (Settings.data.hitsoundVolume > 0) return Settings.data.hitsoundVolume;
 		return hitsoundForce ? hitsoundVolume : 0.0;
 	}
 	public var hitsound:String = 'hitsounds/' + Std.string(Settings.data.hitsoundTypes).toLowerCase();
@@ -192,7 +191,6 @@ class Note extends FlxSprite {
 
 	public function defaultRGB() {
 		var arr:Array<FlxColor> = (!PlayState.isPixelStage ? Settings.data.arrowRGB : Settings.data.arrowRGBPixel)[noteData];
-
 		if (arr != null && noteData > -1 && noteData <= arr.length) rgbShader.setRGB(arr[0], arr[1], arr[2]);
 		else rgbShader.setRGB(FlxColor.RED, FlxColor.LIME, FlxColor.BLUE);
 	}
@@ -212,7 +210,7 @@ class Note extends FlxSprite {
 					else {
 						try {
 							reloadNote('HURTNOTE_assets');
-						} catch (_:Dynamic) alpha = 0.5;
+						} catch (_:Dynamic) alpha = .5;
 					}
 
 					// splash data and colors
@@ -412,7 +410,6 @@ class Note extends FlxSprite {
 		} else animation.add(playAnim + 'Scroll', [noteData + 4], 12, true);
 	}
 
-
 	override function update(elapsed:Float) {
 		if (PlayState.inPlayState && PlayState.instance.cpuControlled) return;
 		super.update(elapsed);
@@ -516,14 +513,15 @@ class Note extends FlxSprite {
 				flipY = Settings.data.downScroll;
 				alpha = multAlpha = .6;
 
+				var holdAnim:String = noteGFX + (isSustainEnds ? 'holdend' : 'hold');
 				if (PlayState.isPixelStage) {
 					offsetX += pixelWidth[0] * .5 * PlayState.daPixelZoom;
-					animation.play(noteGFX + (isSustainEnds ? 'holdend' : 'hold')); // isHoldEnd
+					animation.play(holdAnim); // isHoldEnd
 					offsetX -= pixelWidth[1] * .5 * PlayState.daPixelZoom;
 					if (!isSustainEnds) sustainScale = (PlayState.daPixelZoom / pixelHeight[1]); // Auto adjust note size
 				} else {
 					offsetX += width * .5;
-					animation.play(noteGFX + (isSustainEnds ? 'holdend' : 'hold')); // isHoldEnd
+					animation.play(holdAnim); // isHoldEnd
 					updateHitbox();
 					offsetX -= width * .5;
 

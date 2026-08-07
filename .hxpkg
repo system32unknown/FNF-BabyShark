@@ -46,12 +46,13 @@
 			},
 			{
 				"name": "funkin.vis",
-				"link": "https://github.com/FunkinCrew/funkVis"
+				"link": "https://github.com/FunkinCrew/funkVis",
+				"branch": "02bada154b474c2554709b9d12aef0cbf0da3ec9"
 			},
 			{
 				"name": "grig.audio",
 				"link": "https://github.com/FunkinCrew/grig.audio",
-				"branch": "FuroYT/fix-memory-leak"
+				"branch": "6409f3c6d1b4c52176813d3ede86c0d34e8af2c1"
 			},
 			{
 				"name": "thx.core",

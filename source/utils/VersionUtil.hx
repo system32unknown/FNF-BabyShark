@@ -83,23 +83,6 @@ class VersionUtil {
 	 * @param input The JSON string to parse.
 	 * @return The semantic version, or null if it could not be parsed.
 	 */
-	public static function getVersionFromJSON(input:Null<String>):Null<Version> {
-		if (input == null) return null;
-
-		var parsed:Dynamic = SerializerUtil.fromJSON(input);
-		if (parsed == null) return null;
-		if (parsed.version == null) return null;
-
-		var versionStr:String = parsed.version; // Dynamic -> String cast
-		var version:Version = versionStr; // Implicit, not explicit, cast.
-		return version;
-	}
-
-	/**
-	 * Get and parse the semantic version from a JSON string.
-	 * @param input The JSON string to parse.
-	 * @return The semantic version, or null if it could not be parsed.
-	 */
 	public static function parseVersion(input:Null<Dynamic>):Null<Version> {
 		if (input == null) return null;
 

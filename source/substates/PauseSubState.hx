@@ -175,8 +175,7 @@ class PauseSubState extends MusicBeatSubstate {
 				final leftPressed:Bool = Controls.pressed('ui_left');
 				if (leftPressed || Controls.pressed('ui_right')) {
 					holdTime += elapsed;
-					if (holdTime > 0.5)
-						curTime += 45000 * elapsed * (leftPressed ? -1 : 1);
+					if (holdTime > 0.5) curTime += 45000 * elapsed * (leftPressed ? -1 : 1);
 
 					if (curTime >= FlxG.sound.music.length) curTime -= FlxG.sound.music.length;
 					else if (curTime < 0) curTime += FlxG.sound.music.length;
@@ -243,7 +242,7 @@ class PauseSubState extends MusicBeatSubstate {
 					pSte.practiceMode = !pSte.practiceMode;
 					PlayState.changedDifficulty = true;
 					practiceText.visible = pSte.practiceMode;
-					if (practiceText.visible) FlxTween.tween(practiceText, {alpha: 1, y: practiceText.y}, 0.4, {ease: FlxEase.quartInOut, startDelay: 0.9});
+					if (practiceText.visible) FlxTween.tween(practiceText, {alpha: 1, y: practiceText.y}, 0.4, {ease: FlxEase.quartInOut, startDelay: .9});
 				case "Restart Song": restartSong();
 				case "Leave Charting Mode":
 					restartSong();
@@ -283,9 +282,9 @@ class PauseSubState extends MusicBeatSubstate {
 							default: Conductor.bpm;
 						}
 					} else {
-						FlxG.sound.music.resume();
+						@:privateAccess FlxG.sound.playMusic(pSte.inst._sound, 0);
 						FlxTween.tween(FlxG.sound.music, {volume: 1}, .8);
-						FlxG.sound.music.looped = true;
+						FlxG.sound.music.time = Conductor.songPosition;
 					}
 					OptionsState.onPlayState = true;
 				case "Exit to menu":

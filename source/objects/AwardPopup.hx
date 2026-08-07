@@ -40,9 +40,7 @@ class AwardPopup extends Sprite {
 			antialiasing = false;
 		} else graphic = Paths.image(path, false);
 
-		#if MODS_ALLOWED
-		Mods.currentModDirectory = lastMod;
-		#end
+		#if MODS_ALLOWED Mods.currentModDirectory = lastMod; #end
 
 		if (graphic == null) graphic = Paths.image('unknownMod', false);
 

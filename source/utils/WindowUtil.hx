@@ -61,7 +61,7 @@ class WindowUtil {
 	 */
 	public static function initWindowEvents():Void {
 		// onExit is called when the game window is closed.
-		openfl.Lib.current.stage.application.onExit.add((exitCode:Int) -> windowExit.dispatch(exitCode));
+		FlxG.stage.application.onExit.add((exitCode:Int) -> windowExit.dispatch(exitCode));
 	}
 
     #if DEBUG_TRACY

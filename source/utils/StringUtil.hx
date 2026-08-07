@@ -8,14 +8,15 @@ class StringUtil {
 	 * @param code Integer (use fastCodeAt)
 	 */
 	inline public static function fillNumber(value:Float, digits:Int, code:Int):String {
-		var length:Int = Std.string(value).length;
+		final strValue:String = Std.string(value);
+		var length:Int = strValue.length;
 		var str:String = null;
 		var format:StringBuf = new StringBuf();
 
 		if (length < digits) {
 			for (_ in 0...(digits - length)) format.addChar(code);
-			format.add(Std.string(value));
-		} else format.add(Std.string(value));
+			format.add(strValue);
+		} else format.add(strValue);
 
 		str = format.toString();
 		format = null;
@@ -56,15 +57,10 @@ class StringUtil {
 		inline function pad2(n:Int):String return (n < 10 ? "0" : "") + n;
 
 		var out:String;
-		if (w > 0) {
-			out = '${w}w ${d}d ${h}h ${m}m ${s}s';
-		} else if (d > 0) {
-			out = '${d}d ${h}h ${m}m ${s}s';
-		} else if (h > 0) {
-			out = '${h}:${pad2(m)}:${pad2(s)}';
-		} else {
-			out = '${m}:${pad2(s)}';
-		}
+		if (w > 0) out = '${w}w ${d}d ${h}h ${m}m ${s}s';
+		else if (d > 0) out = '${d}d ${h}h ${m}m ${s}s';
+		else if (h > 0) out = '${h}:${pad2(m)}:${pad2(s)}';
+		else out = '${m}:${pad2(s)}';
 
 		if (precision > 0) {
 			var frac:Float = time - total;
@@ -116,9 +112,8 @@ class StringUtil {
 
 		var defined:String = null;
 		if (value is String) {
-			if (!Math.isNaN(Std.parseFloat(value))) {
-				defined = value;
-			} else throw "Given string, but It cannot convert to number";
+			if (!Math.isNaN(Std.parseFloat(value))) defined = value;
+			else throw "Given string, but It cannot convert to number";
 		} else if (value is Float || value is Int) {
 			defined = Std.string(value);
 		} else throw "It's invalid type. You need the number or numerical string.";
