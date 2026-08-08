@@ -44,11 +44,11 @@ class CLIUtil {
 				switch (arg) {
 					// Flags
 					case '-h' | '--help':
-                        printUsage();
-                        Sys.exit(0);
+						printUsage();
+						Sys.exit(0);
 					case '-ver' | '--version': trace(Main.engineVer);
-                    case "-nocolor": Main.noTerminalColor = true;
-                    case "-v" | "-verbose" | "--verbose": Main.verbose = true;
+					case "-nocolor": Main.noTerminalColor = true;
+					case "-v" | "-verbose" | "--verbose": Main.verbose = true;
 				}
 			} else {
 				Sys.println('Unknown command: $arg');

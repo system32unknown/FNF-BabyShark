@@ -1,6 +1,6 @@
 package options;
 
-import backend.InputFormatter;
+import utils.InputUtil;
 import objects.AttachedSprite;
 
 import flixel.input.keyboard.FlxKey;
@@ -145,7 +145,7 @@ class ControlsSubState extends MusicBeatSubstate {
 		if (keys == null) keys = Controls.default_binds.get(option[2]).copy();
 
 		for (n in 0...2) {
-			var key:String = InputFormatter.getKeyName(keys[n] ?? NONE);
+			var key:String = InputUtil.getKeyName(keys[n] ?? NONE);
 
 			var attach:Alphabet = new Alphabet(360 + n * 300, 248, key, NORMAL);
 			attach.isMenuItem = true;
@@ -257,7 +257,7 @@ class ControlsSubState extends MusicBeatSubstate {
 				holdingEsc += elapsed;
 				if (holdingEsc > .5) {
 					Controls.binds.get(curOption[2])[altNum] = NONE;
-					updateBind(Math.floor(curSelected * 2) + altNum, InputFormatter.getKeyName(NONE));
+					updateBind(Math.floor(curSelected * 2) + altNum, InputUtil.getKeyName(NONE));
 					FlxG.sound.play(Paths.sound('cancelMenu'));
 					closeBinding();
 				}
@@ -286,7 +286,7 @@ class ControlsSubState extends MusicBeatSubstate {
 					for (n in 0...2) {
 						var key:String = null;
 						var savKey:Array<Null<FlxKey>> = Controls.binds.get(option);
-						key = InputFormatter.getKeyName(savKey[n] ?? NONE);
+						key = InputUtil.getKeyName(savKey[n] ?? NONE);
 						updateBind(Math.floor(curSelected * 2) + n, key);
 					}
 					FlxG.sound.play(Paths.sound('confirmMenu'));

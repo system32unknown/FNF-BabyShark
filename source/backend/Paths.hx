@@ -137,9 +137,9 @@ class Paths {
 		return getPath('data/$key.json', TEXT, folder);
 
 	inline public static function shaderFragment(key:String, ?folder:String):String
-		return getPath('shaders/$key.frag', TEXT, folder, true);
+		return getPath('shaders/$key.frag', TEXT, folder);
 	inline public static function shaderVertex(key:String, ?folder:String):String
-		return getPath('shaders/$key.vert', TEXT, folder, true);
+		return getPath('shaders/$key.vert', TEXT, folder);
 
 	public static function video(key:String):String {
 		#if MODS_ALLOWED
@@ -361,8 +361,4 @@ class Paths {
 		return 'mods/' + key;
 	}
 	#end
-
-	public static inline function exists(file:String):Bool {
-		return #if MODS_ALLOWED FileSystem #else Assets #end.exists(file);
-	}
 }

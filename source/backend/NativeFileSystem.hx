@@ -19,7 +19,7 @@ class NativeFileSystem {
 	/**
 	 * Populated at startup with every path registered in the OpenFL asset manifest.
 	 */
-	public static var openFlAssets:Array<String> = null;
+	public static var openFlAssets:Array<String>;
 
 	/**
 	 * Returns the text content of a file, or `null` if it cannot be found.	
@@ -192,7 +192,7 @@ class NativeFileSystem {
 			return null;
 		} catch (e:Dynamic) return null;
 	}
-	#else
+	#elseif sys
 
 	/**
 	 * On case-insensitive file systems (Windows, macOS) a straight existence

@@ -4,7 +4,7 @@ import flixel.input.keyboard.FlxKey;
 
 import objects.AttachedText;
 import objects.CheckboxThingie;
-import backend.InputFormatter;
+import utils.InputUtil;
 
 class BaseOptionsMenu extends MusicBeatSubstate {
 	var curOption:Option = null;
@@ -256,7 +256,7 @@ class BaseOptionsMenu extends MusicBeatSubstate {
 			holdingEsc += elapsed;
 			if (holdingEsc > .5) {
 				curOption.keys.keyboard = NONE;
-				updateBind(InputFormatter.getKeyName(NONE));
+				updateBind(InputUtil.getKeyName(NONE));
 				FlxG.sound.play(Paths.sound('cancelMenu'));
 				closeBinding();
 			}
@@ -280,7 +280,7 @@ class BaseOptionsMenu extends MusicBeatSubstate {
 				var key:String = null;
 				if (curOption.keys.keyboard == null) curOption.keys.keyboard = 'NONE';
 				curOption.setValue(curOption.keys.keyboard);
-				key = InputFormatter.getKeyName(FlxKey.fromString(curOption.keys.keyboard));
+				key = InputUtil.getKeyName(FlxKey.fromString(curOption.keys.keyboard));
 				updateBind(key);
 				FlxG.sound.play(Paths.sound('confirmMenu'));
 				closeBinding();
@@ -294,7 +294,7 @@ class BaseOptionsMenu extends MusicBeatSubstate {
 		if (text == null) {
 			text = option.getValue();
 			if (text == null) text = 'NONE';
-			text = InputFormatter.getKeyName(FlxKey.fromString(text));
+			text = InputUtil.getKeyName(FlxKey.fromString(text));
 		}
 
 		var bind:AttachedText = cast option.child;

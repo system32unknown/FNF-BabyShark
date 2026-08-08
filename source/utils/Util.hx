@@ -134,43 +134,6 @@ class Util {
 		return new FlxBackdrop(flixel.addons.display.FlxGridOverlay.createGrid(cellW, cellH, w, h, alt, color1, color2));
 	}
 
-	/**
-	 * Recursively reads all files from a directory and its subdirectories.
-	 *
-	 * Optionally removes the base path from each returned file path.
-	 *
-	 * Files with `.json` extensions will have the extension removed in the result.
-	 *
-	 * @param path The root directory path to search.
-	 * @param erasePath If true (default), the base path will be removed from the returned file paths.
-	 * @return An array of file paths (without `.json` extension), relative or full depending on `erasePath`.
-	 */
-	public static function recursivelyReadFolders(path:String, ?erasePath:Bool = true):Array<String> {
-		var ret:Array<String> = [];
-		for (i in FileSystem.readDirectory(path)) returnFileName(i, ret, path);
-		if (erasePath) {
-			path += '/';
-			for (i in 0...ret.length) ret[i] = ret[i].replace(path, '');
-		}
-		return ret;
-	}
-
-	/**
-	 * Helper function to recursively traverse a directory tree.
-	 *
-	 * Adds full file paths to the output list, removing `.json` extensions.
-	 *
-	 * @param path Current file or folder to evaluate.
-	 * @param toAdd The array to which valid file paths are added.
-	 * @param full The full base path used to resolve nested directories.
-	 */
-	static function returnFileName(path:String, toAdd:Array<String>, full:String):Void {
-		var fullPath:String = '$full/$path';
-		if (FileSystem.isDirectory(fullPath)) {
-			for (i in FileSystem.readDirectory(fullPath)) returnFileName(i, toAdd, fullPath);
-		} else toAdd.push(fullPath.replace('.json', ''));
-	}
-
 	public static inline function inRange(a:Float, b:Float, tolerance:Float):Bool {
 		return (a <= b + tolerance && a >= b - tolerance);
 	}

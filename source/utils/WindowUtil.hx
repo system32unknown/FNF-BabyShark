@@ -64,14 +64,14 @@ class WindowUtil {
 		FlxG.stage.application.onExit.add((exitCode:Int) -> windowExit.dispatch(exitCode));
 	}
 
-    #if DEBUG_TRACY
-    /**
-     * Initialize Tracy.
-     * NOTE: Call this from the main thread ONLY!
-     */
-    public static function initTracy():Void {
-    	FlxG.stage.addEventListener(Event.EXIT_FRAME, (e:Event) -> TracyProfiler.frameMark());
+	#if DEBUG_TRACY
+	/**
+	 * Initialize Tracy.
+	 * NOTE: Call this from the main thread ONLY!
+	 */
+	public static function initTracy():Void {
+		FlxG.stage.addEventListener(Event.EXIT_FRAME, (e:Event) -> TracyProfiler.frameMark());
 		TracyProfiler.setThreadName("main");
-    }
-    #end
+	}
+	#end
 }
