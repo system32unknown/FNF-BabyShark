@@ -4,7 +4,6 @@ dump/
 
 ### VS Code
 .haxelib/
-# .github/
 .vscode/*
 *.code-workspace
 vs_Community.exe
@@ -18,4 +17,4 @@ vs_Community.exe
 !.vscode/extensions.json
 !.vscode/settings.json
 # macOS annoying file
-*.DS_Store
+.DS_Store

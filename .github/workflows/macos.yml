@@ -6,12 +6,10 @@ on:
     branches: [ main ]
 
   workflow_dispatch:
-
-  workflow_call:
-    inputs:
-      buildFlags:
-        required: false
-        type: string
+    save-artifact:
+      type: boolean
+      description: Save the build artifact to Github Actions
+      default: true
 
 env:
   HAXE_VERSION: 4.3.7
@@ -65,6 +63,7 @@ jobs:
         run: tar -zcvf AlterEngine.tar.gz -C export/release/macos/bin .
 
       - name: Uploading artifact
+        if: ${{ github.event.inputs.save-artifact }}
         uses: actions/upload-artifact@main
         with:
           name: Alter Engine (${{ matrix.arch.name }})

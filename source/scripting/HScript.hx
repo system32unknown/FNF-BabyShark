@@ -269,7 +269,6 @@ class HScript extends AlterHscript {
 
 		set('close', destroy);
 		set('this', this);
-		set('game', FlxG.state);
 		set('controls', Controls);
 
 		set('buildTarget', ScriptUtils.getTargetOS());
