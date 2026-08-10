@@ -17,9 +17,9 @@ Refer to [the Build Instructions](/docs/BUILDING.md)
 
 # Customization:
 
-if you wish to disable things like *Video Cutscenes*, you can read over to `Project.xml`
-inside `Project.xml`, you will find several variables to customize Alter Engine to your liking
-to start you off, disabling Videos should be simple, simply Delete the line `"VIDEOS_ALLOWED"` or comment it out by wrapping the line in XML-like comments, like this `<!-- YOUR_LINE_HERE -->`
+if you wish to disable things like *Video Cutscenes*, you can read over to `Project.hxp`
+inside `Project.hxp`, you will find several variables to customize Alter Engine to your liking
+to start you off, disabling Videos should be simple, simply Delete the line `"VIDEOS_ALLOWED"` on `configureFeatureFlags`.
 
 # Credits:
 

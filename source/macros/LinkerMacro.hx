@@ -1,11 +1,9 @@
 package macros;
 
-#if !LIME_DISPLAY
 import haxe.macro.Context;
 import haxe.macro.Expr;
 import haxe.io.Path;
 import sys.FileSystem;
-#end
 
 /**
  * This class provides a macro to include an XML build file in the metadata of a Haxe class.

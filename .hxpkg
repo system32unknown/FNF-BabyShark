@@ -68,6 +68,9 @@
 			},
 			{
 				"name": "hxjsonast"
+			},
+			{
+				"name": "hxp"
 			}
 		]
 	}

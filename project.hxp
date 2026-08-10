@@ -1,0 +1,816 @@
+package;
+
+import hxp.*;
+import lime.tools.*;
+import sys.FileSystem;
+import sys.io.File;
+import sys.io.Process;
+import haxe.io.Path;
+
+using StringTools;
+
+/**
+ * This HXP performs the functions of a Lime `project.xml` file,
+ * but it's written in Haxe rather than XML!
+ *
+ * This makes it far easier to organize, reuse, and refactor,
+ * and improves management of feature flag logic.
+ */
+@:nullSafety
+class Project extends HXProject {
+	//
+	// METADATA
+	//
+
+	/**
+	 * The game's version number, as a Semantic Versioning string with no prefix.
+	 * REMEMBER TO CHANGE THIS WHEN THE GAME UPDATES!
+	 * You only have to change it here, the rest of the game will query this value.
+	 */
+	static final VERSION:String = "0.1.5";
+
+	/**
+	 * The game's name. Used as the default window title.
+	 */
+	static final TITLE:String = "Alter Engine";
+
+	/**
+	 * A package name used for identifying the app on various app stores.
+	 */
+	static final PACKAGE_NAME:String = "com.altertoriel.alterengine";
+
+	/**
+	 * The name of the generated executable file.
+	 * For example, `"Funkin"` will create a file called `Funkin.exe`.
+	 */
+	static final EXECUTABLE_NAME:String = "AlterEngine";
+
+	/**
+	 * The relative location of the source code.
+	 */
+	static final SOURCE_DIR:String = "source";
+
+	/**
+	 * The fully qualified class path for the game's preloader.
+	 * Particularly important on HTML5 but we use it on all platforms.
+	 */
+	static final PRELOADER:String = "flixel.system.FlxPreloader";
+
+	/**
+	 * The fully qualified class path for the entry point class to execute when launching the game.
+	 * It's where `public static function main():Void` goes.
+	 */
+	static final MAIN_CLASS:String = "Main";
+
+	/**
+	 * The company name for the game.
+	 * This appears in metadata in places I think.
+	 */
+	static final COMPANY:String = "Altertoriel";
+
+	//
+	// ASSET FILTERS
+	//
+
+	/**
+	 * Asset path globs to always exclude from asset libraries.
+	 */
+	static final EXCLUDE_ASSETS:Array<String> = [".*", "cvs", "thumbs.db", "desktop.ini", "*.hash", "*.md", "*.fla", "*/.git*"];
+
+	//
+	// FEATURES
+	//
+	static final MODS_ALLOWED:FeatureFlag = "MODS_ALLOWED";
+	static final VIDEOS_ALLOWED:FeatureFlag = "VIDEOS_ALLOWED";
+	static final HSCRIPT_ALLOWED:FeatureFlag = "HSCRIPT_ALLOWED";
+	static final DISCORD_ALLOWED:FeatureFlag = "DISCORD_ALLOWED";
+	static final AWARDS_ALLOWED:FeatureFlag = "AWARDS_ALLOWED";
+	static final CRASH_HANDLER:FeatureFlag = "CRASH_HANDLER";
+	static final CHECK_FOR_UPDATES:FeatureFlag = "CHECK_FOR_UPDATES";
+	static final NDLLS_ALLOWED:FeatureFlag = "NDLLS_ALLOWED";
+	static final TRANSLATIONS_ALLOWED:FeatureFlag = "TRANSLATIONS_ALLOWED";
+	static final ALTER_DEBUG:FeatureFlag = "ALTER_DEBUG";
+	static final MULTITHREADED_LOADING:FeatureFlag = "MULTITHREADED_LOADING";
+	static final SHOW_LOADING_SCREEN:FeatureFlag = "SHOW_LOADING_SCREEN";
+
+	/**
+	 * `-DFEATURE_DEBUG_FUNCTIONS`
+	 * If this flag is enabled, the game will have all playtester-only debugging functionality enabled.
+	 * This includes debug hotkeys like time travel in the Play State.
+	 * By default, enabled on debug builds or playtester builds and disabled on release builds.
+	 */
+	static final FEATURE_DEBUG_FUNCTIONS:FeatureFlag = "FEATURE_DEBUG_FUNCTIONS";
+
+	/**
+	 * `-DFEATURE_DEBUG_TRACY`
+	 * If this flag is enabled, the game will have the necessary hooks for the Tracy profiler.
+	 * Only enable this if you're using the correct fork of Haxe to support this.
+	 * @see https://github.com/HaxeFoundation/hxcpp/pull/1153
+	 */
+	static final FEATURE_DEBUG_TRACY:FeatureFlag = "FEATURE_DEBUG_TRACY";
+
+	/**
+	 * `-DFEATURE_FUNKVIS`
+	 * If this flag is enabled, the game will enable the Funkin Visualizer library.
+	 * This is used to provide audio visualization like Nene's speaker.
+	 * Disabling this will make some waveforms inactive.
+	 */
+	static final FEATURE_FUNKVIS:FeatureFlag = "FEATURE_FUNKVIS";
+
+	//
+	// CONFIGURATION FUNCTIONS
+	//
+
+	public function new() {
+		super();
+
+		#if !target.unicode
+		if (isWindowsHost()) Sys.command("chcp 65001 > nul");
+		#end
+
+		flair();
+		configureApp();
+
+		configureOutputDir();
+
+		if (isRun() || isInstall()) return; // These commands dont really need much in order to run so to improve the speed, we return here.
+
+		configureFeatureFlags();
+		configureCompileDefines();
+		configureHaxelibs();
+		configureAssets();
+		configureAL();
+
+		if (!isLinux()) configureIcons();
+		if (isCPP()) buildHxCppTools();
+	}
+
+	/**
+	 * Do something before building, display some ASCII or something IDK
+	 */
+	function flair() {
+		info("Alter Engine - " + VERSION);
+		info("Initializing build...");
+
+		var branch:String = getGitBranch();
+
+		if (branch != null && branch != ""){
+			info("Git Branch: " + branch);
+			info("Git Commit: " + getGitCommit());
+		}
+		info("Display? " + isDisplay());
+	}
+
+	/**
+	 * Apply basic project metadata, such as the game title and version number,
+	 * as well as info like the package name and company (used by various app stores).
+	 */
+	function configureApp() {
+		this.meta.title = TITLE;
+		this.meta.version = VERSION;
+		this.meta.packageName = PACKAGE_NAME;
+		this.meta.company = COMPANY;
+
+		this.app.main = MAIN_CLASS;
+		this.app.file = EXECUTABLE_NAME;
+		this.app.preloader = PRELOADER;
+
+		// Tell Lime where to look for the game's source code.
+		// If for some reason we have multiple source directories, we can add more entries here.
+		this.sources.push(SOURCE_DIR);
+
+		// Configure the window.
+		// Automatically configure FPS.
+		this.window.fps = 60;
+		// Set the window size.
+		this.window.width = 1280;
+		this.window.height = 720;
+
+		// Black background on release builds, magenta on debug builds.
+		this.window.background = FEATURE_DEBUG_FUNCTIONS.isEnabled(this) ? 0xFFFF00FF : 0xFF000000;
+
+		this.window.hardware = true;
+		this.window.vsync = false;
+		this.window.allowHighDPI = !isMac();
+
+		if (isDesktop()) {
+			this.window.orientation = Orientation.LANDSCAPE;
+			this.window.fullscreen = false;
+			this.window.resizable = true;
+		}
+	}
+
+	/**
+	 * For desktop platforms, copy the OpenALSoft config file into the build to improve audio quality.
+	 */
+	function configureAL() {
+		if (!isDesktop()) return;
+		addAsset("alsoft.txt", 'plugins/alsoft.${isWindows() ? "ini" : "conf"}', "default");
+	}
+
+	/**
+	 * Apply various feature flags based on the target platform and the user-provided build flags.
+	 */
+	function configureFeatureFlags() {
+		// You can explicitly override any of these.
+		// For example, `-DMODS_ALLOWED` or `-DVIDEOS_ALLOWED`
+
+		CRASH_HANDLER.apply(this, true);
+		AWARDS_ALLOWED.apply(this, true);
+		CHECK_FOR_UPDATES.apply(this, true);
+		if (isDesktop()) {
+			MODS_ALLOWED.apply(this, !isWeb());
+			VIDEOS_ALLOWED.apply(this, (!isWeb() || !is32Bit()));
+			HSCRIPT_ALLOWED.apply(this, true);
+			DISCORD_ALLOWED.apply(this, true);
+		}
+
+		TRANSLATIONS_ALLOWED.apply(this, true);
+		NDLLS_ALLOWED.apply(this, isCPP());
+		ALTER_DEBUG.apply(this, true);
+
+		MULTITHREADED_LOADING.apply(this, true);
+		SHOW_LOADING_SCREEN.apply(this, true);
+
+		FEATURE_DEBUG_FUNCTIONS.apply(this, isDebug());
+		FEATURE_FUNKVIS.apply(this, true);
+	}
+
+	/**
+	 * Set compilation flags which are not feature flags.
+	 */
+	function configureCompileDefines() {
+		// Enable OpenFL's error handler. Required for the crash logger.
+		setHaxedef("openfl-enable-handle-error");
+
+		// Enable stack trace tracking. Good for debugging but has a (minor) performance impact.
+		if (CRASH_HANDLER.isEnabled(this) && isCPP()) {
+			setHaxedef("HXCPP_CHECK_POINTER");
+			setHaxedef("HXCPP_STACK_LINE");
+			setHaxedef("HXCPP_STACK_TRACE");
+			setHaxedef("HXCPP_CATCH_SEGV");
+		}
+
+		if (HSCRIPT_ALLOWED.isEnabled(this)) {
+			addHaxeMacro("macros.KeepMacro.keep()");
+			setHaxedef("hscriptPos");
+	
+			setHaxedef("CUSTOM_CLASSES");
+			setHaxedef("HSCRIPT_ABSTRACT_SUPPORT");
+		}
+
+		if (FEATURE_DEBUG_FUNCTIONS.isDisabled(this) && isRelease()) {
+			setHaxedef("no-deprecation-warnings");
+			setHaxedef("FLX_NO_DEBUG"); // If we aren't using the Flixel debugger, strip it out.
+			setHaxedef("analyzer-optimize"); // Optimize haxe code when not in debug to improve performance.
+		}
+
+		// Allow memory to go above 1GB.
+		setHaxedef("HXCPP_GC_BIG_BLOCKS");
+		if (DISCORD_ALLOWED.isEnabled(this)) setHaxedef("DISCORD_DISABLE_IO_THREAD");
+
+		// Disable the built in pause screen when unfocusing the game.
+		setHaxedef("FLX_NO_FOCUS_LOST_SCREEN");
+		if (isDesktop()) setHaxedef("FLX_NO_TOUCH");
+
+		// Cleaner looking compiler errors.
+		setHaxedef("message.reporting", "pretty");
+
+		addHaxeMacro("allowPackage('flash')");
+		addHaxeMacro("include('my.pack')");
+		addHaxeMacro("macros.FlxMacro.initMacros()");
+
+		if (VIDEOS_ALLOWED.isEnabled(this)) {
+			if (isDebug()) setHaxedef("HXC_LIBVLC_LOGGING");
+			setHaxedef("HXVLC_NO_SHARE_DIRECTORY");
+		}
+
+		if (FEATURE_DEBUG_TRACY.isEnabled(this)) {
+			setHaxedef("HXCPP_TELEMETRY"); // Enable telemetry
+			setHaxedef("HXCPP_TRACY"); // Enable Tracy telemetry
+			setHaxedef("HXCPP_TRACY_MEMORY"); // Track memory allocations
+			setHaxedef("HXCPP_TRACY_ON_DEMAND"); // Only collect telemetry when Tracy is open and reachable
+
+			setHaxedef("absolute-paths"); // Fix source locations so Tracy can see them
+		}
+
+		// Display server.
+		setHaxedef("LIME_CMD", command);
+
+		if (command == "update" || command == "display" || hasDefine("display") || hasDefine("display_details")) {
+			setHaxedef("LIME_DISPLAY");
+			unsetHaxedef("HSCRIPT_ABSTRACT_SUPPORT");
+			unsetHaxedef("CUSTOM_CLASSES");
+		}
+	}
+
+	function configureOutputDir() {
+		// Set the output directory. Depends on the target platform and build type.
+		var buildDir:String = 'export/${isDebug() ? 'debug' : 'release'}';
+
+		// we use a dedicated 'tracy' folder, since it generally needs a recompile when in use
+		if (FEATURE_DEBUG_TRACY.isEnabled(this)) buildDir += "-tracy";
+
+		info('Output directory: $buildDir');
+
+		// trailing slash might not be needed, works fine on macOS without it, but I haven't tested on Windows!
+		buildDir += "/";
+		app.path = buildDir;
+	}
+
+	function configureHaxelibs() {
+		addHaxelib('lime'); // Game engine backend
+		addHaxelib('openfl'); // Game engine backend
+
+		addHaxelib('flixel'); // Game engine
+		addHaxelib('flixel-addons'); // Additional utilities for Flixel
+		addHaxelib('flixel-animate'); // Texture atlas rendering
+
+		addHaxelib('json2object'); // JSON parsing
+
+		addHaxelib('parallaxlt'); // ParallaxSprites
+		addHaxelib('tjson');
+
+		addHaxelib('thx.core'); // General utility library, "the lodash of Haxe"
+		addHaxelib('thx.semver'); // Version string handling
+
+		if (HSCRIPT_ALLOWED.isEnabled(this)) addHaxelib('hscript-improved'); // Scripting
+
+		if (isDebug() && isCPP()) addHaxelib('hxcpp-debug-server'); // VSCode debug support
+
+		if (isDesktop() && VIDEOS_ALLOWED.isEnabled(this)) addHaxelib('hxvlc'); // Video playback
+		if (isLinux()) addHaxelib('hxgamemode'); // FeralInteractive gamemode
+		if (isDesktop() && DISCORD_ALLOWED.isEnabled(this)) addHaxelib('hxdiscord_rpc'); // Discord API
+
+		if (FEATURE_FUNKVIS.isEnabled(this)) {
+			addHaxelib('funkin.vis'); // Audio visualization
+			addHaxelib('grig.audio'); // Audio data utilities
+		}
+	}
+
+	function configureAssets() {
+		if (!(isDisplay() || isCleanCommand())) clearAssets();
+
+		var exclude:Array<String> = EXCLUDE_ASSETS;
+
+		// Default asset library
+		var shouldEmbed:Bool = false;
+
+		addAssetLibrary("default", shouldEmbed, true);
+		addAssetPath("assets", "assets", "default", ["*"], exclude, shouldEmbed);
+
+		var shouldEmbedFonts:Bool = true;
+		addAssetPath("assets/fonts", null, "default", ["*"], exclude, shouldEmbedFonts);
+		addAssetPath("assets/embed", "assets", "default", ["*"], exclude, true);
+		addAssetPath("assets/songs", "assets/songs", "songs", ["*"], exclude, shouldEmbed);
+		addAssetPath("assets/shared", "assets/shared", "shared", ["*"], exclude, shouldEmbed);
+
+		addAssetPath("assets/week_assets", "assets", "default");
+
+		if (TRANSLATIONS_ALLOWED.isEnabled(this)) addAssetPath("assets/translations", "assets/translations", "translations", ["*"], exclude, shouldEmbed);
+		if (VIDEOS_ALLOWED.isEnabled(this)) addAssetPath("assets/videos", "assets/videos", "videos", ["*"], exclude, shouldEmbed);
+
+		if (MODS_ALLOWED.isEnabled(this)) {
+			addAssetPath("example_mods", "mods", "default", ["*"], exclude, shouldEmbed); 
+			addAsset("list.txt", "modsList.txt", "default");
+		}
+	}
+
+	function clearAssets():Void {
+		// Don't run on non-build commands.
+		if (!isBuild()) return;
+
+		var exportPath:Null<String> = app.path ?? "";
+
+		// mac target uses `macos` for the export folder instead of `mac`
+		var platform:String = !isMac() ? Std.string(this.target) : 'macos';
+		var basePath:String = Path.join([exportPath, platform, "bin"]);
+		var assetsPath:String = "";
+
+		switch (platformType) {
+			case PlatformType.DESKTOP:
+				if (isMac()) assetsPath = Path.join([basePath, '${this.app.file}.app', "Contents", "Resources", "assets"]);
+				else assetsPath = Path.join([basePath, "assets"]);
+			default:
+				// Don't do this for other platform types yet.
+				return;
+		}
+
+		if (FileSystem.exists(assetsPath)) {
+			info('Deleting assets folder from export folder ($assetsPath)');
+			deleteDirectoryRecursive(assetsPath);
+		} else info('Assets folder does not exist ($assetsPath)');
+	}
+
+	/**
+	 * Recursively delete a directory and its contents.
+	 * @param path The path to the directory to delete.
+	 */
+	function deleteDirectoryRecursive(path:String):Void {
+		if (!FileSystem.exists(path)) return;
+
+		for (file in FileSystem.readDirectory(path)) {
+			var fullPath:String = Path.join([path, file]);
+			if (FileSystem.isDirectory(fullPath)) deleteDirectoryRecursive(fullPath);
+			else FileSystem.deleteFile(fullPath);
+		}
+
+		FileSystem.deleteDirectory(path);
+	}
+
+	/**
+	 * Configure the application's favicon and executable icon.
+	 */
+	function configureIcons() {
+		info('Configuring application icons...');
+
+		if (isLinux() || isMac()) {
+            var iconOGOverride:Icon = new Icon("icons/iconOG.png");
+            this.icons.push(iconOGOverride);
+		}
+		
+		for (size in [16, 32, 64]) addIcon('art/icon${size}.png', size);
+		addIcon("art/iconOG.png");
+
+		info('Done configuring icons.');
+	}
+
+	//
+	// HELPER FUNCTIONS
+	// Easy functions to make the code more readable.
+	//
+
+	public function isWeb():Bool {
+		return this.platformType == PlatformType.WEB;
+	}
+
+	public function isDesktop():Bool {
+		return this.platformType == PlatformType.DESKTOP;
+	}
+
+	public function is32Bit():Bool {
+		return this.architectures.contains(Architecture.X86);
+	}
+
+	public function isWindowsHost():Bool {
+		return System.hostPlatform == WINDOWS;
+	}
+
+	public function isWindows():Bool {
+		return this.target == Platform.WINDOWS;
+	}
+
+	public function isMac():Bool {
+		return this.target == Platform.MAC;
+	}
+
+	public function isLinux():Bool {
+		return this.target == Platform.LINUX;
+	}
+
+	public function isCPP():Bool {
+		return this.defines.exists("cpp");
+	}
+
+	public function isDisplay():Bool {
+		return this.command == "display";
+	}
+
+	public function isCleanCommand():Bool {
+		return this.command == "clean";
+	}
+
+	public function isRun():Bool {
+		return this.command == "run";
+	}
+
+	public function isInstall():Bool {
+		return this.command == "install";
+	}
+
+	public function isBuild():Bool {
+		return this.command == "test" || this.command == "build";
+	}
+
+	public function isDebug():Bool {
+		return this.debug;
+	}
+
+	public function isRelease():Bool {
+		return !isDebug();
+	}
+
+	public function setHaxedef(name:String, ?value:String):Void {
+		if (value == null) value = "";
+		this.haxedefs.set(name, value);
+	}
+
+	public function unsetHaxedef(name:String):Void {
+		this.haxedefs.remove(name);
+	}
+
+	public function getDefine(name:String):Null<Dynamic> {
+		return this.defines.get(name);
+	}
+
+	public function hasDefine(name:String):Bool {
+		return this.defines.exists(name);
+	}
+
+	/**
+	 * Add a library to the list of dependencies for the project.
+	 * @param name The name of the library to add.
+	 * @param version The version of the library to add. Optional.
+	 */
+	public function addHaxelib(name:String, version:String = ""):Void {
+		this.haxelibs.push(new Haxelib(name, version));
+	}
+
+	/**
+	 * Add a `haxeflag` to the project.
+	 */
+	public function addHaxeFlag(value:String):Void {
+		this.haxeflags.push(value);
+	}
+
+	/**
+	 * Call a Haxe build macro.
+	 */
+	public function addHaxeMacro(value:String):Void {
+		addHaxeFlag('--macro ${value}');
+	}
+
+	/**
+	 * Add an icon to the project.
+	 * @param icon The path to the icon.
+	 * @param size The size of the icon. Optional.
+	 */
+	public function addIcon(icon:String, ?size:Int):Void {
+		this.icons.push(new Icon(icon, size));
+	}
+
+	/**
+	 * Add an asset to the game build.
+	 * @param path The path the asset is located at.
+	 * @param rename The path the asset should be placed.
+	 * @param library The asset library to add the asset to. `null` = "default"
+	 * @param embed Whether to embed the asset in the executable.
+	 */
+	public function addAsset(path:String, ?rename:String, ?library:String, embed:Bool = false):Void {
+		var asset:Asset = new Asset(path, rename, null, embed, true);
+		@:nullSafety(Off) {
+			asset.library = library ?? "default";
+		}
+
+		this.assets.push(asset);
+	}
+
+	/**
+	 * Remove an asset from the game build.
+	 * @param path The path the asset is located at.
+	 */
+	public function removeAsset(path:String, ?library:String):Void {
+		for (asset in this.assets) {
+			if (asset.sourcePath == path) {
+				if (library != null && asset.library != library) continue;
+				this.assets.remove(asset);
+				break;
+			}
+		}
+	}
+
+	/**
+	 * Add an entire path of assets to the game build.
+	 * @param path The path the assets are located at.
+	 * @param rename The path the assets should be placed.
+	 * @param library The asset library to add the assets to. `null` = "default"
+	 * @param include An optional array to include specific asset names.
+	 * @param exclude An optional array to exclude specific asset names.
+	 * @param embed Whether to embed the assets in the executable.
+	 */
+	public function addAssetPath(path:String, ?rename:String, library:String, ?include:Array<String>, ?exclude:Array<String>, embed:Bool = false):Void {
+		// Argument parsing.
+		if (path == "") return;
+		if (include == null) include = [];
+		if (exclude == null) exclude = [];
+
+		var targetPath:String = rename ?? path;
+		if (targetPath != "") targetPath += "/";
+
+		// Validate path.
+		if (!FileSystem.exists(path)) error('Could not find asset path "${path}".');
+		else if (!FileSystem.isDirectory(path)) error('Could not parse asset path "${path}", expected a directory.');
+
+		for (file in FileSystem.readDirectory(path)) {
+			if (FileSystem.isDirectory('${path}/${file}')) {
+				if (this.filter(file, ["*"], exclude)) addAssetPath('${path}/${file}', '${targetPath}${file}', library, include, exclude, embed);
+			} else {
+				if (this.filter(file, include, exclude)) addAsset('${path}/${file}', '${targetPath}${file}', library, embed);
+			}
+		}
+	}
+
+	/**
+	 * Remove all assets in a path recursively from the game build.
+	 * @param path The path the assets are located at.
+	 * @param library (optional) The asset library to remove the assets from. Defaults to all libraries.
+	 */
+	public function removeAssetPath(path:String, ?library:String):Void {
+		// Argument parsing.
+		if (path == "") return;
+
+		// Validate path.
+		if (!FileSystem.exists(path)) {
+			error('Could not find asset path "${path}".');
+		} else if (!FileSystem.isDirectory(path)) {
+			error('Could not parse asset path "${path}", expected a directory.');
+		}
+
+		for (exclude in EXCLUDE_ASSETS) {
+			if (path.contains(exclude.replace('*', ''))) return;
+		}
+
+		for (file in FileSystem.readDirectory(path)) {
+			if (FileSystem.isDirectory('${path}/${file}')) removeAssetPath('${path}/${file}', library); // Attempt to recursively remove all assets in the directory.
+			else removeAsset('${path}/${file}', library);
+		}
+	}
+
+	/**
+	 * Add an asset library to the game build.
+	 * @param name The name of the library.
+	 * @param embed
+	 * @param preload
+	 */
+	public function addAssetLibrary(name:String, embed:Bool = false, preload:Bool = false):Void {
+		this.libraries.push(new Library('', name, null, embed, preload, false, ""));
+	}
+
+	//
+	// PROCESS FUNCTIONS
+	//
+
+	public function getGitCommit():String {
+		var process:Process = new Process('git', ['rev-parse', 'HEAD']);
+		if (process.exitCode() != 0) error('Could not determine current git commit; is this a proper Git repository?');
+
+		var commitHash:String = process.stdout.readLine();
+		var commitHashSplice:String = commitHash.substr(0, 7);
+
+		process.close();
+
+		return commitHashSplice;
+	}
+
+	static function readLibraryCurrentVersion(libraryName:String):String {
+		var path:String = getLibraryCurrentFile(libraryName);
+		if (FileSystem.exists(path)) return File.getContent(path).trim();
+		return '';
+	}
+
+	static function getLibraryCurrentFile(libraryName:String):String {
+		return Path.join([Path.addTrailingSlash(Sys.getCwd()), '.haxelib', libraryName, '.current']);
+	}
+
+	static function getLibraryPath(libraryName:String):String {
+		var process:Process = new Process('haxelib', ['libpath', libraryName]);
+		var lib:String = process.stdout.readLine();
+		process.close();
+		return lib;
+	}
+
+	public function getGitBranch():String {
+		// Cannibalized from GitCommit.hx
+		var branchProcess = new Process('git', ['rev-parse', '--abbrev-ref', 'HEAD']);
+
+		if (branchProcess.exitCode() != 0) error('Could not determine current git branch; is this a proper Git repository?');
+
+		var branchName:String = branchProcess.stdout.readLine();
+		branchProcess.close();
+		return branchName;
+	}
+
+	public function buildHxCppTools():Void {
+		var path:String = getLibraryPath("hxcpp");
+		var dotNPath:String = Path.join([path, 'hxcpp.n']);
+		var toolsPath:String = Path.join([path, 'tools/hxcpp']);
+
+		// The output can be an error message if the library doesn't exist.
+		if (path.toLowerCase().startsWith("error") || !FileSystem.exists(path))
+			error('HXCPP could not be found while on C++ target.');
+
+		// Build Tools are compiled, no need for us to do it.
+		if (FileSystem.exists(dotNPath)) return;
+
+		info('Compiling the HXCPP Build Tool...');
+
+		var oldDir:String = Sys.getCwd();
+		info(toolsPath);
+		Sys.setCwd(toolsPath);
+
+		var compileProcess:Process = new Process('haxe', ['compile.hxml']);
+		if (compileProcess.exitCode() != 0)
+			info('Could not compile the Build Tool. Is HXCPP installed correctly? Continuing...');
+		else info('Compiled the HXCPP Build Tool successfully!');
+		compileProcess.close();
+		Sys.setCwd(oldDir);
+	}
+
+	//
+	// LOGGING FUNCTIONS
+	//
+
+	/**
+	 * Display an error message. This should stop the build process.
+	 */
+	public function error(message:String):Void {
+		Log.error('${message}');
+	}
+
+	/**
+	 * Display an info message. This should not interfere with the build process.
+	 */
+	public function info(message:String):Void {
+		if (!(isDisplay() || isCleanCommand() || isRun() || isInstall())) Log.info('[INFO] ${message}');
+	}
+}
+
+/**
+ * An object representing a feature flag, which can be enabled or disabled.
+ * Includes features such as automatic generation of compile defines and inversion.
+ */
+abstract FeatureFlag(String) from String to String {
+	public static final INVERSE_PREFIX:String = "NO_";
+
+	public function new(input:String) {
+		this = input;
+	}
+
+	@:from
+	public static function fromString(input:String):FeatureFlag {
+		return new FeatureFlag(input);
+	}
+
+	/**
+	 * Enable/disable a feature flag if it is unset, and handle the inverse flag.
+	 * Doesn't override a feature flag that was set explicitly.
+	 * @param enableByDefault Whether to enable this feature flag if it is unset.
+	 */
+	public function apply(project:Project, enableByDefault:Bool = false):Void {
+		if (isEnabled(project)) {
+			getInverse().disable(project, false); // If this flag was already enabled, disable the inverse.
+		} else if (getInverse().isEnabled(project)) {
+			disable(project, false);
+		} else {
+			if (enableByDefault) enable(project, true);
+			else disable(project, true);
+		}
+	}
+
+	/**
+	 * Enable this feature flag by setting the appropriate compile define.
+	 *
+	 * @param project The project to modify.
+	 * @param andInverse Also disable the feature flag's inverse.
+	 */
+	public function enable(project:Project, andInverse:Bool = true) {
+		project.setHaxedef(this, "");
+		if (andInverse) getInverse().disable(project, false);
+	}
+
+	/**
+	 * Disable this feature flag by removing the appropriate compile define.
+	 *
+	 * @param project The project to modify.
+	 * @param andInverse Also enable the feature flag's inverse.
+	 */
+	public function disable(project:Project, andInverse:Bool = true) {
+		project.unsetHaxedef(this);
+		if (andInverse) getInverse().enable(project, false);
+	}
+
+	/**
+	 * Query if this feature flag is enabled.
+	 * @param project The project to query.
+	 */
+	public function isEnabled(project:Project):Bool {
+		// Check both Haxedefs and Defines for this flag.
+		return project.haxedefs.exists(this) || project.defines.exists(this);
+	}
+
+	/**
+	 * Query if this feature flag's inverse is enabled.
+	 */
+	public function isDisabled(project:Project):Bool {
+		return getInverse().isEnabled(project);
+	}
+
+	/**
+	 * Return the inverse of this feature flag.
+	 * @return A new feature flag that is the inverse of this one.
+	 */
+	public function getInverse():FeatureFlag {
+		if (this.startsWith(INVERSE_PREFIX)) return this.substring(INVERSE_PREFIX.length);
+		return INVERSE_PREFIX + this;
+	}
+}

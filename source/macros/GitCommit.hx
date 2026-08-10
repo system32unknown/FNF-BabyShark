@@ -1,10 +1,8 @@
 package macros;
 
-#if !LIME_DISPLAY
 import sys.io.Process;
 import haxe.macro.Context;
 import haxe.macro.Expr;
-#end
 
 @:nullSafety
 class GitCommit {

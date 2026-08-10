@@ -1,0 +1,9 @@
+{
+    "recommendations": [
+        "nadako.vshaxe", // Basic Haxe integration
+        "jeremyfa.haxe-blocks", // Haxe blocks
+        "vshaxe.haxe-checkstyle", // Haxe code style and conventions
+        "openfl.lime-vscode-extension", // Lime integration
+        "dotjoshjohnson.xml" // XML formatting
+    ]
+}
