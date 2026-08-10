@@ -154,7 +154,7 @@ class Project extends HXProject {
 
 		var branch:String = getGitBranch();
 
-		if (branch != null && branch != ""){
+		if (branch != null && branch != "") {
 			info("Git Branch: " + branch);
 			info("Git Commit: " + getGitCommit());
 		}
@@ -294,11 +294,7 @@ class Project extends HXProject {
 			setHaxedef("absolute-paths"); // Fix source locations so Tracy can see them
 		}
 
-		// Display server.
-		setHaxedef("LIME_CMD", command);
-
 		if (command == "update" || command == "display" || hasDefine("display") || hasDefine("display_details")) {
-			setHaxedef("LIME_DISPLAY");
 			unsetHaxedef("HSCRIPT_ABSTRACT_SUPPORT");
 			unsetHaxedef("CUSTOM_CLASSES");
 		}
@@ -357,18 +353,18 @@ class Project extends HXProject {
 		var shouldEmbed:Bool = false;
 
 		addAssetLibrary("default", shouldEmbed, true);
-		addAssetPath("assets", "assets", "default", ["*"], exclude, shouldEmbed);
+		addAssetPath("assets", null, "default", ["*"], exclude, shouldEmbed);
 
 		var shouldEmbedFonts:Bool = true;
 		addAssetPath("assets/fonts", null, "default", ["*"], exclude, shouldEmbedFonts);
 		addAssetPath("assets/embed", "assets", "default", ["*"], exclude, true);
-		addAssetPath("assets/songs", "assets/songs", "songs", ["*"], exclude, shouldEmbed);
-		addAssetPath("assets/shared", "assets/shared", "shared", ["*"], exclude, shouldEmbed);
+		addAssetPath("assets/songs", null, "default", ["*"], exclude, shouldEmbed);
+		addAssetPath("assets/shared", null, "default", ["*"], exclude, shouldEmbed);
 
-		addAssetPath("assets/week_assets", "assets", "default");
+		addAssetPath("assets/week_assets", "assets", "default", ["*"], exclude, shouldEmbed);
 
-		if (TRANSLATIONS_ALLOWED.isEnabled(this)) addAssetPath("assets/translations", "assets/translations", "translations", ["*"], exclude, shouldEmbed);
-		if (VIDEOS_ALLOWED.isEnabled(this)) addAssetPath("assets/videos", "assets/videos", "videos", ["*"], exclude, shouldEmbed);
+		if (TRANSLATIONS_ALLOWED.isEnabled(this)) addAssetPath("assets/translations", null, "default", ["*"], exclude, shouldEmbed);
+		if (VIDEOS_ALLOWED.isEnabled(this)) addAssetPath("assets/videos", null, "default", ["*"], exclude, shouldEmbed);
 
 		if (MODS_ALLOWED.isEnabled(this)) {
 			addAssetPath("example_mods", "mods", "default", ["*"], exclude, shouldEmbed); 
@@ -426,11 +422,12 @@ class Project extends HXProject {
 
 		if (isLinux() || isMac()) {
             var iconOGOverride:Icon = new Icon("icons/iconOG.png");
+			iconOGOverride.path = 'icon.png';
             this.icons.push(iconOGOverride);
 		}
 		
-		for (size in [16, 32, 64]) addIcon('art/icon${size}.png', size);
-		addIcon("art/iconOG.png");
+		for (size in [16, 32, 64]) addIcon('icons/icon${size}.png', size);
+		addIcon("icons/iconOG.png");
 
 		info('Done configuring icons.');
 	}
