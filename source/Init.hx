@@ -31,7 +31,7 @@ class Init extends flixel.FlxState {
 
 			// Setup window events (like callbacks for onWindowClose)
 			WindowUtil.initWindowEvents();
-			#if DEBUG_TRACY WindowUtil.initTracy(); #end
+			#if FEATURE_DEBUG_TRACY WindowUtil.initTracy(); #end
 
 			FlxG.fixedTimestep = false;
 			FlxG.game.soundTray.active = true;

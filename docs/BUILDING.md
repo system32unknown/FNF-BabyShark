@@ -1,4 +1,4 @@
-# Psych Engine Build Instructions
+# Alter Engine Build Instructions
 
 * [Dependencies](#dependencies)
 * [Building](#building)

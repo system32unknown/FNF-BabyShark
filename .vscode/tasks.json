@@ -3,21 +3,9 @@
 	"tasks": [
 		{
 			"type": "lime",
-			"command": "build",
-			"targetConfiguration": "Windows",
-			"label": "lime: build windows",
+			"command": "test",
 			"group": {
 				"kind": "build",
-				"isDefault": true
-			}
-		},
-		{
-			"type": "lime",
-			"command": "test",
-			"targetConfiguration": "cpp",
-			"label": "lime: test cpp",
-			"group": {
-				"kind": "test",
 				"isDefault": true
 			}
 		}

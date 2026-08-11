@@ -130,7 +130,7 @@ class PreloadListSubState extends FlxSubState implements PsychUIEvent {
 						showOutput('File must be inside images/music/songs subfolder!', true);
 					default: showOutput('File must be inside assets/mods folder!', true);
 				}
-			} else showOutput('File is not inside Psych Engine\'s folder!', true);
+			} else showOutput('File is not inside Alter Engine\'s folder!', true);
 		}
 
 		var loadFileBtn:PsychUIButton = new PsychUIButton(0, bg.y + bg.height - 40, 'Load File', () -> {

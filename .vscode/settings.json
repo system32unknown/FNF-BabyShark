@@ -1,4 +1,6 @@
 {
+  "haxe.displayPort": "auto",
+  "haxe.enableCompilationServer": true,
   "search.exclude": {
     "export/**/*.hx": true
   },

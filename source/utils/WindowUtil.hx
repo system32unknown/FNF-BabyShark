@@ -1,7 +1,7 @@
 package utils;
 
 import flixel.util.FlxSignal.FlxTypedSignal;
-#if DEBUG_TRACY
+#if FEATURE_DEBUG_TRACY
 import cpp.vm.tracy.TracyProfiler;
 import openfl.events.Event;
 #end
@@ -64,7 +64,7 @@ class WindowUtil {
 		FlxG.stage.application.onExit.add((exitCode:Int) -> windowExit.dispatch(exitCode));
 	}
 
-	#if DEBUG_TRACY
+	#if FEATURE_DEBUG_TRACY
 	/**
 	 * Initialize Tracy.
 	 * NOTE: Call this from the main thread ONLY!

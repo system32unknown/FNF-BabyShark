@@ -121,7 +121,7 @@ class Project extends HXProject {
 	// CONFIGURATION FUNCTIONS
 	//
 
-	public function new() {
+	public function new():Void {
 		super();
 
 		#if !target.unicode
@@ -130,7 +130,6 @@ class Project extends HXProject {
 
 		flair();
 		configureApp();
-
 		configureOutputDir();
 
 		if (isRun() || isInstall()) return; // These commands dont really need much in order to run so to improve the speed, we return here.
@@ -148,7 +147,7 @@ class Project extends HXProject {
 	/**
 	 * Do something before building, display some ASCII or something IDK
 	 */
-	function flair() {
+	function flair():Void {
 		info("Alter Engine - " + VERSION);
 		info("Initializing build...");
 
@@ -165,7 +164,7 @@ class Project extends HXProject {
 	 * Apply basic project metadata, such as the game title and version number,
 	 * as well as info like the package name and company (used by various app stores).
 	 */
-	function configureApp() {
+	function configureApp():Void {
 		this.meta.title = TITLE;
 		this.meta.version = VERSION;
 		this.meta.packageName = PACKAGE_NAME;
@@ -203,15 +202,15 @@ class Project extends HXProject {
 	/**
 	 * For desktop platforms, copy the OpenALSoft config file into the build to improve audio quality.
 	 */
-	function configureAL() {
+	function configureAL():Void {
 		if (!isDesktop()) return;
-		addAsset("alsoft.txt", 'plugins/alsoft.${isWindows() ? "ini" : "conf"}', "default");
+		addAsset("alsoft.txt", 'plugins/alsoft.${isWindows() ? "ini" : "conf"}');
 	}
 
 	/**
 	 * Apply various feature flags based on the target platform and the user-provided build flags.
 	 */
-	function configureFeatureFlags() {
+	function configureFeatureFlags():Void {
 		// You can explicitly override any of these.
 		// For example, `-DMODS_ALLOWED` or `-DVIDEOS_ALLOWED`
 
@@ -239,7 +238,7 @@ class Project extends HXProject {
 	/**
 	 * Set compilation flags which are not feature flags.
 	 */
-	function configureCompileDefines() {
+	function configureCompileDefines():Void {
 		// Enable OpenFL's error handler. Required for the crash logger.
 		setHaxedef("openfl-enable-handle-error");
 
@@ -259,7 +258,7 @@ class Project extends HXProject {
 			setHaxedef("HSCRIPT_ABSTRACT_SUPPORT");
 		}
 
-		if (FEATURE_DEBUG_FUNCTIONS.isDisabled(this) && isRelease()) {
+		if (FEATURE_DEBUG_FUNCTIONS.isDisabled(this)) {
 			setHaxedef("no-deprecation-warnings");
 			setHaxedef("FLX_NO_DEBUG"); // If we aren't using the Flixel debugger, strip it out.
 			setHaxedef("analyzer-optimize"); // Optimize haxe code when not in debug to improve performance.
@@ -300,7 +299,7 @@ class Project extends HXProject {
 		}
 	}
 
-	function configureOutputDir() {
+	function configureOutputDir():Void {
 		// Set the output directory. Depends on the target platform and build type.
 		var buildDir:String = 'export/${isDebug() ? 'debug' : 'release'}';
 
@@ -314,7 +313,7 @@ class Project extends HXProject {
 		app.path = buildDir;
 	}
 
-	function configureHaxelibs() {
+	function configureHaxelibs():Void {
 		addHaxelib('lime'); // Game engine backend
 		addHaxelib('openfl'); // Game engine backend
 
@@ -344,7 +343,7 @@ class Project extends HXProject {
 		}
 	}
 
-	function configureAssets() {
+	function configureAssets():Void {
 		if (!(isDisplay() || isCleanCommand())) clearAssets();
 
 		var exclude:Array<String> = EXCLUDE_ASSETS;
@@ -368,7 +367,7 @@ class Project extends HXProject {
 
 		if (MODS_ALLOWED.isEnabled(this)) {
 			addAssetPath("example_mods", "mods", "default", ["*"], exclude, shouldEmbed); 
-			addAsset("list.txt", "modsList.txt", "default");
+			addAsset("list.txt", "modsList.txt");
 		}
 	}
 
@@ -417,7 +416,7 @@ class Project extends HXProject {
 	/**
 	 * Configure the application's favicon and executable icon.
 	 */
-	function configureIcons() {
+	function configureIcons():Void {
 		info('Configuring application icons...');
 
 		if (isLinux() || isMac()) {
@@ -493,10 +492,6 @@ class Project extends HXProject {
 		return this.debug;
 	}
 
-	public function isRelease():Bool {
-		return !isDebug();
-	}
-
 	public function setHaxedef(name:String, ?value:String):Void {
 		if (value == null) value = "";
 		this.haxedefs.set(name, value);
@@ -504,10 +499,6 @@ class Project extends HXProject {
 
 	public function unsetHaxedef(name:String):Void {
 		this.haxedefs.remove(name);
-	}
-
-	public function getDefine(name:String):Null<Dynamic> {
-		return this.defines.get(name);
 	}
 
 	public function hasDefine(name:String):Bool {
@@ -617,19 +608,16 @@ class Project extends HXProject {
 		if (path == "") return;
 
 		// Validate path.
-		if (!FileSystem.exists(path)) {
-			error('Could not find asset path "${path}".');
-		} else if (!FileSystem.isDirectory(path)) {
-			error('Could not parse asset path "${path}", expected a directory.');
-		}
+		if (!FileSystem.exists(path)) error('Could not find asset path "$path".');
+		else if (!FileSystem.isDirectory(path)) error('Could not parse asset path "$path", expected a directory.');
 
 		for (exclude in EXCLUDE_ASSETS) {
 			if (path.contains(exclude.replace('*', ''))) return;
 		}
 
 		for (file in FileSystem.readDirectory(path)) {
-			if (FileSystem.isDirectory('${path}/${file}')) removeAssetPath('${path}/${file}', library); // Attempt to recursively remove all assets in the directory.
-			else removeAsset('${path}/${file}', library);
+			if (FileSystem.isDirectory('${path}/${file}')) removeAssetPath('$path/$file', library); // Attempt to recursively remove all assets in the directory.
+			else removeAsset('$path/$file', library);
 		}
 	}
 
@@ -677,9 +665,7 @@ class Project extends HXProject {
 	}
 
 	public function getGitBranch():String {
-		// Cannibalized from GitCommit.hx
 		var branchProcess = new Process('git', ['rev-parse', '--abbrev-ref', 'HEAD']);
-
 		if (branchProcess.exitCode() != 0) error('Could not determine current git branch; is this a proper Git repository?');
 
 		var branchName:String = branchProcess.stdout.readLine();
@@ -706,8 +692,7 @@ class Project extends HXProject {
 		Sys.setCwd(toolsPath);
 
 		var compileProcess:Process = new Process('haxe', ['compile.hxml']);
-		if (compileProcess.exitCode() != 0)
-			info('Could not compile the Build Tool. Is HXCPP installed correctly? Continuing...');
+		if (compileProcess.exitCode() != 0) info('Could not compile the Build Tool. Is HXCPP installed correctly? Continuing...');
 		else info('Compiled the HXCPP Build Tool successfully!');
 		compileProcess.close();
 		Sys.setCwd(oldDir);
@@ -739,7 +724,7 @@ class Project extends HXProject {
 abstract FeatureFlag(String) from String to String {
 	public static final INVERSE_PREFIX:String = "NO_";
 
-	public function new(input:String) {
+	public function new(input:String):Void {
 		this = input;
 	}
 
@@ -770,7 +755,7 @@ abstract FeatureFlag(String) from String to String {
 	 * @param project The project to modify.
 	 * @param andInverse Also disable the feature flag's inverse.
 	 */
-	public function enable(project:Project, andInverse:Bool = true) {
+	public function enable(project:Project, andInverse:Bool = true):Void {
 		project.setHaxedef(this, "");
 		if (andInverse) getInverse().disable(project, false);
 	}
@@ -781,7 +766,7 @@ abstract FeatureFlag(String) from String to String {
 	 * @param project The project to modify.
 	 * @param andInverse Also enable the feature flag's inverse.
 	 */
-	public function disable(project:Project, andInverse:Bool = true) {
+	public function disable(project:Project, andInverse:Bool = true):Void {
 		project.unsetHaxedef(this);
 		if (andInverse) getInverse().enable(project, false);
 	}
