@@ -275,8 +275,6 @@ class Project extends HXProject {
 		// Cleaner looking compiler errors.
 		setHaxedef("message.reporting", "pretty");
 
-		addHaxeMacro("allowPackage('flash')");
-		addHaxeMacro("include('my.pack')");
 		addHaxeMacro("macros.FlxMacro.initMacros()");
 
 		if (VIDEOS_ALLOWED.isEnabled(this)) {
@@ -333,9 +331,9 @@ class Project extends HXProject {
 
 		if (isDebug() && isCPP()) addHaxelib('hxcpp-debug-server'); // VSCode debug support
 
-		if (isDesktop() && VIDEOS_ALLOWED.isEnabled(this)) addHaxelib('hxvlc'); // Video playback
+		if (VIDEOS_ALLOWED.isEnabled(this)) addHaxelib('hxvlc'); // Video playback
 		if (isLinux()) addHaxelib('hxgamemode'); // FeralInteractive gamemode
-		if (isDesktop() && DISCORD_ALLOWED.isEnabled(this)) addHaxelib('hxdiscord_rpc'); // Discord API
+		if (DISCORD_ALLOWED.isEnabled(this)) addHaxelib('hxdiscord_rpc'); // Discord API
 
 		if (FEATURE_FUNKVIS.isEnabled(this)) {
 			addHaxelib('funkin.vis'); // Audio visualization

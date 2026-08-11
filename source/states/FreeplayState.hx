@@ -296,8 +296,11 @@ class FreeplayState extends MusicBeatState {
 		if (FlxG.keys.pressed.SHIFT) shiftMult = 3;
 
 		if (!player.playingMusic) {
-			scoreText.text = Language.getPhrase('high_score', 'HIGHSCORE: {1} ({2}%)', [lerpScore, ratingSplit.join('.')]);
-			comboText.text = Language.getPhrase('high_combo', 'RATING: {1}', [intendedcombo]);
+			var newScoreTxt:String = Language.getPhrase('high_score', 'HIGHSCORE: {1} ({2}%)', [lerpScore, ratingSplit.join('.')]);
+			if (scoreText.text != newScoreTxt) {
+				scoreText.text = newScoreTxt; 
+				comboText.text = Language.getPhrase('high_combo', 'RATING: {1}', [intendedcombo]);
+			}
 			positionHighscore();
 
 			if (songs.length > 1) {

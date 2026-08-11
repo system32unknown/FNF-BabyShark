@@ -2,6 +2,7 @@ package objects;
 
 import haxe.Json;
 import backend.NativeFileSystem;
+import flixel.graphics.frames.FlxAtlasFrames;
 
 // swordcube's alphabet but heavily modified to work with psych
 // since i had alignment issues getting it to work the other way around (psych alphabet working with swordcube's code)
@@ -55,7 +56,11 @@ class Alphabet extends FlxTypedSpriteGroup<AlphabetLine> {
 					var glyph:String = char.toLowerCase().substr(0, 1);
 
 					if (AlphabetGlyph.allGlyphs.exists(glyph)) {
-						AlphabetGlyph.allGlyphs.set(glyph, {anim: glyphData.animation ?? glyph, offsets: glyphData.normal ?? [0.0, 0.0], offsetsBold: glyphData.bold ?? [0.0, 0.0]});
+						AlphabetGlyph.allGlyphs.set(glyph, {
+							anim: glyphData.animation ?? glyph,
+							offsets: glyphData.normal ?? [0.0, 0.0],
+							offsetsBold: glyphData.bold ?? [0.0, 0.0]
+						});
 					}
 				}
 			}
@@ -230,6 +235,7 @@ typedef Glyph = {
 }
 
 class AlphabetGlyph extends FlxSprite {
+	public static var cachedFrames:Map<String, FlxAtlasFrames> = new Map();
 	public var image(default, set):String;
 	public static var allGlyphs:Map<String, Glyph>;
 
@@ -254,19 +260,29 @@ class AlphabetGlyph extends FlxSprite {
 		return type = newType;
 	}
 
+	static function getCachedFrames(name:String):FlxAtlasFrames {
+		if (cachedFrames.exists(name)) {
+			var cached:FlxAtlasFrames = cachedFrames.get(name);
+			if (cached != null && cached.parent != null && cached.parent == Paths.image(name)) return cached;
+		}
+		var atlas:FlxAtlasFrames = Paths.sparrowAtlas(name);
+		cachedFrames.set(name, atlas);
+		return atlas;
+	}
+
 	@:noCompletion function set_image(value:String):String {
 		if (frames == null) {
-			frames = Paths.sparrowAtlas(image = value);
+			frames = getCachedFrames(image = value);
 			return value;
 		}
 
 		var lastAnim:String = null;
 		if (animation != null) lastAnim = animation.name;
 
-		frames = Paths.sparrowAtlas(image = value);
+		frames = getCachedFrames(image = value);
 
 		if (lastAnim != null) {
-			animation.addByPrefix(lastAnim, lastAnim, 24);
+			if (animation.getByName(lastAnim) == null) animation.addByPrefix(lastAnim, lastAnim, 24);
 			animation.play(lastAnim, true);
 			updateHitbox();
 		}
@@ -280,7 +296,7 @@ class AlphabetGlyph extends FlxSprite {
 	}
 
 	@:noCompletion inline function set_char(newChar:String):String {
-		frames = Paths.sparrowAtlas(image);
+		frames = getCachedFrames(image);
 
 		var converted:String = newChar.toLowerCase();
 		final isLowerCase:Bool = converted == newChar;
@@ -295,7 +311,7 @@ class AlphabetGlyph extends FlxSprite {
 
 		converted = '${curGlyph.anim} $suffix';
 
-		animation.addByPrefix(converted, converted, 24);
+		if (animation.getByName(converted) == null) animation.addByPrefix(converted, converted, 24);
 		animation.play(converted);
 
 		updateHitbox();

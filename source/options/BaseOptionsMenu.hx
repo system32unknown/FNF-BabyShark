@@ -95,6 +95,8 @@ class BaseOptionsMenu extends MusicBeatSubstate {
 	var holdTime:Float = 0;
 	var holdValue:Float = 0;
 
+	var _textThrottle:Float = 0;
+
 	var bindingKey:Bool = false;
 	var holdingEsc:Float = 0;
 	var bindingBlack:FlxSprite;
@@ -212,7 +214,11 @@ class BaseOptionsMenu extends MusicBeatSubstate {
 									case FLOAT, PERCENT: curOption.setValue(FlxMath.roundDecimal(holdValue, curOption.decimals));
 									default:
 								}
-								updateTextFrom(curOption);
+								_textThrottle += elapsed;
+								if (_textThrottle >= 0.08) {
+									_textThrottle = 0;
+									updateTextFrom(curOption);
+								}
 								curOption.change();
 							}
 						}
@@ -334,7 +340,9 @@ class BaseOptionsMenu extends MusicBeatSubstate {
 		var val:Dynamic = option.getValue();
 		if (option.type == PERCENT) val *= 100;
 		var def:Dynamic = option.defaultValue;
-		option.text = text.replace('%v', Std.string(val)).replace('%d', Std.string(def));
+		var newText:String = text.replace('%v', Std.string(val)).replace('%d', Std.string(def));
+		if (option.text != null && option.text == newText) return;
+		option.text = newText;
 	}
 	
 	function changeSelection(change:Int = 0) {
