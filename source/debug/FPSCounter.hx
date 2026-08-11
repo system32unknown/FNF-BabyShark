@@ -29,6 +29,7 @@ class FPSCounter extends openfl.text.TextField {
 	}
 	var gcPeakMEM:Float = 0;
 
+	/** The current task memory usage **/
 	public var taskMEM(get, never):Float;
 	@:noCompletion function get_taskMEM():Float {
 		if (!hasTaskMem) return 0.0;

@@ -124,13 +124,9 @@ class Mods {
 		#if MODS_ALLOWED
 		if (mods) {
 			// Global mods first
-			for (mod in getGlobalMods())
-				tryAdd(Paths.mods('$mod/$fileToFind')); // Then "PsychEngine/mods/" main folder
-
+			for (mod in getGlobalMods()) tryAdd(Paths.mods('$mod/$fileToFind')); // Then "PsychEngine/mods/" main folder
 			tryAdd(Paths.mods(fileToFind));
-
-			if (currentModDirectory != null && currentModDirectory.length > 0)
-				tryAdd(Paths.mods('$currentModDirectory/$fileToFind')); // And lastly, the loaded mod's folder
+			if (Util.notBlank(currentModDirectory)) tryAdd(Paths.mods('$currentModDirectory/$fileToFind')); // And lastly, the loaded mod's folder
 		}
 		#end
 
@@ -145,7 +141,7 @@ class Mods {
 		if (FileSystem.exists(path)) {
 			try {
 				var raw:String = NativeFileSystem.getContent(path);
-				if (raw != null && raw.length > 0) return tjson.TJSON.parse(raw);
+				if (Util.notBlank(raw)) return tjson.TJSON.parse(raw);
 			} catch (e:Dynamic) Logs.error('ERROR: $e');
 		}
 		#end

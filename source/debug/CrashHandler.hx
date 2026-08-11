@@ -46,6 +46,9 @@ class CrashHandler {
 		onError(message);
 	}
 
+	/** Crash Folder Location. **/
+	static inline var CRASH_FOLDER:String = './crash/';
+
 	/**
 	 * Main crash handler logic.
 	 *
@@ -66,7 +69,7 @@ class CrashHandler {
 		if (Mods.currentModDirectory != '') errMsg += '\nCurrent Active Mod: ${Mods.currentModDirectory}';
 
 		try {
-			if (!FileSystem.exists("./crash/")) FileSystem.createDirectory("./crash/");
+			if (!FileSystem.exists(CRASH_FOLDER)) FileSystem.createDirectory(CRASH_FOLDER);
 			File.saveContent(path, errMsg);
 
 			Sys.println("\n" + errMsg);
@@ -91,12 +94,12 @@ class CrashHandler {
 		for (stackItem in haxe.CallStack.exceptionStack(true)) {
 			switch (stackItem) {
 				case FilePos(_, file, line, column):
-					error += ' in ${file}#${line}';
-					if (column != null) error += ':${column}';
+					error += ' in $file#$line';
+					if (column != null) error += ':$column';
 				case CFunction: error += '[Function] ';
-				case Module(m): error += '[Module(${m})] ';
-				case Method(cl, m): error += '[Function(${cl}.${m})] ';
-				case LocalFunction(v): error += '[LocalFunction(${v})] ';
+				case Module(m): error += '[Module($m)] ';
+				case Method(cl, m): error += '[Function($cl.$m)] ';
+				case LocalFunction(v): error += '[LocalFunction($v)] ';
 			}
 			error += '\n';
 		}

@@ -361,6 +361,7 @@ class Project extends HXProject {
 		addAssetPath("assets/shared", null, "default", ["*"], exclude, shouldEmbed);
 
 		addAssetPath("assets/week_assets", "assets", "default", ["*"], exclude, shouldEmbed);
+		removeAssetPath("assets/week_assets");
 
 		if (TRANSLATIONS_ALLOWED.isEnabled(this)) addAssetPath("assets/translations", null, "default", ["*"], exclude, shouldEmbed);
 		if (VIDEOS_ALLOWED.isEnabled(this)) addAssetPath("assets/videos", null, "default", ["*"], exclude, shouldEmbed);
@@ -382,13 +383,9 @@ class Project extends HXProject {
 		var basePath:String = Path.join([exportPath, platform, "bin"]);
 		var assetsPath:String = "";
 
-		switch (platformType) {
-			case PlatformType.DESKTOP:
-				if (isMac()) assetsPath = Path.join([basePath, '${this.app.file}.app', "Contents", "Resources", "assets"]);
-				else assetsPath = Path.join([basePath, "assets"]);
-			default:
-				// Don't do this for other platform types yet.
-				return;
+		if (platformType == PlatformType.DESKTOP) {
+			if (isMac()) assetsPath = Path.join([basePath, '${this.app.file}.app', "Contents", "Resources", "assets"]);
+			else assetsPath = Path.join([basePath, "assets"]);
 		}
 
 		if (FileSystem.exists(assetsPath)) {
@@ -665,7 +662,7 @@ class Project extends HXProject {
 	}
 
 	public function getGitBranch():String {
-		var branchProcess = new Process('git', ['rev-parse', '--abbrev-ref', 'HEAD']);
+		var branchProcess:Process = new Process('git', ['rev-parse', '--abbrev-ref', 'HEAD']);
 		if (branchProcess.exitCode() != 0) error('Could not determine current git branch; is this a proper Git repository?');
 
 		var branchName:String = branchProcess.stdout.readLine();

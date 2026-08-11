@@ -87,7 +87,8 @@ class FreeplaySectionSubstate extends FlxSubState {
 			if (leWeek == null || leWeek.hideFreeplay) continue;
 
 			var sec:String = leWeek.section;
-			if (sec == null) continue;
+			if (!Util.notBlank(sec)) sec = 'mods';
+			else if (sec == null) continue;
 
 			var key:String = sec.toLowerCase();
 			if (seen.exists(key)) continue;

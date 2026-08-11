@@ -22,7 +22,7 @@ class Difficulty {
 		week ??= WeekData.getCurrentWeek();
 
 		var diffStr:String = week.difficulties;
-		if (diffStr != null && diffStr.length > 0) {
+		if (Util.notBlank(diffStr)) {
 			var diffs:Array<String> = diffStr.trim().split(',');
 			var i:Int = diffs.length - 1;
 			while (i > 0) {
