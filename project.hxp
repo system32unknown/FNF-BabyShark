@@ -94,6 +94,21 @@ class Project extends HXProject {
 	static final SHOW_LOADING_SCREEN:FeatureFlag = "SHOW_LOADING_SCREEN";
 
 	/**
+	 * `-DULTRA_OPTIMIZED` (WIP / EXPERIMENTAL max-speed build flag).
+	 * Strips debug instrumentation and forces the fastest codegen the
+	 * installed toolchain supports. Enabled with `-DULTRA_OPTIMIZED`.
+	 * Defines this flag toggles (see the ULTRA_OPTIMIZED block in
+	 * configureCompileDefines):
+	 *   ON:  analyzer-optimize, HXCPP_OPTIMIZE_LINK (/GL + /LTCG or -flto)
+	 *   OFF: HXCPP_CHECK_POINTER, HXCPP_STACK_LINE, HXCPP_STACK_TRACE,
+	 *        HXCPP_GC_CHECK_LEAKS, HXCPP_FAST_LINK
+	 *   KEPT: HXCPP_CATCH_SEGV (CrashHandler needs it), fast GC defines,
+	 *        HXCPP_CPP17, HXCPP_NO_ARCH_LEVEL, -dce no
+	 * WIP: may crash code that relied on null-pointer checks / stack traces.
+	 */
+	static final ULTRA_OPTIMIZED:FeatureFlag = "ULTRA_OPTIMIZED";
+
+	/**
 	 * `-DFEATURE_DEBUG_FUNCTIONS`
 	 * If this flag is enabled, the game will have all playtester-only debugging functionality enabled.
 	 * This includes debug hotkeys like time travel in the Play State.
@@ -124,6 +139,8 @@ class Project extends HXProject {
 	public function new():Void {
 		super();
 
+		setenv('HAXEPATH', './'); // Fixes an issue for haxelibs that use native C++ files until Haxe 5 releases.
+
 		#if !target.unicode
 		if (isWindowsHost()) Sys.command("chcp 65001 > nul");
 		#end
@@ -134,6 +151,7 @@ class Project extends HXProject {
 
 		if (isRun() || isInstall()) return; // These commands dont really need much in order to run so to improve the speed, we return here.
 
+		displayTarget();
 		configureFeatureFlags();
 		configureCompileDefines();
 		configureHaxelibs();
@@ -196,6 +214,46 @@ class Project extends HXProject {
 			this.window.orientation = Orientation.LANDSCAPE;
 			this.window.fullscreen = false;
 			this.window.resizable = true;
+		}
+	}
+
+	/**
+	 * Log information about the configured target platform.
+	 */
+	function displayTarget() {
+		// Display the target operating system.
+		switch (this.target) {
+			case Platform.WINDOWS: info('Target Platform: Windows');
+			case Platform.MAC: info('Target Platform: MacOS');
+			case Platform.LINUX: info('Target Platform: Linux');
+			case Platform.ANDROID: info('Target Platform: Android');
+			case Platform.IOS: info('Target Platform: IOS');
+			case Platform.HTML5: info('Target Platform: HTML5');
+			default: error('Unsupported platform! (got ${target})');
+		}
+
+		switch (this.platformType) {
+			case PlatformType.DESKTOP: info('Platform Type: Desktop');
+			case PlatformType.MOBILE: info('Platform Type: Mobile');
+			case PlatformType.WEB: info('Platform Type: Web');
+			case PlatformType.CONSOLE: info('Platform Type: Console');
+			default: error('Unknown platform type! (got $platformType)');
+		}
+
+		// Print whether we are using HXCPP, HashLink, or something else.
+		if (isWeb()) info('Target Language: JavaScript (HTML5)');
+		else info('Target Language: C++');
+
+		for (arch in this.architectures) {
+			// Display the list of target architectures.
+			switch (arch) {
+				case Architecture.X86: info('Architecture: x86');
+				case Architecture.X64: info('Architecture: x64');
+				case null:
+					if (!isWeb()) error('Unsupported architecture (got null on non-web platform)');
+					else info('Architecture: Web');
+				default: error('Unsupported architecture (got $arch)');
+			}
 		}
 	}
 
@@ -289,6 +347,38 @@ class Project extends HXProject {
 			setHaxedef("HXCPP_TRACY_ON_DEMAND"); // Only collect telemetry when Tracy is open and reachable
 
 			setHaxedef("absolute-paths"); // Fix source locations so Tracy can see them
+		}
+
+		if (ULTRA_OPTIMIZED.isEnabled(this) && !isWeb()) {
+			// WIP: experimental max-speed build. See the flag doc above.
+			// hxcpp 4.3.2 has NO HXCPP_OPTIMIZE_SPEED/SIZE/O3 defines (grep
+			// toolchain + tools = zero hits): MSVC already emits /O2 in
+			// release (msvc-toolchain.xml:67,79) which is max-speed for cl,
+			// and gcc/clang already use -O2 (linux-toolchain.xml:35). So the
+			// real speed levers are: enable whole-program link-time codegen
+			// (HXCPP_OPTIMIZE_LINK → /GL + /LTCG, or -flto) and drop the
+			// fast-link default that forces INCREMENTAL LTCG.
+
+			// UNSET: debug instrumentation overhead (hxcpp toolchain applies
+			// each by emitting -D flags to haxe in common-defines.xml).
+			unsetHaxedef("HXCPP_CHECK_POINTER"); // null-pointer checks
+			unsetHaxedef("HXCPP_STACK_LINE"); // line info in stack traces
+			unsetHaxedef("HXCPP_STACK_TRACE"); // stack frame tracking
+			unsetHaxedef("HXCPP_GC_CHECK_LEAKS"); // GC leak scanning
+
+			// KEEP: HXCPP_CATCH_SEGV — CrashHandler.init() registers
+			// __hxcpp_set_critical_error_handler and CallStack.exceptionStack()
+			// in onUncaughtError; HXCPP_CATCH_SEGV enables SEH translation
+			// in hxcpp (Debug.cpp:273-279, StackContext.h:448) that keeps
+			// segfaults catchable as haxe exceptions instead of hard crashes.
+			// Removing it would crash the game instead of showing the crash
+			// screen; the overhead is negligible so we keep it.
+			setHaxedef("HXCPP_OPTIMIZE_LINK");
+
+			// FORCE: analyzer-optimize is normally only set in !isDebug(); ensure it
+			// regardless of build type when ULTRA is on.
+			setHaxedef("analyzer-optimize");
+			info("ULTRA_OPTIMIZED: experimental max-speed build enabled (native target)");
 		}
 
 		if (command == "update" || command == "display" || hasDefine("display") || hasDefine("display_details")) {

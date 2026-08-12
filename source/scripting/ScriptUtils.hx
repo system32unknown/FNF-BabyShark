@@ -5,10 +5,9 @@ import openfl.display.BlendMode;
 import data.StageData;
 
 class ScriptUtils {
-	public static var Function_Stop:String = "##PSYCH_FUNCTIONSTOP";
-	public static var Function_Continue:String = "##PSYCH_FUNCTIONCONTINUE";
-	public static var Function_StopHScript:String = "##PSYCH_FUNCTIONSTOPHSCRIPT";
-	public static var Function_StopAll:String = "##PSYCH_FUNCTIONSTOPALL";
+	public static var Function_Stop:String = "FUNC_STOP";
+	public static var Function_Continue:String = "FUNC_CONT";
+	public static var Function_Halt:String = "FUNC_HALT";
 
 	public static function setVarInArray(instance:Dynamic, variable:String, value:Dynamic, allowMaps:Bool = false):Any {
 		var splitProps:Array<String> = variable.split('[');

@@ -10,7 +10,7 @@ typedef StageFile = {
 	var defaultZoom:Float;
 	@:optional var isPixelStage:Null<Bool>;
 	var stageUI:String;
-	@default(["intro3", "intro2", "intro1", "introGo"])
+	@:default(["intro3", "intro2", "intro1", "introGo"])
 	var introSounds:Array<String>;
 
 	var boyfriend:Array<Dynamic>;

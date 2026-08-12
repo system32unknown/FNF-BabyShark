@@ -42,7 +42,7 @@ class HscriptSubstate extends MusicBeatSubstate {
 		var callValue:AlterCall = hscript.call(funcToCall, args);
 		if (callValue != null) {
 			var myValue:Dynamic = callValue.returnValue;
-			if ((myValue == ScriptUtils.Function_StopHScript || myValue == ScriptUtils.Function_StopAll) && !excludeValues.contains(myValue) && !ignoreStops) returnVal = myValue;
+			if (myValue == ScriptUtils.Function_Halt && !excludeValues.contains(myValue) && !ignoreStops) returnVal = myValue;
 			if (myValue != null && !excludeValues.contains(myValue)) returnVal = myValue;
 		}
 		#end

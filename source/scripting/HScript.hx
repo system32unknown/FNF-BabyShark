@@ -277,8 +277,7 @@ class HScript extends AlterHscript {
 
 		set('Function_Stop', ScriptUtils.Function_Stop);
 		set('Function_Continue', ScriptUtils.Function_Continue);
-		set('Function_StopHScript', ScriptUtils.Function_StopHScript);
-		set('Function_StopAll', ScriptUtils.Function_StopAll);
+		set('Function_Halt', ScriptUtils.Function_Halt);
 
 		setParent(FlxG.state);
 		if (PlayState.instance == FlxG.state) {
