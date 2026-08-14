@@ -1,16 +1,12 @@
 name: Linux Build
 on:
-  push:
-    branches: [ main ]
-  pull_request:
-    branches: [ main ]
-
   workflow_dispatch:
     inputs:
       save-artifact:
         type: boolean
         description: Save the build artifact to Github Actions
         default: true
+  push:
 
 env:
   HAXE_VERSION: 4.3.7
