@@ -7,7 +7,7 @@ import sys.net.Socket as SysSocket;
 class Socket implements flixel.util.FlxDestroyUtil.IFlxDestroyable {
 	public var socket:SysSocket;
 
-	public function new(?socket:SysSocket) {
+	public function new(?socket:SysSocket):Void {
 		this.socket = socket;
 		if (this.socket == null) this.socket = new SysSocket();
 		this.socket.setFastSend(true);
@@ -33,7 +33,7 @@ class Socket implements flixel.util.FlxDestroyUtil.IFlxDestroyable {
 		}
 	}
 
-	public function host(host:Host, port:Int, nbConnections:Int = 1) {
+	public function host(host:Host, port:Int, nbConnections:Int = 1):Void {
 		socket.bind(host, port);
 		socket.listen(nbConnections);
 		socket.setFastSend(true);
@@ -51,11 +51,11 @@ class Socket implements flixel.util.FlxDestroyUtil.IFlxDestroyable {
 		return accept;
 	}
 
-	public function connect(host:Host, port:Int) {
+	public function connect(host:Host, port:Int):Void {
 		socket.connect(host, port);
 	}
 
-	public function destroy() {
+	public function destroy():Void {
 		socket?.close();
 	}
 }

@@ -2,7 +2,6 @@ package;
 
 import openfl.display.Sprite;
 import flixel.input.keyboard.FlxKey;
-import utils.system.MemoryUtil;
 import utils.SemanticVersion;
 import debug.FPSCounter;
 
@@ -94,21 +93,17 @@ class Main extends Sprite {
 		fpsVar.memDisplay = Settings.data.memCounterType;
 
 		#if !MODS_ALLOWED
-		final path:String = 'mods';
-		if (FileSystem.exists(path) && FileSystem.isDirectory(path)) {
-			for (entry in FileSystem.readDirectory(path)) FileSystem.deleteFile('$path/$entry');
-			FileSystem.deleteDirectory(path);
+		final MOD_PATH:String = 'mods';
+		if (FileSystem.exists(MOD_PATH) && FileSystem.isDirectory(MOD_PATH)) {
+			for (entry in FileSystem.readDirectory(MOD_PATH)) FileSystem.deleteFile('$MOD_PATH/$entry');
+			FileSystem.deleteDirectory(MOD_PATH);
 		}
 		#end
 
 		FlxG.signals.preStateSwitch.add(() -> if (Settings.data.autoCleanAssets) Paths.clearStoredMemory());
 		FlxG.signals.postStateSwitch.add(() -> {
 			if (Settings.data.autoCleanAssets) Paths.clearUnusedMemory();
-			if (!Settings.data.disableGC) {
-				MemoryUtil.clearMajor(true);
-				MemoryUtil.clearMajor();
-				MemoryUtil.clearMajor(true);
-			}
+			if (!Settings.data.disableGC) utils.system.MemoryUtil.clearMajor(true);
 		});
 		FlxG.signals.gameResized.add((w:Int, _:Int) -> {
 			@:privateAccess FlxG.game.soundTray._defaultScale = (w / FlxG.width) * 2;

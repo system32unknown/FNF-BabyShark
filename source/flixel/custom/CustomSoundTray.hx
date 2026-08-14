@@ -16,6 +16,7 @@ class CustomSoundTray extends flixel.system.ui.FlxSoundTray {
 	 * Sets up the "sound tray", the little volume meter that pops down sometimes.
 	 */
 	public function new() {
+		// calls super, then removes all children to add our own graphics
 		super();
 		removeChildren();
 

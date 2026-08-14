@@ -1,5 +1,6 @@
 package states;
 
+import flixel.util.FlxSort;
 import flixel.FlxObject;
 import objects.Bar;
 import utils.MathUtil;
@@ -48,7 +49,10 @@ class AwardsState extends MusicBeatState {
 		grpAwards.scrollFactor.x = 0;
 		add(camFollow = new FlxObject(0, 0, 1, 1));
 
-		options.sort(utils.SortUtil.byID);
+		options.sort((Obj1:Dynamic, Obj2:Dynamic) -> {
+			if (Obj1 == null || Obj2 == null) return 0;
+			return FlxSort.byValues(FlxSort.ASCENDING, Obj1.ID, Obj2.ID);
+		});
 		for (id in options) {
 			var graphic:flixel.graphics.FlxGraphic = null;
 			var path:String = 'awards/$id';

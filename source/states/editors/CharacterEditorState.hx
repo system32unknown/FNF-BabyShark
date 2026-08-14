@@ -841,7 +841,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 
 			if (length >= 0) {
 				if (FlxG.keys.justPressed.A || FlxG.keys.justPressed.D || holdingFrameTime > .5) {
-					var isLeft = false;
+					var isLeft:Bool = false;
 					if ((holdingFrameTime > .5 && FlxG.keys.pressed.A) || FlxG.keys.justPressed.A) isLeft = true;
 					character.animPaused = true;
 
@@ -852,7 +852,7 @@ class CharacterEditorState extends MusicBeatState implements PsychUIEventHandler
 					}
 				}
 
-				txt = 'Frames: ( $frames / ${length - 1} )';
+				txt = 'Frames: ($frames / ${length - 1})';
 				clr = FlxColor.WHITE;
 			}
 		}

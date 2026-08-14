@@ -40,9 +40,8 @@ class MemoryUtil {
 	 * Enable or disable garbage collection.
 	 */
 	public static function enable(on:Bool = true):Void {
-		isGcOn = on;
 		#if cpp
-		Gc.enable(isGcOn);
+		Gc.enable(isGcOn = on);
 		#else
 		throw 'Not implemented!';
 		#end

@@ -37,7 +37,7 @@ class WindowUtil {
 	public static function openURL(site:String):Void {
 		// Ensure you can't open protocols such as steam://, file://, etc
 		var protocol:Array<String> = site.split('://');
-		if (protocol.length == 1) site = 'https://${site}';
+		if (protocol.length == 1) site = 'https://$site';
 		else if (protocol[0] != 'http' && protocol[0] != 'https') throw 'openURL can only open http and https links.';
 
 		site = sanitizeURL(site);

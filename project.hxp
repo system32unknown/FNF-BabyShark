@@ -229,7 +229,7 @@ class Project extends HXProject {
 			case Platform.ANDROID: info('Target Platform: Android');
 			case Platform.IOS: info('Target Platform: IOS');
 			case Platform.HTML5: info('Target Platform: HTML5');
-			default: error('Unsupported platform! (got ${target})');
+			default: error('Unsupported platform! (got $target)');
 		}
 
 		switch (this.platformType) {
@@ -610,7 +610,7 @@ class Project extends HXProject {
 	 * Call a Haxe build macro.
 	 */
 	public function addHaxeMacro(value:String):Void {
-		addHaxeFlag('--macro ${value}');
+		addHaxeFlag('--macro $value');
 	}
 
 	/**
@@ -671,14 +671,14 @@ class Project extends HXProject {
 		if (targetPath != "") targetPath += "/";
 
 		// Validate path.
-		if (!FileSystem.exists(path)) error('Could not find asset path "${path}".');
-		else if (!FileSystem.isDirectory(path)) error('Could not parse asset path "${path}", expected a directory.');
+		if (!FileSystem.exists(path)) error('Could not find asset path "$path".');
+		else if (!FileSystem.isDirectory(path)) error('Could not parse asset path "$path", expected a directory.');
 
 		for (file in FileSystem.readDirectory(path)) {
-			if (FileSystem.isDirectory('${path}/${file}')) {
-				if (this.filter(file, ["*"], exclude)) addAssetPath('${path}/${file}', '${targetPath}${file}', library, include, exclude, embed);
+			if (FileSystem.isDirectory('$path/$file')) {
+				if (this.filter(file, ["*"], exclude)) addAssetPath('$path/$file', '${targetPath}${file}', library, include, exclude, embed);
 			} else {
-				if (this.filter(file, include, exclude)) addAsset('${path}/${file}', '${targetPath}${file}', library, embed);
+				if (this.filter(file, include, exclude)) addAsset('$path/$file', '${targetPath}${file}', library, embed);
 			}
 		}
 	}
@@ -689,8 +689,7 @@ class Project extends HXProject {
 	 * @param library (optional) The asset library to remove the assets from. Defaults to all libraries.
 	 */
 	public function removeAssetPath(path:String, ?library:String):Void {
-		// Argument parsing.
-		if (path == "") return;
+		if (path == "") return; // Argument parsing.
 
 		// Validate path.
 		if (!FileSystem.exists(path)) error('Could not find asset path "$path".');
@@ -701,7 +700,7 @@ class Project extends HXProject {
 		}
 
 		for (file in FileSystem.readDirectory(path)) {
-			if (FileSystem.isDirectory('${path}/${file}')) removeAssetPath('$path/$file', library); // Attempt to recursively remove all assets in the directory.
+			if (FileSystem.isDirectory('$path/$file')) removeAssetPath('$path/$file', library); // Attempt to recursively remove all assets in the directory.
 			else removeAsset('$path/$file', library);
 		}
 	}
@@ -791,14 +790,14 @@ class Project extends HXProject {
 	 * Display an error message. This should stop the build process.
 	 */
 	public function error(message:String):Void {
-		Log.error('${message}');
+		Log.error(message);
 	}
 
 	/**
 	 * Display an info message. This should not interfere with the build process.
 	 */
 	public function info(message:String):Void {
-		if (!(isDisplay() || isCleanCommand() || isRun() || isInstall())) Log.info('[INFO] ${message}');
+		if (!(isDisplay() || isCleanCommand() || isRun() || isInstall())) Log.info('[INFO] $message');
 	}
 }
 

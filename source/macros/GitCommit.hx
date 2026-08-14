@@ -30,7 +30,6 @@ class GitCommit {
 
 		var commitHash:String = proc.stdout.readLine();
 		var commitHashSplice:String = commitHash.substr(0, 7);
-
 		proc.close();
 
 		return macro $v{commitHashSplice};

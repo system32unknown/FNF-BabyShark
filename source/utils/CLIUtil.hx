@@ -23,7 +23,7 @@ class CLIUtil {
 		if (cwd == gameDir) {
 			trace('Working directory is already correct.');
 		} else {
-			trace('Changing working directory from ${Sys.getCwd()} to ${gameDir}');
+			trace('Changing working directory from ${Sys.getCwd()} to $gameDir');
 			Sys.setCwd(gameDir);
 		}
 		#end
@@ -61,10 +61,10 @@ class CLIUtil {
 
 	static function printUsage():Void {
 		Sys.println("-- Alter Engine Command Line help --");
-		Sys.println("-help / -h		| Show this help");
-		Sys.println("-nocolor		| Disables colors in the terminal");
-		Sys.println("-v / -verbose	| Enables verbose logging");
-		Sys.println("-ver / -version| Displays current of engine version");
+		Sys.println("-help / -h	| Show this help");
+		Sys.println("-nocolor | Disables colors in the terminal");
+		Sys.println("-v / -verbose | Enables verbose logging");
+		Sys.println("-ver / -version | Displays current of engine version");
 	}
 
 	/**
