@@ -117,6 +117,15 @@ class SpriteUtil {
 		return rectangle;
 	}
 
+	/**
+	 * Safely adds an animation using a frame prefix.
+	 *
+	 * @param spr The sprite to add the animation to
+	 * @param name The animation name
+	 * @param prefix The frame prefix
+	 * @param framerate The animation framerate
+	 * @param loop Whether the animation loops
+	 */
 	public static function addAnimSafe(spr:FlxSprite, name:String, prefix:String, framerate:Float = 24, loop:Bool = true):Void {
 		if (spr.animation.getByName(name) != null) return;
 

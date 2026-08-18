@@ -58,9 +58,7 @@ class PixelSplashShader extends flixel.system.FlxAssets.FlxShader {
 			vec4 color = flixel_texture2D(bitmap, floor(coord * blocks) / blocks);
 			if (!hasTransform) return color;
 
-			if (color.a == 0.0 || mult == 0.0) {
-				return color * openfl_Alphav;
-			}
+			if (color.a == 0.0 || mult == 0.0) return color * openfl_Alphav;
 
 			vec4 newColor = color;
 			newColor.rgb = min(color.r * r + color.g * g + color.b * b, vec3(1.0));
@@ -68,9 +66,7 @@ class PixelSplashShader extends flixel.system.FlxAssets.FlxShader {
 
 			color = mix(color, newColor, mult);
 
-			if (color.a > 0.0) {
-				return vec4(color.rgb, color.a);
-			}
+			if (color.a > 0.0) return vec4(color.rgb, color.a);
 			return vec4(0.0, 0.0, 0.0, 0.0);
 		}')
 	@:glFragmentSource('

@@ -26,7 +26,7 @@ class CutsceneHandler extends flixel.FlxBasic {
 	public function new(canSkip:Bool = true) {
 		super();
 
-		timer(0, function() {
+		timer(0, () -> {
 			if (music != null) {
 				FlxG.sound.playMusic(Paths.music(music), 0, false);
 				FlxG.sound.music.fadeIn();

@@ -74,15 +74,13 @@ class ArraySortTools {
 		var j:Int = high + 1;
 
 		while (true) {
-			// Move the left pointer to the right until it finds an element greater than the pivot.
 			do {
 				i++;
-			} while (compare(input[i], pivot) < 0);
+			} while (compare(input[i], pivot) < 0); // Move the left pointer to the right until it finds an element greater than the pivot.
 
-			// Move the right pointer to the left until it finds an element less than the pivot.
 			do {
 				j--;
-			} while (compare(input[j], pivot) > 0);
+			} while (compare(input[j], pivot) > 0); // Move the right pointer to the left until it finds an element less than the pivot.
 
 			// If i and j have crossed, the array has been partitioned, and the pivot will be at the index j.
 			if (i >= j) return j;

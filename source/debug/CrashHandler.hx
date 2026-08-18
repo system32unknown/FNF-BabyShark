@@ -1,6 +1,7 @@
 package debug;
 
 // crash handler stuff
+import flixel.util.FlxSignal.FlxTypedSignal;
 import openfl.events.UncaughtErrorEvent;
 import openfl.events.ErrorEvent;
 import openfl.errors.Error;
@@ -12,7 +13,23 @@ import lime.system.System;
  * This class hooks into native (C++) and OpenFL error systems
  * to ensure crashes are properly logged and reported.
  */
+@:nullSafety
 class CrashHandler {
+	public static final LOG_FOLDER:String = 'logs';
+
+	/**
+	 * Called before exiting the game when a standard error occurs, like a thrown exception.
+	 * @param message The error message.
+	 */
+	public static var errorSignal(default, null):FlxTypedSignal<String->Void> = new FlxTypedSignal<String->Void>();
+
+	/**
+	 * Called before exiting the game when a critical error occurs, like a stack overflow or null object reference.
+	 * CAREFUL: The game may be in an unstable state when this is called.
+	 * @param message The error message.
+	 */
+	public static var criticalErrorSignal(default, null):FlxTypedSignal<String->Void> = new FlxTypedSignal<String->Void>();
+
 	/**
 	 * Initializes the crash handler.
 	 *
@@ -20,8 +37,8 @@ class CrashHandler {
 	 * an OpenFL uncaught error listener.
 	 */
 	public static function init():Void {
-		#if cpp untyped __global__.__hxcpp_set_critical_error_handler(onError); #end
 		FlxG.stage.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onErrorOFL);
+		#if cpp untyped __global__.__hxcpp_set_critical_error_handler(onCriticalError); #end
 	}
 
 	/**
@@ -46,9 +63,6 @@ class CrashHandler {
 		onError(message);
 	}
 
-	/** Crash Folder Location. **/
-	static inline var CRASH_FOLDER:String = './crash/';
-
 	/**
 	 * Main crash handler logic.
 	 *
@@ -58,28 +72,51 @@ class CrashHandler {
 	 * @param message The error message or stack trace.
 	 */
 	static function onError(message:String):Void {
-		final path:String = './crash/${FlxG.stage.application.meta.get('file')}_${Date.now().toString().replace(" ", "_").replace(":", "'")}.txt';
 		final defines:Map<String, Dynamic> = macros.DefinesMacro.defines;
 
-		var errMsg:String = getError();
+		var errMsg:String = 'Uncaught Error: $message\n' + getError();
 		errMsg += '\nPlatform: ${System.platformLabel} ${System.platformVersion} [Target: ${scripting.ScriptUtils.getTarget()}]';
-		errMsg += '\nFlixel Current State: ${Type.getClassName(Type.getClass(FlxG.state))}';
-		errMsg += '\nUncaught Error: $message\nPlease report this error to the GitHub page: https://github.com/system32unknown/AlterEngine\n\nCustom Crash Handler written by: sqirra-rng and Codename Engine Team and Altertoriel';
+		var currentState:String = 'No state loaded';
+		if (FlxG.game != null && FlxG.state != null) {
+			var currentStateCls:Null<Class<Dynamic>> = Type.getClass(FlxG.state);
+			if (currentStateCls != null) currentState = Type.getClassName(currentStateCls) ?? 'No state loaded';
+		}
+		errMsg += '\nFlixel Current State: $currentState';
+		errMsg += '\nPlease report this error to the GitHub page: https://github.com/system32unknown/AlterEngine\n\nCustom Crash Handler written by: sqirra-rng and Codename Engine Team and Altertoriel';
 		errMsg += '\nHaxe: ${defines['haxe']} / Flixel: ${defines['flixel']} / OpenFL: ${defines['openfl']} / Lime: ${defines['lime']}';
 		if (Mods.currentModDirectory != '') errMsg += '\nCurrent Active Mod: ${Mods.currentModDirectory}';
 
+		errorSignal.dispatch(errMsg);
 		try {
-			if (!FileSystem.exists(CRASH_FOLDER)) FileSystem.createDirectory(CRASH_FOLDER);
-			File.saveContent(path, errMsg);
-
-			Sys.println("\n" + errMsg);
-			Sys.println('Crash dump saved in ${haxe.io.Path.normalize(path)}');
+			#if sys logErrorMsg(errMsg); #end
 		} catch (e:Dynamic) Sys.println('Error!\nCouldn\'t save the crash dump because:\n$e');
 
-		utils.system.NativeUtil.showMessageBox("Alter Engine Crash Handler", errMsg, MSG_ERROR);
+		utils.system.NativeUtil.showMessageBox("Fatal Uncaught Exception", errMsg, MSG_ERROR);
 		#if DISCORD_ALLOWED DiscordClient.shutdown(); #end
 		System.exit(1);
 	}
+
+	static function onCriticalError(message:String):Void {
+		try {
+			criticalErrorSignal.dispatch(message);
+			#if sys logErrorMsg(message, true); #end
+		} catch (e:Dynamic) Sys.println('Error!\nCouldn\'t save the critial crash dump because:\n$e');
+
+		utils.system.NativeUtil.showMessageBox("Fatal Uncaught Exception", message, MSG_ERROR);
+		#if DISCORD_ALLOWED DiscordClient.shutdown(); #end
+		System.exit(1);
+	}
+
+	#if sys
+	static function logErrorMsg(msg:String, critical:Bool = false):Void {
+		final path:String = '$LOG_FOLDER/crash${critical ? '-critical' : ''}-${Date.now().toString().replace(" ", "_").replace(":", "'")}.log';
+		if (!FileSystem.exists(LOG_FOLDER)) FileSystem.createDirectory(LOG_FOLDER);
+		File.saveContent(path, msg);
+
+		Sys.println("\n" + msg);
+		Sys.println('Crash dump saved in ${haxe.io.Path.normalize(path)}');
+	}
+	#end
 
 	/**
 	 * Builds a formatted stack trace string from the current exception stack.
@@ -90,7 +127,7 @@ class CrashHandler {
 	 * @return A formatted stack trace string.
 	 */
 	static function getError():String {
-		var error:String = "";
+		var error:String = '';
 		for (stackItem in haxe.CallStack.exceptionStack(true)) {
 			switch (stackItem) {
 				case FilePos(_, file, line, column):

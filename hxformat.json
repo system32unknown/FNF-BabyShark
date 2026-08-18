@@ -16,7 +16,8 @@
     "expressionIfWithBlocks": false,
     "doWhile": "same",
     "tryBody": "same",
-    "tryCatch": "next"
+    "tryCatch": "keep",
+    "catchBody": "same"
   },
 
 	"emptyLines": {

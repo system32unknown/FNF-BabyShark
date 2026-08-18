@@ -139,13 +139,8 @@ class Util {
 	}
 
 	inline public static function changeFramerateCap(newFramerate:Int):Void {
-		if (newFramerate > FlxG.updateFramerate) {
-			FlxG.updateFramerate = newFramerate;
-			FlxG.drawFramerate = newFramerate;
-		} else {
-			FlxG.drawFramerate = newFramerate;
-			FlxG.updateFramerate = newFramerate;
-		}
+		if (newFramerate > FlxG.updateFramerate) FlxG.updateFramerate = FlxG.drawFramerate = newFramerate;
+		else FlxG.drawFramerate = FlxG.updateFramerate = newFramerate;
 	}
 
 	inline public static function notBlank(s:String):Bool {

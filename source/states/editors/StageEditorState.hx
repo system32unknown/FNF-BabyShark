@@ -789,7 +789,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		objY += 40;
 		tab_group.add(new FlxText(objX, objY - 18, 80, 'Opacity:'));
 		alphaStepper = new PsychUINumericStepper(objX, objY, 0.1, 1, 0, 1, 2, true);
-		alphaStepper.onValueChange = function() {
+		alphaStepper.onValueChange = () -> {
 			var selected:StageEditorMetaSprite = getSelected(); // alpha/opacity
 			if (selected != null) selected.alpha = alphaStepper.value;
 		};
@@ -812,7 +812,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 		objY += 40;
 		tab_group.add(new FlxText(objX, objY - 18, 80, 'Angle:'));
 		angleStepper = new PsychUINumericStepper(objX, objY, 10, 0, 0, 360);
-		angleStepper.onValueChange = function() {
+		angleStepper.onValueChange = () -> {
 			var selected:StageEditorMetaSprite = getSelected(); // angle
 			if (selected != null) selected.angle = angleStepper.value;
 		};
@@ -1478,10 +1478,10 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 				state.add(txt);
 
 				var btnY:Int = 390;
-				var btn:PsychUIButton = new PsychUIButton(0, btnY, 'OK', function() {
+				var btn:PsychUIButton = new PsychUIButton(0, btnY, 'OK', () -> {
 					var fileName:String = fullPath.substring(fullPath.lastIndexOf('/') + 1, fullPath.lastIndexOf('.'));
 					var pathNoExt:String = fullPath.substring(0, fullPath.lastIndexOf('.'));
-					function saveFile(ext:String) {
+					function saveFile(ext:String):Void {
 						var p1:String = '$pathNoExt.$ext';
 						var p2:String = modFolder + '$fileName.$ext';
 						if (FileSystem.exists(p1)) File.saveBytes(p2, File.getBytes(p1));
@@ -1499,7 +1499,7 @@ class StageEditorState extends MusicBeatState implements PsychUIEventHandler.Psy
 				btn.gameCenter(X).x -= 100;
 				btn.cameras = state.cameras;
 				state.add(btn);
-				var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Cancel', function() {
+				var btn:PsychUIButton = new PsychUIButton(0, btnY, 'Cancel', () -> {
 					_makeNewSprite = null;
 					state.close();
 				});

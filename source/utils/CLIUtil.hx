@@ -80,8 +80,6 @@ class CLIUtil {
 		return args.map(function(arg:String):String {
 			if (arg == null) return '';
 			return arg.trim();
-		}).filter(function(arg:String):Bool {
-			return arg != null && arg != '';
-		});
+		}).filter((arg:String) -> return arg != null && arg != '');
 	}
 }

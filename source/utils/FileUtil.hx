@@ -273,7 +273,8 @@ class FileUtil {
 	public static function writeStringToPath(path:String, data:String, mode:FileWriteMode = Skip):Void {
 		#if sys
 		if (FileSystem.isDirectory(path)) throw 'Target path is a directory, not a file: "$path"';
-		createDirIfNotExists(Path.directory(path));
+		var dir:String = Path.directory(path);
+		if (!FileSystem.isDirectory(dir)) FileSystem.createDirectory(dir);
 
 		switch (mode) {
 			case Force: File.saveContent(path, data);
@@ -313,7 +314,8 @@ class FileUtil {
 		}
 
 		if (shouldWrite) {
-			createDirIfNotExists(Path.directory(path));
+			var dir:String = Path.directory(path);
+			if (!FileSystem.isDirectory(dir)) FileSystem.createDirectory(dir);
 			File.saveBytes(path, data);
 		}
 		#else
@@ -349,21 +351,6 @@ class FileUtil {
 		#end
 	}
 
-	/**
-	 * Create a directory if it doesn't already exist.
-	 * Only works on native.
-	 *
-	 * @param dir The path to the directory.
-	 */
-	public static function createDirIfNotExists(dir:String):Void {
-		if (!FileSystem.isDirectory(dir)) {
-			#if sys
-			FileSystem.createDirectory(dir);
-			#else
-			throw 'Directory creation is not supported on this platform.';
-			#end
-		}
-	}
 	/**
 	 * Get a directory's total size in bytes. Max representable size is ~2.147 GB.
 	 * Only works on native.
@@ -432,7 +419,7 @@ class FileUtil {
 		#if sys
 		pathFolder = pathFolder.trim();
 		if (createIfNotExists) {
-			createDirIfNotExists(pathFolder);
+			if (!FileSystem.isDirectory(pathFolder)) FileSystem.createDirectory(pathFolder);
 		} else if (!FileSystem.isDirectory(pathFolder)) throw 'Path is not a directory: "$pathFolder"';
 
 		#if windows
@@ -593,7 +580,8 @@ class FileUtilSandboxed {
 		return FileUtil.getDirSize(sanitizePath(path));
 	}
 	public static function createDirIfNotExists(dir:String):Void {
-		FileUtil.createDirIfNotExists(sanitizePath(dir));
+		var sanitizedPath:String = sanitizePath(dir);
+		if (!FileSystem.isDirectory(sanitizedPath)) FileSystem.createDirectory(sanitizedPath);
 	}
 	public static function openFolder(pathFolder:String, createIfNotExists:Bool = true):Void {
 		FileUtil.openFolder(sanitizePath(pathFolder), createIfNotExists);

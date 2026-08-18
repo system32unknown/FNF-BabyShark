@@ -28,7 +28,7 @@ class Prompt extends BasePrompt {
 
 	function promptCreate(_) {
 		var btnY:Int = 390;
-		var btn:PsychUIButton = new PsychUIButton(0, btnY, _yesTxt, function() {
+		var btn:PsychUIButton = new PsychUIButton(0, btnY, _yesTxt, () -> {
 			yesFunction();
 			close();
 		});

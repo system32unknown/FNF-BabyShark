@@ -180,7 +180,7 @@ class NoteSplashEditorState extends MusicBeatState {
 
 		setAnimDropDown();
 
-		templateButton.onClick = function() {
+		templateButton.onClick = () -> {
 			NoteSplash.configs.clear();
 			config = NoteSplash.createConfig();
 
@@ -197,7 +197,7 @@ class NoteSplashEditorState extends MusicBeatState {
 			changeShader.onSelect(0, "Red");
 		}
 
-		addButton = new PsychUIButton(20, 185, "Add/Update", function() {
+		addButton = new PsychUIButton(20, 185, "Add/Update", () -> {
 			var indices:Array<Int> = [];
 			if (indices_input.text.split(',').length > 1) {
 				for (i in indices_input.text.split(',')) {
@@ -229,7 +229,7 @@ class NoteSplashEditorState extends MusicBeatState {
 		});
 		UI.add(addButton);
 
-		var removeButton:PsychUIButton = new PsychUIButton(185, 185, "Remove", function() {
+		var removeButton:PsychUIButton = new PsychUIButton(185, 185, "Remove", () -> {
 			if (config != null) {
 				if (config.animations.exists(curAnim)) {
 					config.animations.remove(curAnim);
@@ -246,7 +246,7 @@ class NoteSplashEditorState extends MusicBeatState {
 		UI.add(removeButton);
 		UI.add(animDropDown);
 
-		reloadImage = function() {
+		reloadImage = () -> {
 			imageSkin = imageInputText.text;
 
 			errorText.color = FlxColor.RED;

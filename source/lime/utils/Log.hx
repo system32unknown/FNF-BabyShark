@@ -72,7 +72,7 @@ class Log {
 
 		#if js
 		if (untyped Syntax.code("typeof console") == "undefined") untyped Syntax.code("console = {}");
-		if (untyped Syntax.code("console").log == null) untyped Syntax.code("console").log = function() {};
+		if (untyped Syntax.code("console").log == null) untyped Syntax.code("console").log = () -> {};
 		#end
 	}
 }

@@ -35,20 +35,6 @@ class SystemUtil {
 	}
 
 	/**
-	 * Generates a text file with the specified content and opens it.
-	 * 
-	 * @param fileContent The content to write to the file.
-	 * @param fileName The name of the file (without extension).
-	 */
-	public static function generateTextFile(fileContent:String, fileName:String) {
-		#if desktop
-		var path:String = getSysPath() + '/$fileName.txt';
-		File.saveContent(path, fileContent);
-		Sys.command(#if windows "start " #elseif linux "xdg-open " #else "open " #end + path);
-		#end
-	}
-
-	/**
 	 * Indicates whether the console output is available.
 	 */
 	public static function isConsoleOn():Bool {

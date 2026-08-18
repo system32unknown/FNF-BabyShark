@@ -2191,7 +2191,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 
 		objY += 40;
 		strumTimeStepper = new PsychUINumericStepper(objX, objY, Conductor.stepCrochet, 0, -5000, Math.POSITIVE_INFINITY, 3, 120);
-		strumTimeStepper.onValueChange = function() {
+		strumTimeStepper.onValueChange = () -> {
 			if (selectedNotes.length < 1) return;
 
 			var firstTime:Float = selectedNotes[0].strumTime;
@@ -2615,7 +2615,7 @@ class ChartingState extends MusicBeatState implements PsychUIEventHandler.PsychU
 				showOutput('Error: File loaded is not a Psych Engine/FNF 0.2.x.x chart.', true);
 				return;
 			}
-			var func:Void->Void = function() {
+			var func:Void->Void = () -> {
 				loadChart(loadedChart);
 				Song.chartPath = diff ? curdiff : cur;
 				reloadNotesDropdowns();

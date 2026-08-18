@@ -30,10 +30,11 @@ class ErrorHandledShader extends flixel.system.FlxAssets.FlxShader implements IE
 		Logs.error(error);
 		#if !debug
 		// Save a crash log on Release builds
+		final LOG_FOLDER:String = 'logs';
 		var dateNow:String = Date.now().toString().replace(" ", "_").replace(":", "'");
-		if (!FileSystem.exists('./crash/')) FileSystem.createDirectory('./crash/');
+		if (!FileSystem.exists(LOG_FOLDER)) FileSystem.createDirectory(LOG_FOLDER);
 
-		var crashLogPath:String = './crash/shader_${shaderName}_${dateNow}.txt';
+		var crashLogPath:String = '$LOG_FOLDER/shader_${shaderName}_${dateNow}.txt';
 		File.saveContent(crashLogPath, error);
 		NativeUtil.showMessageBox('Error log saved at: $crashLogPath', alertTitle, MSG_ERROR);
 		#else

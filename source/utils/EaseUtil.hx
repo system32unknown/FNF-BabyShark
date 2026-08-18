@@ -35,9 +35,7 @@ class EaseUtil {
 	 * @return Float->Float
 	 */
 	public static inline function stepped(steps:Int):Float->Float {
-		return (t:Float) -> {
-			return Math.floor(t * steps) / steps;
-		}
+		return (t:Float) -> return Math.floor(t * steps) / steps;
 	}
 
 	/**
