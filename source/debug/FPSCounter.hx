@@ -52,7 +52,6 @@ class FPSCounter extends openfl.text.TextField {
 		selectable = mouseEnabled = false;
 		text = "0FPS";
 		defaultTextFormat = new openfl.text.TextFormat(fontName, 12, -1, JUSTIFY);
-		antiAliasType = NORMAL;
 		sharpness = 100;
 		multiline = true;
 		fpsManager = new FPSUtil();

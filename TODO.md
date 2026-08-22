@@ -30,6 +30,7 @@
 - [ ] Rewrite Objects
     - [ ] Note and Strum Note
 - [ ] New Conductor
+- [ ] Funkin Crew's Lime and OpenFL
 
 ### Characters List
 - [ ] Stariana

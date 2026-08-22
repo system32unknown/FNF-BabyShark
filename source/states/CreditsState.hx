@@ -39,10 +39,6 @@ class CreditsState extends MusicBeatState {
 		['CheemsAndFriends', 	'cheems', 			'Creator of FlxAnimate', 										'https://x.com/CheemsnFriendos', 	'E1E1E1'],
 		['Itz_Miles', 			'miles', 			'Linear GFX Transformations Library (ParallaxLT)', 				'https://x.com/Itz_MilesDev', 		'7AAAFE'],
 		[''],
-		['Extra Keys Team'],
-		['Magman03k7', 			'magman',			'Main Programmer of Psych Engine EK', 							'https://github.com/Magman03k7', 	'B9AF27'],
-		['SrPerez', 			'perez', 			'1-9 keys art', 												'https://x.com/newsrperez',			'FF9E00'],
-		[''],
 		['Special Thanks'],
 		['Codename Engine',		'codename',			'Some stuffs used for this engine',				'https://github.com/CodenameCrew/CodenameEngine',	'FF9300'],
 		['HRK-EXEX',			'hrk',				'Some stuffs used for this engine',				'https://github.com/HRK-EXEX',						'FF9300'],
@@ -238,9 +234,10 @@ class CreditsState extends MusicBeatState {
 
 	var modCredits:Array<Array<String>> = [];
 	function pushModCredits(?folder:String = null):Void {
-		var creditsFile:String = Paths.mods((folder != null ? '$folder/' : '') + 'data/credits.txt');
+		final modFolder:String = folder != null ? '$folder/' : '';
+		var creditsFile:String = Paths.mods(modFolder + 'data/credits.txt');
 		#if TRANSLATIONS_ALLOWED
-		var translatedCredits:String = Paths.mods((folder != null ? '$folder/' : '') + 'data/credits-${Settings.data.language}.txt');
+		var translatedCredits:String = Paths.mods(modFolder + 'data/credits-${Settings.data.language}.txt');
 		#end
 		if (#if TRANSLATIONS_ALLOWED (FileSystem.exists(translatedCredits) && (creditsFile = translatedCredits) == translatedCredits) || #end FileSystem.exists(creditsFile)) {
 			var arr:Array<String> = File.getContent(creditsFile).split('\n');
